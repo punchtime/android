@@ -19,4 +19,4 @@ It uses Firebase to communicate the location of an employee when he arrives at a
 
 ## License
 
-MIT
+Apache License 2.0
