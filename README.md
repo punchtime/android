@@ -1,0 +1,22 @@
+# punchtime app
+
+> Note: this is a work in progress, and not yet a deployed app.
+
+## info
+
+This is the android client of [punchtime.io](https://punchtime.io).
+
+Made for Projecten 1 at Odisee in Ghent
+
+By [Haroen Viaene](https://haroen.me), [Elias Meire](http://eliasmei.re) and [Arnaud Weyts](https://weyts.xyz).
+
+It uses Firebase to communicate the location of an employee when he arrives at a location he works at (i.e. an electrician). This is then used to calculate the amount of hours the employee worked, and also how much the clients should pay for offered services.
+
+## related
+
+- [organisation](https://github.com/punchtime/organisation)
+- [web client](https://github.com/punchtime/web)
+
+## License
+
+MIT
