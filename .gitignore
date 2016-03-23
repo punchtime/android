@@ -34,3 +34,7 @@ build/
 
 #NDK
 obj/
+
+#API keys
+app/src/main/res/values/api_keys.xml
+
