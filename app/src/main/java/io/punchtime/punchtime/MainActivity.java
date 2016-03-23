@@ -30,6 +30,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
+        final MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -70,6 +71,13 @@ public class MainActivity extends AppCompatActivity
                     if(mLastLocation != null) {
                         Snackbar.make(view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
+                        // gets current location, adds a marker, and changes the camera
+                        LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+
+                        map.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title("Marker"));
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
                     }
                     else {
                         Snackbar.make(view, "Could not retrieve location", Snackbar.LENGTH_LONG)
@@ -167,6 +175,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
+        map.getUiSettings().setMapToolbarEnabled(false);
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Marker"));
