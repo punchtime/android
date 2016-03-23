@@ -35,7 +35,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
 
     private Firebase fBase;
     private GoogleApiClient mGoogleApiClient;
+    private MapView mapView;
     private GoogleMap map;
     private Location mLastLocation;
     private boolean connectedGoogleApi;
@@ -76,9 +77,19 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
-        /*final MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
+        // set default view as dashboard
+        if(savedInstanceState == null) {
+            Fragment fragment = null;
+            try {
+                fragment = (Fragment) (Fragment) DashboardFragment.class.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            setFragment(fragment);
+        }
+
+        mapView = (MapView) mapView.findViewById(R.id.map);
+        mapView.getMapAsync(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -110,7 +121,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 TextView txtView = (TextView) findViewById(R.id.text_view);
-                /*txtView.setText(snapshot.getValue().toString()); */ // ();  //prints "Do you have data? You'll love Firebase."
+                txtView.setText(snapshot.getValue().toString()); // ();  //prints "Do you have data? You'll love Firebase."
             }
             @Override public void onCancelled(FirebaseError error) { }
         });
@@ -188,12 +199,16 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        setFragment(fragment);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
     }
 
     // `onPostCreate` called when activity start-up is complete after `onStart()`
