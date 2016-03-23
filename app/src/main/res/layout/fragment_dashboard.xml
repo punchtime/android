@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="io.punchtime.punchtime.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/activity_main">
 
 
     <ScrollView
@@ -21,7 +21,7 @@
             android:layout_height="fill_parent"
             android:layout_width="fill_parent">
 
-            <fragment
+            <!--fragment
                 android:name="com.google.android.gms.maps.MapFragment"
                 android:id="@+id/map"
                 android:layout_width="match_parent"
@@ -29,12 +29,17 @@
                 map:cameraZoom="13"
                 map:mapType="normal"
                 map:liteMode="true"
-               />
+                />-->
             <TextView
                 android:id="@+id/text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                />
+                android:text="Hello world" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_my_location_24dp"/>
 
         </LinearLayout>
     </ScrollView>

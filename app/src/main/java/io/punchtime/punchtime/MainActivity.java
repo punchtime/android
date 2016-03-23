@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -38,7 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private Firebase fBase;
     private GoogleApiClient mGoogleApiClient;
@@ -46,21 +49,36 @@ public class MainActivity extends AppCompatActivity
     private Location mLastLocation;
     private boolean connectedGoogleApi;
     private static Context context;
+    private DrawerLayout mDrawer;
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Firebase setup
         context = this;
         Firebase.setAndroidContext(this);
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // set a toolbar to replace the actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final MapFragment mapFragment = (MapFragment) getFragmentManager()
+        // find our drawer layout view
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = setupDrawerToggle();
+
+        mDrawer.addDrawerListener(drawerToggle);
+
+        // find our drawer view
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        setupDrawerContent(navigationView);
+
+        /*final MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(this);*/
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -86,26 +104,18 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        // connect to firebase
         fBase = new Firebase("https://scorching-inferno-1467.firebaseio.com/");
         fBase.child("/").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 TextView txtView = (TextView) findViewById(R.id.text_view);
-                txtView.setText(snapshot.getValue().toString());  // ();  //prints "Do you have data? You'll love Firebase."
+                /*txtView.setText(snapshot.getValue().toString()); */ // ();  //prints "Do you have data? You'll love Firebase."
             }
             @Override public void onCancelled(FirebaseError error) { }
         });
 
+        // check api client
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -113,6 +123,21 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -134,42 +159,57 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        // open or close the drawer
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean selectDrawerItem(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_dashboard) {
-            // Handle the camera action
-        } else if (id == R.id.nav_day) {
-
-        } else if (id == R.id.nav_3days) {
-
-        } else if (id == R.id.nav_week) {
-
-        } else if (id == R.id.nav_month) {
-
-        } else if (id == R.id.nav_settings) {
-
+        Fragment fragment = null;
+        Class fragmentClass;
+        switch (item.getItemId()) {
+            case R.id.nav_dashboard:
+                fragmentClass = DashboardFragment.class;
+                break;
+            case R.id.nav_day:
+                fragmentClass = DayFragment.class;
+                break;
+            default:
+                fragmentClass = DashboardFragment.class;
         }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // `onPostCreate` called when activity start-up is complete after `onStart()`
+    // NOTE! Make sure to override the method with only a single `Bundle` argument
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
