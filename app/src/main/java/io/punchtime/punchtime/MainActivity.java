@@ -40,15 +40,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity {
 
     private Firebase fBase;
-    private GoogleApiClient mGoogleApiClient;
-    private MapView mapView;
-    private GoogleMap map;
-    private Location mLastLocation;
-    private boolean connectedGoogleApi;
     private static Context context;
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -88,33 +82,6 @@ public class MainActivity extends AppCompatActivity
             setFragment(fragment);
         }
 
-        mapView = (MapView) mapView.findViewById(R.id.map);
-        mapView.getMapAsync(this);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getLocation();
-                    if(mLastLocation != null) {
-                        Snackbar.make(view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                        // gets current location, adds a marker, and changes the camera
-                        LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-
-                        map.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title("Marker"));
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-                    }
-                    else {
-                        Snackbar.make(view, "Could not retrieve location", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                }
-            });
-        }
         // connect to firebase
         fBase = new Firebase("https://scorching-inferno-1467.firebaseio.com/");
         fBase.child("/").addValueEventListener(new ValueEventListener() {
@@ -125,15 +92,6 @@ public class MainActivity extends AppCompatActivity
             }
             @Override public void onCancelled(FirebaseError error) { }
         });
-
-        // check api client
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -225,95 +183,5 @@ public class MainActivity extends AppCompatActivity
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        this.map = map;
-        map.getUiSettings().setMapToolbarEnabled(false);
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
-    }
-
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        this.connectedGoogleApi = true;
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        this.connectedGoogleApi = false;
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        this.connectedGoogleApi = false;
-    }
-
-    private void getLocation() {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions((Activity) context,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        1);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    getLocation();
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
     }
 }
