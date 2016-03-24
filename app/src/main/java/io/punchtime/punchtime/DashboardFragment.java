@@ -16,7 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Bundle;
+import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,6 +44,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback, 
     private Location mLastLocation;
     private boolean connectedGoogleApi;
     private static Context context;
+    private Firebase fBase;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -50,7 +56,20 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback, 
         context = getContext();
 
         // Defines the xml file for the fragment
-        View v = inflater.inflate(R.layout.fragment_dashboard, parent, false);
+        final View v = inflater.inflate(R.layout.fragment_dashboard, parent, false);
+
+        Firebase.setAndroidContext(getContext());
+
+        // connect to firebase
+        fBase = new Firebase("https://scorching-inferno-1467.firebaseio.com/");
+        fBase.child("/").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                TextView txtView = (TextView) v.findViewById(R.id.text_view);
+                txtView.setText(snapshot.getValue().toString()); // ();  //prints "Do you have data? You'll love Firebase."
+            }
+            @Override public void onCancelled(FirebaseError error) { }
+        });
 
         // get map fragment
         mMapFragment =  (SupportMapFragment)getChildFragmentManager()

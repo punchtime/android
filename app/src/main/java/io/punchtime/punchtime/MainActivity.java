@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Firebase setup
         context = this;
-        Firebase.setAndroidContext(this);
 
         // set a toolbar to replace the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -81,17 +80,6 @@ public class MainActivity extends AppCompatActivity {
             }
             setFragment(fragment);
         }
-
-        // connect to firebase
-        fBase = new Firebase("https://scorching-inferno-1467.firebaseio.com/");
-        fBase.child("/").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                TextView txtView = (TextView) findViewById(R.id.text_view);
-                txtView.setText(snapshot.getValue().toString()); // ();  //prints "Do you have data? You'll love Firebase."
-            }
-            @Override public void onCancelled(FirebaseError error) { }
-        });
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
