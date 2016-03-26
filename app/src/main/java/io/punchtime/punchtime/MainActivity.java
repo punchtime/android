@@ -113,6 +113,15 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_day:
                 fragmentClass = DayFragment.class;
                 break;
+            case R.id.nav_3days:
+                fragmentClass = ThreeDayFragment.class;
+                break;
+            case R.id.nav_month:
+                fragmentClass = MonthFragment.class;
+                break;
+            case R.id.nav_settings:
+                fragmentClass = SettingsFragment.class;
+                break;
             default:
                 fragmentClass = DashboardFragment.class;
         }
