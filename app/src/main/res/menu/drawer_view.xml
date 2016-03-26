@@ -18,7 +18,7 @@
                 <item
                     android:id="@+id/nav_3days"
                     android:icon="@drawable/ic_view_week"
-                    android:title="3-day" />
+                    android:title="3 Day" />
                 <item
                     android:id="@+id/nav_week"
                     android:icon="@drawable/ic_view_week"
