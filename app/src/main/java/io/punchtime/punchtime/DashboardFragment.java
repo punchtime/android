@@ -12,10 +12,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Bundle;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -36,7 +38,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * Created by Arnaud on 3/23/2016.
  */
-public class DashboardFragment extends Fragment  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        CompoundButton.OnCheckedChangeListener {
     private static View view;
     private GoogleApiClient mGoogleApiClient;
     private SupportMapFragment mMapFragment;
@@ -57,6 +62,12 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback, 
 
         // Defines the xml file for the fragment
         final View v = inflater.inflate(R.layout.fragment_dashboard, parent, false);
+
+        /* crashes the app because switch is part of toolbar idk send help
+        SwitchCompat switchCompat = (SwitchCompat) v.findViewById(R.id
+                .switchToolbar);
+        switchCompat.setOnCheckedChangeListener(DashboardFragment.this);
+        */
 
         Firebase.setAndroidContext(getContext());
 
@@ -127,6 +138,13 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback, 
         }
 
         super.onDestroyView();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView.getId() == R.id.switchToolbar) {
+            // handle switch
+        }
     }
 
     @Override
