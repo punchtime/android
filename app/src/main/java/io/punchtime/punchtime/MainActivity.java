@@ -116,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_3days:
                 fragmentClass = ThreeDayFragment.class;
                 break;
+            case R.id.nav_week:
+                fragmentClass = WeekFragment.class;
+                break;
             case R.id.nav_month:
                 fragmentClass = MonthFragment.class;
                 break;
