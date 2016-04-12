@@ -30,6 +30,12 @@
                 map:mapType="normal"
                 map:liteMode="true"
                 />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/pulsesList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
             <TextView
                 android:id="@+id/text_view"
                 android:layout_width="wrap_content"

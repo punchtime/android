@@ -20,8 +20,6 @@ import com.firebase.client.Firebase;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Firebase fBase;
-    private static Context context;
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
@@ -30,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Firebase setup
-        context = this;
+        setTitle(R.string.main_activity_title);
 
         // set a toolbar to replace the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);

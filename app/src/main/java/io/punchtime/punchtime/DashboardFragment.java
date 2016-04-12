@@ -12,7 +12,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +22,22 @@ import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Calendar;
+import java.util.Locale;
+
+import io.punchtime.punchtime.data.Pulse;
 
 /**
  * Created by Arnaud on 3/23/2016.
@@ -50,6 +54,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     private boolean connectedGoogleApi;
     private static Context context;
     private Firebase fBase;
+    private RecyclerView pulsesList;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -71,16 +76,11 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
 
         Firebase.setAndroidContext(getContext());
 
+        pulsesList =  (RecyclerView) v.findViewById(R.id.pulsesList);
+        pulsesList.setLayoutManager(new LinearLayoutManager(getContext()));
+
         // connect to firebase
-        fBase = new Firebase("https://scorching-inferno-1467.firebaseio.com/");
-        fBase.child("/").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                TextView txtView = (TextView) v.findViewById(R.id.text_view);
-                txtView.setText(snapshot.getValue().toString()); // ();  //prints "Do you have data? You'll love Firebase."
-            }
-            @Override public void onCancelled(FirebaseError error) { }
-        });
+        fBase = new Firebase("https://scorching-inferno-1467.firebaseio.com/pulses");
 
         // get map fragment
         mMapFragment =  (SupportMapFragment)getChildFragmentManager()
@@ -111,7 +111,6 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                 }
             });
         }
-
         return v;
     }
 
@@ -142,7 +141,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView.getId() == R.id.switchToolbar) {
+        if(buttonView.getId() == R.id.pin) {
             // handle switch
         }
     }
@@ -159,6 +158,16 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     public void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
+
+        FirebaseRecyclerAdapter<Pulse, PulseViewHolder> mAdapter = new FirebaseRecyclerAdapter<Pulse, PulseViewHolder>(Pulse.class, android.R.layout.two_line_list_item, PulseViewHolder.class, fBase) {
+            @Override
+            protected void populateViewHolder(PulseViewHolder pulseViewHolder, Pulse pulse, int i) {
+                pulseViewHolder.nameText.setText("Checkin at Lat=" + pulse.getLatitude() + " Long=" + pulse.getLongitude());
+                pulseViewHolder.messageText.setText("By " + pulse.getUser() + "\nNote: " + pulse.getNote() + "\nTime: " + getDate(pulse.getTime()));
+            }
+        };
+
+        pulsesList.setAdapter(mAdapter);
     }
 
     public void onStop() {
@@ -233,6 +242,24 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
 
             // other 'case' lines to check for other
             // permissions this app might request
+        }
+    }
+
+    private String getDate(long time) {
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTimeInMillis(time);
+        String date = DateFormat.format("HH:mm dd/MM/yyyy", cal).toString();
+        return date;
+    }
+
+    public static class PulseViewHolder extends RecyclerView.ViewHolder {
+        TextView messageText;
+        TextView nameText;
+
+        public PulseViewHolder(View itemView) {
+            super(itemView);
+            nameText = (TextView)itemView.findViewById(android.R.id.text1);
+            messageText = (TextView) itemView.findViewById(android.R.id.text2);
         }
     }
 }
