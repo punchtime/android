@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 /**
  * Created by haroenv on 26/03/16.
@@ -21,5 +22,11 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
+
+        WebView webview = (WebView) findViewById(R.id.webView);
+
+        webview.getSettings().setJavaScriptEnabled(true);
+
+        webview.loadUrl("https://punchtime.io/dashboard");
     }
 }
