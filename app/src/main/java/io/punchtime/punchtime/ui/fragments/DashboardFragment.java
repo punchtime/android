@@ -1,4 +1,4 @@
-package io.punchtime.punchtime;
+package io.punchtime.punchtime.ui.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Calendar;
 import java.util.Locale;
 
+import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
 
 /**
@@ -163,7 +165,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
             @Override
             protected void populateViewHolder(PulseViewHolder pulseViewHolder, Pulse pulse, int i) {
                 pulseViewHolder.nameText.setText("Checkin at Lat=" + pulse.getLatitude() + " Long=" + pulse.getLongitude());
-                pulseViewHolder.messageText.setText("By " + pulse.getUser() + "\nNote: " + pulse.getNote() + "\nTime: " + getDate(pulse.getTime()));
+                pulseViewHolder.messageText.setText("By " + pulse.getUser() + "\nNote: " + pulse.getNote() + "\nTime: " + DateUtils.formatDateTime(context, pulse.getTime(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
             }
         };
 
@@ -243,13 +245,6 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }
-
-    private String getDate(long time) {
-        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-        cal.setTimeInMillis(time);
-        String date = DateFormat.format("HH:mm dd/MM/yyyy", cal).toString();
-        return date;
     }
 
     public static class PulseViewHolder extends RecyclerView.ViewHolder {

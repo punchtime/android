@@ -1,6 +1,5 @@
-package io.punchtime.punchtime;
+package io.punchtime.punchtime.ui.activities;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
-import android.support.v7.widget.SwitchCompat;
 
-import com.firebase.client.Firebase;
+import io.punchtime.punchtime.R;
+import io.punchtime.punchtime.ui.fragments.DashboardFragment;
+import io.punchtime.punchtime.ui.fragments.DayFragment;
+import io.punchtime.punchtime.ui.fragments.MonthFragment;
+import io.punchtime.punchtime.ui.fragments.SettingsFragment;
+import io.punchtime.punchtime.ui.fragments.ThreeDayFragment;
+import io.punchtime.punchtime.ui.fragments.WeekFragment;
 
 public class MainActivity extends AppCompatActivity {
 

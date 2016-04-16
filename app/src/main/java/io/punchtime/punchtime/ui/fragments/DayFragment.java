@@ -1,19 +1,20 @@
-package io.punchtime.punchtime;
-
-import android.os.Bundle;
+package io.punchtime.punchtime.ui.fragments;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.Bundle;
+
+import io.punchtime.punchtime.R;
 
 /**
- * Created by haroenv on 26/03/16.
+ * Created by Arnaud on 3/23/2016.
  */
-public class SettingsFragment extends Fragment {
+public class DayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.fragment_settings, parent, false);
+        return inflater.inflate(R.layout.fragment_day, parent, false);
     }
 
     // triggered soon after onCreateView
