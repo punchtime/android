@@ -18,7 +18,7 @@
         app:base_release_color="@color/colorPrimaryDark"
         app:base_press_color="@color/colorPrimaryDark"
         app:ball_release_color="@color/colorAccent"
-        app:ball_press_color="@color/colorPrimary"
+        app:ball_press_color="@color/colorPrimaryDark"
         app:icon_release="@drawable/ic_tracking"
         app:icon_press="@drawable/ic_tracking"
         />
