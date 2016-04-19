@@ -10,17 +10,19 @@ public class Pulse {
     String note;
     long time;
     String type;
-    String user;
+    String employee;
+    String employer;
 
     public Pulse() {}
 
-    public Pulse(double latitude, double longitude, String note, long time, String type, String user) {
+    public Pulse(double latitude, double longitude, String note, long time, String type, String employee, String employer) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.note = note;
         this.time = time;
         this.type = type;
-        this.user = user;
+        this.employee = employee;
+        this.employer = employer;
     }
 
     public double getLatitude() {
@@ -43,7 +45,10 @@ public class Pulse {
         return type;
     }
 
-    public String getUser() {
-        return user;
+    public String getEmployee() {
+        return employee;
+    }
+    public String getEmployer() {
+        return employer;
     }
 }

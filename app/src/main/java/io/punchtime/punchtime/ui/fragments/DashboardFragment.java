@@ -165,7 +165,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
             @Override
             protected void populateViewHolder(PulseViewHolder pulseViewHolder, Pulse pulse, int i) {
                 pulseViewHolder.nameText.setText("Checkin at Lat=" + pulse.getLatitude() + " Long=" + pulse.getLongitude());
-                pulseViewHolder.messageText.setText("By " + pulse.getUser() + "\nNote: " + pulse.getNote() + "\nTime: " + DateUtils.formatDateTime(context, pulse.getTime(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
+                pulseViewHolder.messageText.setText("By " + pulse.getEmployee() + "\nNote: " + pulse.getNote() + "\nTime: " + DateUtils.formatDateTime(context, pulse.getTime(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
             }
         };
 
