@@ -15,8 +15,6 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
 public class ThreeDayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setTitle(R.string.menu_3_day);
         // Defines the xml file for the fragment
         return inflater.inflate(R.layout.fragment_three_day, parent, false);
     }

@@ -2,6 +2,7 @@ package io.punchtime.punchtime.ui.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,7 @@ import android.view.View;
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
 import io.punchtime.punchtime.ui.fragments.DayFragment;
+import io.punchtime.punchtime.ui.fragments.HistoryFragment;
 import io.punchtime.punchtime.ui.fragments.MonthFragment;
 import io.punchtime.punchtime.ui.fragments.SettingsFragment;
 import io.punchtime.punchtime.ui.fragments.ThreeDayFragment;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
+    private AppBarLayout appBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        appBar = (AppBarLayout) findViewById(R.id.appBar);
 
         drawerToggle = setupDrawerToggle();
         mDrawer.addDrawerListener(drawerToggle);
@@ -82,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
         toolbar.removeView(v);
     }
 
+    public void addViewToAppBarLayout(View v) {
+        appBar.addView(v);
+    }
+
+    public void removeViewFromAppBarLayout(View v) {
+        appBar.removeView(v);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -113,34 +126,34 @@ public class MainActivity extends AppCompatActivity {
     public boolean selectDrawerItem(MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
-        Class fragmentClass;
+        Bundle args = new Bundle();
         switch (item.getItemId()) {
             case R.id.nav_dashboard:
-                fragmentClass = DashboardFragment.class;
+                fragment = new DashboardFragment();
                 break;
             case R.id.nav_day:
-                fragmentClass = DayFragment.class;
+                fragment = new HistoryFragment();
                 break;
             case R.id.nav_3days:
-                fragmentClass = ThreeDayFragment.class;
+                fragment = new HistoryFragment();
+                args.putInt("fragment",R.id.nav_3days);
+                fragment.setArguments(args);
                 break;
             case R.id.nav_week:
-                fragmentClass = WeekFragment.class;
+                fragment = new HistoryFragment();
+                args.putInt("fragment",R.id.nav_week);
+                fragment.setArguments(args);
                 break;
             case R.id.nav_month:
-                fragmentClass = MonthFragment.class;
+                fragment = new HistoryFragment();
+                args.putInt("fragment",R.id.nav_month);
+                fragment.setArguments(args);
                 break;
             case R.id.nav_settings:
-                fragmentClass = SettingsFragment.class;
+                fragment = new SettingsFragment();
                 break;
             default:
-                fragmentClass = DashboardFragment.class;
-        }
-
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
+                fragment = new DashboardFragment();
         }
 
         setFragment(fragment);

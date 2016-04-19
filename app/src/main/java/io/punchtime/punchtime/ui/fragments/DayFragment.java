@@ -18,11 +18,7 @@ public class DayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        View v = inflater.inflate(R.layout.fragment_day, parent, false);
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setTitle(R.string.menu_day);
-
-        return v;
+        return inflater.inflate(R.layout.fragment_day, parent, false);
     }
 
     // triggered soon after onCreateView
