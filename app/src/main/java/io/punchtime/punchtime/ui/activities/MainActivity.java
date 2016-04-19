@@ -10,8 +10,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
@@ -31,16 +33,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle(R.string.main_activity_title);
-
-        // set a toolbar to replace the actionbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         // find our drawer layout view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = setupDrawerToggle();
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerToggle = setupDrawerToggle();
         mDrawer.addDrawerListener(drawerToggle);
 
         // find our drawer view
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Fragment fragment = null;
             try {
-                fragment = (Fragment) (Fragment) DashboardFragment.class.newInstance();
+                fragment = DashboardFragment.class.newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -73,6 +73,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public void addViewToToolbar(View v) {
+        toolbar.addView(v);
+    }
+
+    public void removeViewFromToolbar(View v) {
+        toolbar.removeView(v);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -135,9 +144,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setFragment(fragment);
-
-        // set title of the toolbar
-        toolbar.setTitle(item.getTitle());
 
         // close drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

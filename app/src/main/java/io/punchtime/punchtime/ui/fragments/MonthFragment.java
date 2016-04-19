@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.punchtime.punchtime.R;
+import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
  * Created by haroenv on 26/03/16.
@@ -15,6 +16,9 @@ public class MonthFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
+
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setTitle(R.string.menu_month);
         return inflater.inflate(R.layout.fragment_month, parent, false);
     }
 

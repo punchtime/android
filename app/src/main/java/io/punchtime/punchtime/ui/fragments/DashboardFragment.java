@@ -12,8 +12,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 import com.firebase.ui.FirebaseRecyclerAdapter;
+import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -37,9 +40,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TooManyListenersException;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
+import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
  * Created by Arnaud on 3/23/2016.
@@ -57,10 +62,12 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     private static Context context;
     private Firebase fBase;
     private RecyclerView pulsesList;
+    private MainActivity activity;
+    private Toolbar toolbar;
+    private MaterialAnimatedSwitch mSwitch;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
-        //args.putInt("data", data);
         setArguments(args);
     }
     @Override
@@ -70,11 +77,13 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         // Defines the xml file for the fragment
         final View v = inflater.inflate(R.layout.fragment_dashboard, parent, false);
 
-        /* crashes the app because switch is part of toolbar idk send help
-        SwitchCompat switchCompat = (SwitchCompat) v.findViewById(R.id
-                .switchToolbar);
-        switchCompat.setOnCheckedChangeListener(DashboardFragment.this);
-        */
+
+
+        activity = (MainActivity) getActivity();
+        activity.setTitle(R.string.main_activity_title);
+        toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        mSwitch = (MaterialAnimatedSwitch) LayoutInflater.from(activity).inflate(R.layout.toolbar_switch, toolbar, false);
+        activity.addViewToToolbar(mSwitch);
 
         Firebase.setAndroidContext(getContext());
 
@@ -137,6 +146,8 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         if (xmlFragment != null) {
             fm.beginTransaction().remove(xmlFragment).commit();
         }
+
+        activity.removeViewFromToolbar(mSwitch);
 
         super.onDestroyView();
     }
