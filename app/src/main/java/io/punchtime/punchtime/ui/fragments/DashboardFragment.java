@@ -60,11 +60,11 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     private Location mLastLocation;
     private boolean connectedGoogleApi;
     private static Context context;
-    private Firebase fBase;
     private RecyclerView pulsesList;
     private MainActivity activity;
     private Toolbar toolbar;
     private MaterialAnimatedSwitch mSwitch;
+    private Firebase mRef;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -77,21 +77,14 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         // Defines the xml file for the fragment
         final View v = inflater.inflate(R.layout.fragment_dashboard, parent, false);
 
-
-
         activity = (MainActivity) getActivity();
         activity.setTitle(R.string.main_activity_title);
         toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         mSwitch = (MaterialAnimatedSwitch) LayoutInflater.from(activity).inflate(R.layout.toolbar_switch, toolbar, false);
         activity.addViewToToolbar(mSwitch);
 
-        Firebase.setAndroidContext(getContext());
-
         pulsesList =  (RecyclerView) v.findViewById(R.id.pulsesList);
         pulsesList.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // connect to firebase
-        fBase = new Firebase("https://scorching-inferno-1467.firebaseio.com/pulses");
 
         // get map fragment
         mMapFragment =  (SupportMapFragment)getChildFragmentManager()
@@ -114,8 +107,8 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                                 .position(latLng)
                                 .title("Marker"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-                        Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "android note",System.currentTimeMillis(),"google:116529723379255029542","-KBdSPf90dvJCeH3J8m7");
-                        fBase.push().setValue(pulse);
+                        Pulse pulse = new Pulse(latLng.latitude, latLng.longitude,"some note",System.currentTimeMillis(), "google:116529723379255029542","-KBdSPf90dvJCeH3J8m7", true);
+                        mRef.push().setValue(pulse);
                     }
                     else {
                         Snackbar.make(view, "Could not retrieve location", Snackbar.LENGTH_LONG)
@@ -126,6 +119,8 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         }
         return v;
     }
+
+
 
     // triggered soon after onCreateView
     // Any view setup should occur here.
@@ -174,11 +169,15 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         mGoogleApiClient.connect();
         super.onStart();
 
-        FirebaseRecyclerAdapter<Pulse, PulseViewHolder> mAdapter = new FirebaseRecyclerAdapter<Pulse, PulseViewHolder>(Pulse.class, android.R.layout.two_line_list_item, PulseViewHolder.class, fBase) {
+        mRef = activity.getFirebaseRef();
+
+        FirebaseRecyclerAdapter<Pulse, PulseViewHolder> mAdapter = new FirebaseRecyclerAdapter<Pulse, PulseViewHolder>(Pulse.class, android.R.layout.two_line_list_item, PulseViewHolder.class, mRef) {
             @Override
             protected void populateViewHolder(PulseViewHolder pulseViewHolder, Pulse pulse, int i) {
                 pulseViewHolder.nameText.setText("Checkin at Lat=" + pulse.getLatitude() + " Long=" + pulse.getLongitude());
-                pulseViewHolder.messageText.setText("By " + pulse.getEmployee() + "\nNote: " + pulse.getNote() + "\nStart: " + DateUtils.formatDateTime(context, pulse.getCheckin(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
+                pulseViewHolder.messageText.setText("By " + pulse.getEmployee() + "\nNote: " + pulse.getNote()
+                        + "\nStart: " + DateUtils.formatDateTime(context, pulse.getCheckin(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR)
+                        + "\nEnd: " + DateUtils.formatDateTime(context, pulse.getCheckout(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
             }
         };
 

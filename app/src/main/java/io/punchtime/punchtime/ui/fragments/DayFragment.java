@@ -21,6 +21,8 @@ public class DayFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_day, parent, false);
     }
 
+
+
     // triggered soon after onCreateView
     // Any view setup should occur here.
     @Override

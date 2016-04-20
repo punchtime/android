@@ -5,27 +5,37 @@ package io.punchtime.punchtime.data;
  */
 
 public class Pulse {
-    double latitude;
-    double longitude;
-    String note;
-    long checkin;
-    long checkout;
-    String type;
-    String employee;
-    String employer;
+    private double latitude;
+    private double longitude;
+    private String note;
+    private long checkin;
+    private long checkout;
+    private String employee;
+    private String employer;
+    private boolean confirmed;
 
     public Pulse() {}
 
-    public Pulse(double latitude, double longitude, String note, long checkin, String employee, String employer) {
+    public Pulse(double latitude, double longitude, String note, long checkin, long checkout, String employee, String employer, boolean confirmed) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.note = note;
+        this.checkin = checkin;
+        this.checkout = checkout;
+        this.employee = employee;
+        this.employer = employer;
+        this.confirmed = confirmed;
+    }
+
+    public Pulse(double latitude, double longitude, String note, long checkin, String employee, String employer, boolean confirmed) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.note = note;
         this.checkin = checkin;
         this.employee = employee;
         this.employer = employer;
+        this.confirmed = confirmed;
     }
-
-
 
     public double getLatitude() {
         return latitude;
@@ -38,20 +48,23 @@ public class Pulse {
         return note;
     }
 
-    public long getCheckin() {
-        return checkin;
-    }
-    public long getCheckout() {
-        return checkout;
-    }
-    public void setCheckout(long checkout) {
-        this.checkout = checkout;
-    }
-
     public String getEmployee() {
         return employee;
     }
+
     public String getEmployer() {
         return employer;
+    }
+
+    public long getCheckin() {
+        return checkin;
+    }
+
+    public long getCheckout() {
+        return checkout;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
     }
 }
