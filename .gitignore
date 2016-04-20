@@ -38,3 +38,5 @@ obj/
 #API keys
 app/src/main/res/values/api_keys.xml
 
+#google OAuth key
+app/google-services.json

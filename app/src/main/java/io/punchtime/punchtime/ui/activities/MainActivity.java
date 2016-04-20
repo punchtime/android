@@ -11,10 +11,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.ui.auth.core.AuthProviderType;
+import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
+import com.firebase.ui.auth.core.FirebaseLoginError;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
@@ -25,12 +33,13 @@ import io.punchtime.punchtime.ui.fragments.SettingsFragment;
 import io.punchtime.punchtime.ui.fragments.ThreeDayFragment;
 import io.punchtime.punchtime.ui.fragments.WeekFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FirebaseLoginBaseActivity {
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
     private AppBarLayout appBar;
+    private Firebase mRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
+        Firebase.setAndroidContext(this);
+
+        // connect to firebase
+        mRef = new Firebase("https://scorching-inferno-1467.firebaseio.com/pulses");
+
         // set default view as dashboard
         if (savedInstanceState == null) {
             Fragment fragment = null;
@@ -62,6 +76,19 @@ public class MainActivity extends AppCompatActivity {
             }
             setFragment(fragment);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // All providers are optional! Remove any you don't want.
+        setEnabledAuthProvider(AuthProviderType.FACEBOOK);
+        setEnabledAuthProvider(AuthProviderType.TWITTER);
+        setEnabledAuthProvider(AuthProviderType.GOOGLE);
+        setEnabledAuthProvider(AuthProviderType.PASSWORD);
+
+        showFirebaseLoginPrompt();
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -184,5 +211,31 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onFirebaseLoggedIn(AuthData authData) {
+        Toast.makeText(MainActivity.this, "login using " + authData.getProvider() +  " was succesful", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onFirebaseLoggedOut() {
+        Toast.makeText(MainActivity.this, "Logged out", Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public Firebase getFirebaseRef() {
+        return mRef;
+    }
+
+    @Override
+    protected void onFirebaseLoginProviderError(FirebaseLoginError firebaseLoginError) {
+        Log.d("blah", firebaseLoginError.message);
+        Toast.makeText(MainActivity.this, firebaseLoginError.message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
+        Log.d("blah", firebaseLoginError.message);
+        Toast.makeText(MainActivity.this, firebaseLoginError.message, Toast.LENGTH_LONG).show();
     }
 }
