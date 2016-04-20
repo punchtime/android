@@ -14,7 +14,7 @@ It uses Firebase to communicate the location of an employee when he arrives at a
 
 ## Building it yourself
 
-* fill in valid API keys in [app/src/main/values/api_keys.xml](app/src/main/values/api_keys.xml) for
+* fill in valid API keys in [app/src/main/values/api_keys.xml](app/src/main/values/api_keys.xml) like [app/src/main/values/api_keys.example.xml](app/src/main/values/api_keys.example.xml) for:
     * google maps
     * google oAuth
     * facebook oAuth
