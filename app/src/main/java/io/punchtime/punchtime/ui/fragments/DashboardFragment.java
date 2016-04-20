@@ -114,6 +114,8 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                                 .position(latLng)
                                 .title("Marker"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+                        Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "",(long)System.currentTimeMillis(),"checkin","google:116529723379255029542","-KBdSPf90dvJCeH3J8m7");
+                        fBase.push().setValue(pulse);
                     }
                     else {
                         Snackbar.make(view, "Could not retrieve location", Snackbar.LENGTH_LONG)
