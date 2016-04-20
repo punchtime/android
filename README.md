@@ -12,6 +12,14 @@ By [Haroen Viaene](https://haroen.me), [Elias Meire](http://eliasmei.re) and [Ar
 
 It uses Firebase to communicate the location of an employee when he arrives at a location he works at (i.e. an electrician). This is then used to calculate the amount of hours the employee worked, and also how much the clients should pay for offered services.
 
+## Building it yourself
+
+* fill in valid API keys in [app/src/main/values/api_keys.xml](app/src/main/values/api_keys.xml) for
+    * google maps
+    * google oAuth
+    * facebook oAuth
+    * twitter oAuth
+
 ## related
 
 - [organisation](https://github.com/punchtime/organisation)
