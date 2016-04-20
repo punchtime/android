@@ -64,7 +64,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         Firebase.setAndroidContext(this);
 
         // connect to firebase
-        mRef = new Firebase("https://scorching-inferno-1467.firebaseio.com/pulses");
+        mRef = new Firebase( getString(R.string.firebase_url) + "/pulses");
 
         // set default view as dashboard
         if (savedInstanceState == null) {
