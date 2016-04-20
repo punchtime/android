@@ -114,7 +114,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                                 .position(latLng)
                                 .title("Marker"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-                        Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "",(long)System.currentTimeMillis(),"checkin","google:116529723379255029542","-KBdSPf90dvJCeH3J8m7");
+                        Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "android note",System.currentTimeMillis(),"google:116529723379255029542","-KBdSPf90dvJCeH3J8m7");
                         fBase.push().setValue(pulse);
                     }
                     else {
@@ -178,7 +178,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
             @Override
             protected void populateViewHolder(PulseViewHolder pulseViewHolder, Pulse pulse, int i) {
                 pulseViewHolder.nameText.setText("Checkin at Lat=" + pulse.getLatitude() + " Long=" + pulse.getLongitude());
-                pulseViewHolder.messageText.setText("By " + pulse.getEmployee() + "\nNote: " + pulse.getNote() + "\nTime: " + DateUtils.formatDateTime(context, pulse.getTime(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
+                pulseViewHolder.messageText.setText("By " + pulse.getEmployee() + "\nNote: " + pulse.getNote() + "\nStart: " + DateUtils.formatDateTime(context, pulse.getCheckin(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
             }
         };
 

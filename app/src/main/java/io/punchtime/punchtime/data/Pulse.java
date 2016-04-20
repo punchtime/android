@@ -8,27 +8,28 @@ public class Pulse {
     double latitude;
     double longitude;
     String note;
-    long time;
+    long checkin;
+    long checkout;
     String type;
     String employee;
     String employer;
 
     public Pulse() {}
 
-    public Pulse(double latitude, double longitude, String note, long time, String type, String employee, String employer) {
+    public Pulse(double latitude, double longitude, String note, long checkin, String employee, String employer) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.note = note;
-        this.time = time;
-        this.type = type;
+        this.checkin = checkin;
         this.employee = employee;
         this.employer = employer;
     }
 
+
+
     public double getLatitude() {
         return latitude;
     }
-
     public double getLongitude() {
         return longitude;
     }
@@ -37,12 +38,14 @@ public class Pulse {
         return note;
     }
 
-    public long getTime() {
-        return time;
+    public long getCheckin() {
+        return checkin;
     }
-
-    public String getType() {
-        return type;
+    public long getCheckout() {
+        return checkout;
+    }
+    public void setCheckout(long checkout) {
+        this.checkout = checkout;
     }
 
     public String getEmployee() {
