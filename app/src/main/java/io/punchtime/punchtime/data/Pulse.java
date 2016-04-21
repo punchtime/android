@@ -32,6 +32,7 @@ public class Pulse {
         this.longitude = longitude;
         this.note = note;
         this.checkin = checkin;
+        this.checkout = 0;
         this.employee = employee;
         this.employer = employer;
         this.confirmed = confirmed;
