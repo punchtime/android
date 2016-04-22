@@ -43,4 +43,5 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'org.twitter4j:twitter4j-core:4.0.2'
+    compile 'com.github.alamkanak:android-week-view:1.2.6'
 }
