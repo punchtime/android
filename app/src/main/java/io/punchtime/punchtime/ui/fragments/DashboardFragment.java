@@ -117,6 +117,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                 }
             });
         }
+
         return v;
     }
 
