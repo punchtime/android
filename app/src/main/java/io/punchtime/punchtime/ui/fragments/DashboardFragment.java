@@ -64,7 +64,10 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     private MainActivity activity;
     private Toolbar toolbar;
     private MaterialAnimatedSwitch mSwitch;
+    private boolean trackingLocationMode;
+    private boolean trackingLocation;
     private Firebase mRef;
+    private FloatingActionButton fab;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -83,6 +86,13 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         mSwitch = (MaterialAnimatedSwitch) LayoutInflater.from(activity).inflate(R.layout.toolbar_switch, toolbar, false);
         activity.addViewToToolbar(mSwitch);
 
+        mSwitch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(boolean b) {
+                setTrackingLocationMode(b);
+            }
+        });
+
         pulsesList =  (RecyclerView) v.findViewById(R.id.pulsesList);
         pulsesList.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -91,32 +101,37 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
 
-        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+        fab = (FloatingActionButton) v.findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getLocation();
-                    if(mLastLocation != null) {
-                        Snackbar.make(view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                        // gets current location, adds a marker, and changes the camera
-                        LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    if (trackingLocationMode) {
+                        setTrackingLocation(!trackingLocation);
+                    } else {
+                        getLocation();
+                        if (mLastLocation != null) {
+                            Snackbar.make(view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                            // gets current location, adds a marker, and changes the camera
+                            LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title("Marker"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-                        Pulse pulse = new Pulse(latLng.latitude, latLng.longitude,"some note",System.currentTimeMillis(), "google:116529723379255029542","-KBdSPf90dvJCeH3J8m7", true);
-                        mRef.push().setValue(pulse);
-                    }
-                    else {
-                        Snackbar.make(view, "Could not retrieve location", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .title("Marker"));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+                            Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "some note", System.currentTimeMillis(), "google:116529723379255029542", "-KBdSPf90dvJCeH3J8m7", true);
+                            mRef.push().setValue(pulse);
+                        } else {
+                            Snackbar.make(view, "Could not retrieve location", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
                     }
                 }
             });
         }
+
+        setTrackingLocationMode(false);
         return v;
     }
 
@@ -256,6 +271,29 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
 
             // other 'case' lines to check for other
             // permissions this app might request
+        }
+    }
+
+    public void setTrackingLocationMode(boolean b) {
+        this.trackingLocationMode = b;
+
+        if (trackingLocationMode) {
+            setTrackingLocation(false);
+        } else {
+            fab.setImageResource(R.drawable.ic_pin_drop_24dp);
+            setTrackingLocation(false);
+        }
+
+    }
+
+    public void setTrackingLocation(boolean trackingLocation) {
+        this.trackingLocation = trackingLocation;
+        if (trackingLocationMode) {
+            if(trackingLocation) {
+                fab.setImageResource(R.drawable.ic_stop_black);
+            } else {
+                fab.setImageResource(R.drawable.ic_play_arrow_black);
+            }
         }
     }
 

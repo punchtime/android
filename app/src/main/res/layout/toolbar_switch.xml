@@ -9,7 +9,7 @@
     android:layout_margin="16dp"
     app:base_release_color="@color/colorPrimaryDark"
     app:base_press_color="@color/colorPrimaryDark"
-    app:ball_release_color="@color/colorAccent"
-    app:ball_press_color="@color/colorPrimaryDark"
+    app:ball_release_color="@color/colorPrimaryDark"
+    app:ball_press_color="@color/colorAccent"
     app:icon_release="@drawable/ic_tracking"
     app:icon_press="@drawable/ic_tracking" />
