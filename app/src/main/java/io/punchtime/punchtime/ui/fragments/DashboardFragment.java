@@ -130,7 +130,6 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                 }
             });
         }
-
         setTrackingLocationMode(false);
         return v;
     }

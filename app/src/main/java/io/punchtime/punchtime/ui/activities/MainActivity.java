@@ -1,21 +1,28 @@
 package io.punchtime.punchtime.ui.activities;
 
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
@@ -24,14 +31,11 @@ import com.firebase.ui.auth.core.AuthProviderType;
 import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
 import com.firebase.ui.auth.core.FirebaseLoginError;
 
+import io.punchtime.punchtime.DownloadImageTask;
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
-import io.punchtime.punchtime.ui.fragments.DayFragment;
 import io.punchtime.punchtime.ui.fragments.HistoryFragment;
-import io.punchtime.punchtime.ui.fragments.MonthFragment;
 import io.punchtime.punchtime.ui.fragments.SettingsFragment;
-import io.punchtime.punchtime.ui.fragments.ThreeDayFragment;
-import io.punchtime.punchtime.ui.fragments.WeekFragment;
 
 public class MainActivity extends FirebaseLoginBaseActivity {
 
@@ -40,6 +44,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     private ActionBarDrawerToggle drawerToggle;
     private AppBarLayout appBar;
     private Firebase mRef;
+    private View headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         // find our drawer view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
         setupDrawerContent(navigationView);
 
         Firebase.setAndroidContext(this);
@@ -76,6 +82,24 @@ public class MainActivity extends FirebaseLoginBaseActivity {
             }
             setFragment(fragment);
         }
+
+        View navHeader = headerView.findViewById(R.id.nav_header);
+            navHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "header clicked", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(getString(R.string.logout_dialog_title))
+                        .setMessage(getString(R.string.logout_dialog_message))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                    logout();
+                                    mDrawer.closeDrawer(GravityCompat.START);
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+            }
+        });
     }
 
     @Override
@@ -87,8 +111,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         setEnabledAuthProvider(AuthProviderType.TWITTER);
         setEnabledAuthProvider(AuthProviderType.GOOGLE);
         setEnabledAuthProvider(AuthProviderType.PASSWORD);
-
-        showFirebaseLoginPrompt();
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -215,12 +237,34 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
-        Toast.makeText(MainActivity.this, "login using " + authData.getProvider() +  " was succesful", Toast.LENGTH_LONG).show();
+        TextView mail = (TextView) headerView.findViewById(R.id.userMail);
+        TextView name = (TextView) headerView.findViewById(R.id.userName);
+        ImageView pic = (ImageView) headerView.findViewById(R.id.imageView);
+
+        if (authData.getProvider().equals("password")) {
+            name.setText(authData.getProviderData().get("email").toString());
+            mail.setText("");
+        }
+        else if (authData.getProvider().equals("facebook")) {
+            name.setText(authData.getProviderData().get("displayName").toString());
+            mail.setText("Logged in with Facebook");
+        }
+        else if (authData.getProvider().equals("twitter")) {
+            name.setText(authData.getProviderData().get("displayName").toString());
+            mail.setText("Logged in with Twitter");
+        }
+        else {
+            name.setText(authData.getProviderData().get("displayName").toString());
+            mail.setText(authData.getProviderData().get("email").toString());
+        }
+
+        new DownloadImageTask(pic)
+                .execute(authData.getProviderData().get("profileImageURL").toString());
     }
 
     @Override
     public void onFirebaseLoggedOut() {
-        Toast.makeText(MainActivity.this, "Logged out", Toast.LENGTH_LONG).show();
+        showFirebaseLoginPrompt();
     }
     @Override
     public Firebase getFirebaseRef() {
