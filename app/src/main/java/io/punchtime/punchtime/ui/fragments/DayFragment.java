@@ -83,7 +83,7 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
         endTime.add(Calendar.HOUR,1);
         endTime.set(Calendar.MONTH,newMonth-1);
         WeekViewEvent event=new WeekViewEvent(1,getEventTitle(startTime),startTime,endTime);
-        event.setColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+        event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
         events.add(event);
 
         return events;

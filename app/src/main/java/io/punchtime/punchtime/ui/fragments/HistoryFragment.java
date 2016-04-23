@@ -49,9 +49,6 @@ public class HistoryFragment extends Fragment {
                 case R.id.nav_week:
                     viewPager.setCurrentItem(2);
                     break;
-                case R.id.nav_month:
-                    viewPager.setCurrentItem(3);
-                    break;
             }
         }
 
@@ -76,7 +73,6 @@ public class HistoryFragment extends Fragment {
         adapter.addFragment(new DayFragment(), getString(R.string.menu_day));
         adapter.addFragment(new ThreeDayFragment(), getString(R.string.menu_3_day));
         adapter.addFragment(new WeekFragment(), getString(R.string.menu_week));
-        adapter.addFragment(new MonthFragment(), getString(R.string.menu_month));
         viewPager.setAdapter(adapter);
     }
 
