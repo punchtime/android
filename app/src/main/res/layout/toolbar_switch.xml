@@ -11,5 +11,5 @@
     app:base_press_color="@color/colorPrimaryDark"
     app:ball_release_color="@color/colorPrimaryDark"
     app:ball_press_color="@color/colorAccent"
-    app:icon_release="@drawable/ic_tracking"
-    app:icon_press="@drawable/ic_tracking" />
+    app:icon_release="@drawable/ic_navigation_white_24dp"
+    app:icon_press="@drawable/ic_near_me_black_24dp" />
