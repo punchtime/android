@@ -1,4 +1,4 @@
-package io.punchtime.punchtime.ui.custom;
+package io.punchtime.punchtime.ui.views;
 
 /**
  * Created by Arnaud on 4/22/2016.
