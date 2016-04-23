@@ -25,22 +25,20 @@
             map:liteMode="true"
             />
 
-        <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="-29dp"
-                android:layout_marginTop="-29dp"
-                android:layout_gravity="bottom|end"
-                android:clickable="true"
-                android:src="@drawable/ic_pin_drop_24dp"/>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pulsesList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/map"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:src="@drawable/ic_pin_drop_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
