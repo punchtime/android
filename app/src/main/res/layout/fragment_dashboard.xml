@@ -10,142 +10,146 @@
     tools:context=".ui.activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
+    <fragment
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/map_height"
+        android:layout_weight="0.3"
+        android:layout_gravity="top"
+        map:cameraZoom="13"
+        map:mapType="normal"
+        map:liteMode="true"
+        />
+
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <fragment
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/map_height"
-            map:cameraZoom="13"
-            map:mapType="normal"
-            map:liteMode="true"
-            />
-
-        <android.support.v7.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:baselineAligned="false">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="0.5"
-                        android:padding="@dimen/fab_margin"
-                        android:paddingTop="20dp"
-                        android:background="@drawable/border_right">
-                        <android.support.v7.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="20sp"
-                            android:text="@string/time_today_title"/>
-                        <android.support.v7.widget.AppCompatTextView
-                            android:id="@+id/timeToday"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="14sp"
-                            android:text="@string/time_today_content"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="0.5"
-                        android:padding="@dimen/fab_margin">
-                        <android.support.v7.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="20sp"
-                            android:text="@string/time_here_title"/>
-                        <android.support.v7.widget.AppCompatTextView
-                            android:id="@+id/timeHere"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="14sp"
-                            android:text="@string/time_here_content"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-        </android.support.v7.widget.LinearLayoutCompat>
-
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorPrimary"
-            android:layout_margin="8dp">
-
+        android:layout_weight="0.25"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/time_here_title"
-                    android:background="@color/colorPrimaryDark"
-                    android:textColor="#FFFFFF"
-                    android:alpha="0.7"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"/>
-
+                android:orientation="horizontal"
+                android:baselineAligned="false">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/fab_margin">
-
-                    <TextView
+                    android:layout_weight="0.5"
+                    android:background="@drawable/border_right">
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Oudeheerweg 13"
+                        android:textSize="14sp"
+                        android:alpha="0.87"
+                        android:gravity="center"
+                        android:text="@string/time_today_title"/>
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/timeToday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:textSize="20sp"
-                        android:textColor="#FFFFFF"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Sint-Denijs-Westrem, Belgium"
-                        android:alpha="0.7"
-                        android:textColor="@color/cardview_light_background"/>
+                        android:gravity="center"
+                        android:text="@string/time_today_content"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp">
-
-                    <Button
-                        android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="0.5">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_a_note"
-                        style="?attr/borderlessButtonStyle"
-                        android:textColor="@color/colorAccent" />
-
-                    <Button
-                        android:layout_width="wrap_content"
+                        android:textSize="14sp"
+                        android:alpha="0.87"
+                        android:textAlignment="center"
+                        android:text="@string/time_here_title"/>
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/timeHere"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Show on map"
-                        style="?attr/borderlessButtonStyle"
-                        android:textColor="@color/colorAccent" />
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:text="@string/time_here_content"/>
                 </LinearLayout>
             </LinearLayout>
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimary"
+        android:layout_margin="8dp"
+        android:layout_weight="0.45"
+        android:layout_gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/time_here_title"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="#FFFFFF"
+                android:alpha="0.7"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/fab_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Oudeheerweg 13"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sint-Denijs-Westrem, Belgium"
+                    android:alpha="0.7"
+                    android:textColor="@color/cardview_light_background"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_a_note"
+                    style="?attr/borderlessButtonStyle"
+                    android:textColor="@color/colorAccent" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Show on map"
+                    style="?attr/borderlessButtonStyle"
+                    android:textColor="@color/colorAccent" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
