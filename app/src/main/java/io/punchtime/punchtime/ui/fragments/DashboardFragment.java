@@ -93,8 +93,8 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
             }
         });
 
-        pulsesList =  (RecyclerView) v.findViewById(R.id.pulsesList);
-        pulsesList.setLayoutManager(new LinearLayoutManager(getContext()));
+//        pulsesList =  (RecyclerView) v.findViewById(R.id.pulsesList);
+//        pulsesList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // get map fragment
         mMapFragment =  (SupportMapFragment)getChildFragmentManager()
@@ -185,17 +185,17 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
 
         mRef = activity.getFirebaseRef();
 
-        FirebaseRecyclerAdapter<Pulse, PulseViewHolder> mAdapter = new FirebaseRecyclerAdapter<Pulse, PulseViewHolder>(Pulse.class, android.R.layout.two_line_list_item, PulseViewHolder.class, mRef) {
-            @Override
-            protected void populateViewHolder(PulseViewHolder pulseViewHolder, Pulse pulse, int i) {
-                pulseViewHolder.nameText.setText("Checkin at Lat=" + pulse.getLatitude() + " Long=" + pulse.getLongitude());
-                pulseViewHolder.messageText.setText("By " + pulse.getEmployee() + "\nNote: " + pulse.getNote()
-                        + "\nStart: " + DateUtils.formatDateTime(context, pulse.getCheckin(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR)
-                        + "\nEnd: " + DateUtils.formatDateTime(context, pulse.getCheckout(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
-            }
-        };
-
-        pulsesList.setAdapter(mAdapter);
+//        FirebaseRecyclerAdapter<Pulse, PulseViewHolder> mAdapter = new FirebaseRecyclerAdapter<Pulse, PulseViewHolder>(Pulse.class, android.R.layout.two_line_list_item, PulseViewHolder.class, mRef) {
+//            @Override
+//            protected void populateViewHolder(PulseViewHolder pulseViewHolder, Pulse pulse, int i) {
+//                pulseViewHolder.nameText.setText("Checkin at Lat=" + pulse.getLatitude() + " Long=" + pulse.getLongitude());
+//                pulseViewHolder.messageText.setText("By " + pulse.getEmployee() + "\nNote: " + pulse.getNote()
+//                        + "\nStart: " + DateUtils.formatDateTime(context, pulse.getCheckin(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR)
+//                        + "\nEnd: " + DateUtils.formatDateTime(context, pulse.getCheckout(), DateUtils.FORMAT_SHOW_TIME + DateUtils.FORMAT_SHOW_DATE + DateUtils.FORMAT_SHOW_YEAR));
+//            }
+//        };
+//
+//        pulsesList.setAdapter(mAdapter);
     }
 
     public void onStop() {
