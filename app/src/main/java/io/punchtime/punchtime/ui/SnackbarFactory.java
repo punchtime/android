@@ -19,7 +19,7 @@ public class SnackbarFactory {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
         snackbar.setActionTextColor(context.getResources().getColor(R.color.colorAccent));
         ViewGroup group = (ViewGroup) snackbar.getView();
-        group.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+        group.setBackgroundColor(context.getResources().getColor(R.color.colorPrimaryDark));
 
         return snackbar;
     }
