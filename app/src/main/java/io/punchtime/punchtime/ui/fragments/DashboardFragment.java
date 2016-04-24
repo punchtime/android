@@ -44,6 +44,7 @@ import java.util.TooManyListenersException;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
+import io.punchtime.punchtime.ui.SnackbarFactory;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
@@ -111,8 +112,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                     } else {
                         getLocation();
                         if (mLastLocation != null) {
-                            Snackbar.make(view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                            SnackbarFactory.createSnackbar(getContext(), view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude()).show();
                             // gets current location, adds a marker, and changes the camera
                             LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
@@ -123,8 +123,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                             Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "some note", System.currentTimeMillis(), "google:116529723379255029542", "-KBdSPf90dvJCeH3J8m7", true);
                             mRef.push().setValue(pulse);
                         } else {
-                            Snackbar.make(view, "Could not retrieve location", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                            SnackbarFactory.createSnackbar(getContext(), view, "Could not retrieve location").show();
                         }
                     }
                 }
