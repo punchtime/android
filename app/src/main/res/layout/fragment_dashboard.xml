@@ -39,8 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/border_right">
+                    android:layout_weight="0.5">
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -56,6 +55,10 @@
                         android:gravity="center"
                         android:text="@string/time_today_content"/>
                 </LinearLayout>
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/listDivider"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
