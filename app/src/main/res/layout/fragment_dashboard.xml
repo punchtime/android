@@ -25,6 +25,60 @@
             map:liteMode="true"
             />
 
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="0.5"
+                        android:padding="@dimen/fab_margin"
+                        android:paddingTop="20dp"
+                        android:background="@drawable/border_right">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:text="@string/time_today_title"/>
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/timeToday"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="@string/time_today_content"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="0.5"
+                        android:padding="@dimen/fab_margin">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:text="@string/time_here_title"/>
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/timeHere"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="@string/time_here_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+        </android.support.v7.widget.LinearLayoutCompat>
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pulsesList"
             android:layout_width="wrap_content"
@@ -40,5 +94,10 @@
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:src="@drawable/ic_pin_drop_24dp"/>
+
+    <android.support.design.widget.VisibilityAwareImageButton
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
 
 </android.support.design.widget.CoordinatorLayout>
