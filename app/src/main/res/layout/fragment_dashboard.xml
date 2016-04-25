@@ -101,7 +101,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/time_here_title"
+                android:text="@string/last_checkin"
                 android:background="@color/colorPrimaryDark"
                 android:textColor="#FFFFFF"
                 android:alpha="0.7"

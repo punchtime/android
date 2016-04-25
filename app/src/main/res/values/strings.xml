@@ -6,8 +6,8 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="placeholder_email">test@punchtime.io</string>
-    <string name="placeholder_user">Punchtime User</string>
+    <string name="placeholder_email">Press here to go to settings</string>
+    <string name="placeholder_user">Not logged in</string>
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_history">History</string>
     <string name="menu_day">Day</string>
@@ -20,5 +20,11 @@
     <string name="time_here_title">Current location</string>
     <string name="time_today_content">0m</string>
     <string name="time_here_content">0m</string>
+    <string name="last_checkin">Last checkin</string>
     <string name="add_a_note">Add a note</string>
+    <string name="account">Account</string>
+    <string name="logged_in_summary">"Logged in, tap to logout"</string>
+    <string name="not_logged_in_summary">"Not logged in, tap to login"</string>
+    <string name="location_mode_summary">"This option will automatically check you in and out based on location data"</string>
+    <string name="location_mode_title">"Automatic location tracking"</string>
 </resources>

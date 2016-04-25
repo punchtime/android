@@ -2,8 +2,10 @@ package io.punchtime.punchtime.ui.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +27,7 @@ import android.view.ViewGroup;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.ui.FirebaseRecyclerAdapter;
@@ -54,7 +58,6 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         CompoundButton.OnCheckedChangeListener {
-    private static View view;
     private GoogleApiClient mGoogleApiClient;
     private SupportMapFragment mMapFragment;
     private GoogleMap mMap;
@@ -65,10 +68,9 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     private MainActivity activity;
     private Toolbar toolbar;
     private MaterialAnimatedSwitch mSwitch;
-    private boolean trackingLocationMode;
-    private boolean trackingLocation;
     private Firebase mRef;
     private FloatingActionButton fab;
+    private SharedPreferences preferences;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -103,12 +105,15 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         mMapFragment.getMapAsync(this);
 
         fab = (FloatingActionButton) v.findViewById(R.id.fab);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (trackingLocationMode) {
-                        setTrackingLocation(!trackingLocation);
+                    if (preferences.getBoolean("tracking_location_mode", false)) {
+                        setTrackingLocation(!preferences.getBoolean("tracking_location", false));
                     } else {
                         getLocation();
                         if (mLastLocation != null) {
@@ -129,7 +134,6 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                 }
             });
         }
-        setTrackingLocationMode(false);
         return v;
     }
 
@@ -183,6 +187,19 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         super.onStart();
 
         mRef = activity.getFirebaseRef();
+
+        boolean trackingLocationMode = preferences.getBoolean("tracking_location_mode", false);
+        if(trackingLocationMode) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mSwitch.toggle();
+                }
+            }, 10);
+        }
+        Toast.makeText(activity, trackingLocationMode + "", Toast.LENGTH_SHORT).show();
+        setTrackingLocationMode(trackingLocationMode);
 
 //        FirebaseRecyclerAdapter<Pulse, PulseViewHolder> mAdapter = new FirebaseRecyclerAdapter<Pulse, PulseViewHolder>(Pulse.class, android.R.layout.two_line_list_item, PulseViewHolder.class, mRef) {
 //            @Override
@@ -273,9 +290,9 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     }
 
     public void setTrackingLocationMode(boolean b) {
-        this.trackingLocationMode = b;
+        preferences.edit().putBoolean("tracking_location_mode", b).apply();
 
-        if (trackingLocationMode) {
+        if (b) {
             setTrackingLocation(false);
         } else {
             fab.setImageResource(R.drawable.ic_pin_drop_24dp);
@@ -285,8 +302,8 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     }
 
     public void setTrackingLocation(boolean trackingLocation) {
-        this.trackingLocation = trackingLocation;
-        if (trackingLocationMode) {
+        preferences.edit().putBoolean("tracking_location", trackingLocation).apply();
+        if (preferences.getBoolean("tracking_location_mode", false)) {
             if(trackingLocation) {
                 fab.setImageResource(R.drawable.ic_stop_black);
             } else {

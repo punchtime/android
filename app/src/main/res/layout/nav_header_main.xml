@@ -18,16 +18,13 @@
         android:id="@+id/imageView"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:scaleType="centerInside"
-        android:adjustViewBounds="true"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@android:drawable/sym_def_app_icon" />
 
     <TextView
         android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:paddingTop="8dp"
         android:text="@string/placeholder_user"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 

@@ -1,6 +1,7 @@
 package io.punchtime.punchtime.ui.activities;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -45,9 +47,11 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     private AppBarLayout appBar;
     private Firebase mRef;
     private View headerView;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -69,6 +73,8 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         Firebase.setAndroidContext(this);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         // connect to firebase
         mRef = new Firebase( getString(R.string.firebase_url) + "/pulses");
 
@@ -87,17 +93,8 @@ public class MainActivity extends FirebaseLoginBaseActivity {
             navHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "header clicked", Toast.LENGTH_LONG).show();
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(getString(R.string.logout_dialog_title))
-                        .setMessage(getString(R.string.logout_dialog_message))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                    logout();
-                                    mDrawer.closeDrawer(GravityCompat.START);
-                            }})
-                        .setNegativeButton(android.R.string.no, null).show();
+                setFragment(new SettingsFragment());
+                mDrawer.closeDrawer(GravityCompat.START);
             }
         });
     }
@@ -193,11 +190,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 args.putInt("fragment",R.id.nav_week);
                 fragment.setArguments(args);
                 break;
-            case R.id.nav_month:
-                fragment = new HistoryFragment();
-                args.putInt("fragment",R.id.nav_month);
-                fragment.setArguments(args);
-                break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
                 break;
@@ -237,6 +229,8 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
+        preferences.edit().putBoolean("logged_in", true).apply();
+
         TextView mail = (TextView) headerView.findViewById(R.id.userMail);
         TextView name = (TextView) headerView.findViewById(R.id.userName);
         ImageView pic = (ImageView) headerView.findViewById(R.id.imageView);
@@ -264,7 +258,11 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedOut() {
-        showFirebaseLoginPrompt();
+        ((TextView) headerView.findViewById(R.id.userName)).setText(R.string.placeholder_user);
+        ((TextView) headerView.findViewById(R.id.userMail)).setText(R.string.placeholder_email);
+        ((ImageView) headerView.findViewById(R.id.imageView)).setImageDrawable(getResources().getDrawable(android.R.drawable.sym_def_app_icon));
+
+        preferences.edit().putBoolean("logged_in", false).apply();
     }
     @Override
     public Firebase getFirebaseRef() {

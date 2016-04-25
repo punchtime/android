@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:theme="@style/AppTheme">
+
+    <android.support.v7.preference.Preference
+        android:key="pref_key_account"
+        android:summary="@string/not_logged_in_summary"
+        android:title="@string/account" />
+
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="tracking_location_mode"
+        android:summary="@string/location_mode_summary"
+        android:title="@string/location_mode_title" />
+</android.support.v7.preference.PreferenceScreen>
