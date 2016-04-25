@@ -23,10 +23,6 @@
                     android:id="@+id/nav_week"
                     android:icon="@drawable/ic_view_week"
                     android:title="@string/menu_week" />
-                <item
-                    android:id="@+id/nav_month"
-                    android:icon="@drawable/ic_view_month"
-                    android:title="@string/menu_month" />
             </group>
         </menu>
     </item>
