@@ -1,25 +1,17 @@
 package io.punchtime.punchtime.ui.activities;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +24,9 @@ import com.firebase.client.Firebase;
 import com.firebase.ui.auth.core.AuthProviderType;
 import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
 import com.firebase.ui.auth.core.FirebaseLoginError;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.punchtime.punchtime.DownloadImageTask;
 import io.punchtime.punchtime.R;
@@ -162,16 +157,12 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // open or close the drawer
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     public boolean selectDrawerItem(MenuItem item) {
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
+        Fragment fragment;
         Bundle args = new Bundle();
         switch (item.getItemId()) {
             case R.id.nav_dashboard:
@@ -229,6 +220,15 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
+        // Authentication just completed successfully :)
+        Map<String, String> map = new HashMap<>();
+        map.put("provider", authData.getProvider());
+        if(authData.getProviderData().containsKey("displayName")) {
+            map.put("displayName", authData.getProviderData().get("displayName").toString());
+        }
+        mRef.child("users").child(authData.getUid()).setValue(map);
+
+
         preferences.edit().putBoolean("logged_in", true).apply();
 
         TextView mail = (TextView) headerView.findViewById(R.id.userMail);
@@ -241,11 +241,11 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         }
         else if (authData.getProvider().equals("facebook")) {
             name.setText(authData.getProviderData().get("displayName").toString());
-            mail.setText("Logged in with Facebook");
+            mail.setText(R.string.logged_in_facebook);
         }
         else if (authData.getProvider().equals("twitter")) {
             name.setText(authData.getProviderData().get("displayName").toString());
-            mail.setText("Logged in with Twitter");
+            mail.setText(R.string.logged_in_twitter);
         }
         else {
             name.setText(authData.getProviderData().get("displayName").toString());
@@ -271,13 +271,11 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     protected void onFirebaseLoginProviderError(FirebaseLoginError firebaseLoginError) {
-        Log.d("blah", firebaseLoginError.message);
         Toast.makeText(MainActivity.this, firebaseLoginError.message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
-        Log.d("blah", firebaseLoginError.message);
         Toast.makeText(MainActivity.this, firebaseLoginError.message, Toast.LENGTH_LONG).show();
     }
 }

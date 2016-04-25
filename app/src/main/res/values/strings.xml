@@ -27,4 +27,6 @@
     <string name="not_logged_in_summary">"Not logged in, tap to login"</string>
     <string name="location_mode_summary">"This option will automatically check you in and out based on location data"</string>
     <string name="location_mode_title">"Automatic location tracking"</string>
+    <string name="logged_in_facebook">Logged in with Facebook</string>
+    <string name="logged_in_twitter">Logged in with Twitter</string>
 </resources>
