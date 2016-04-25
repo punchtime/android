@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Punchtime</string>
+    <string name="main_activity_title">Dashboard</string>
+
+    <string name="drawer_open">Open navigatiemenu</string>
+    <string name="drawer_close">Sluit navigatiemenu</string>
+
+    <string name="action_settings">Instellingen</string>
+    <string name="placeholder_email">test@punchtime.io</string>
+    <string name="placeholder_user">Punchtime Gebruiker</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="menu_history">Geschiedenis</string>
+    <string name="menu_day">Dag</string>
+    <string name="menu_3_day">3 Dagen</string>
+    <string name="menu_week">Week</string>
+    <string name="settings">Instellingen</string>
+    <string name="logout_dialog_message">Wilt u zeker uitloggen? U zal zich opnieuw moeten inloggen om de app verder te gebruiken</string>
+    <string name="logout_dialog_title">Log uit</string>
+    <string name="time_today_title">Vandaag</string>
+    <string name="time_here_title">Huidige locatie</string>
+    <string name="time_today_content">0m</string>
+    <string name="time_here_content">0m</string>
+    <string name="add_a_note">Voeg een opmerking toe</string>
+</resources>
