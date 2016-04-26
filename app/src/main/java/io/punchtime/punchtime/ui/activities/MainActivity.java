@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.firebase.ui.auth.core.AuthProviderType;
 import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
 import com.firebase.ui.auth.core.FirebaseLoginError;
@@ -34,6 +38,7 @@ import java.util.Map;
 
 import io.punchtime.punchtime.DownloadImageTask;
 import io.punchtime.punchtime.R;
+import io.punchtime.punchtime.data.Pulse;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
 import io.punchtime.punchtime.ui.fragments.HistoryFragment;
 import io.punchtime.punchtime.ui.fragments.SettingsFragment;
@@ -48,6 +53,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     private View headerView;
     private SharedPreferences preferences;
     private NavigationView navigationView;
+    private Pulse lastPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +82,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // connect to firebase
-        mRef = new Firebase( getString(R.string.firebase_url) + "/pulses");
+        mRef = new Firebase( getString(R.string.firebase_url));
 
         // set default view as dashboard
         if (savedInstanceState == null) {
@@ -209,7 +215,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         return true;
     }
 
-    private void setFragment(Fragment fragment) {
+    public void setFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
     }
@@ -231,18 +237,20 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     }
 
     @Override
-    public void onFirebaseLoggedIn(AuthData authData) {
+    public void onFirebaseLoggedIn(final AuthData authData) {
         setFragment(new DashboardFragment());
         navigationView.setCheckedItem(R.id.nav_dashboard);
 
         // Store user data in firebase
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("provider", authData.getProvider());
         if(authData.getProviderData().containsKey("displayName")) {
             map.put("displayName", authData.getProviderData().get("displayName").toString());
         }
-        mRef.child("users").child(authData.getUid()).setValue(map);
-
+        if(authData.getProviderData().containsKey("profileImageURL")) {
+            map.put("imageURL", authData.getProviderData().get("profileImageURL").toString());
+        }
+        mRef.child("users").child(authData.getUid()).updateChildren(map);
 
         preferences.edit().putBoolean("logged_in", true).apply();
 

@@ -23,9 +23,15 @@
         </activity>
         <activity
             android:name=".ui.activities.PermissionErrorActivity"
-            android:label="k"
+            android:label="Error"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher" >
+        </activity>
+        <activity
+            android:name=".ui.activities.MapDetailActivity"
+            android:label="Map Detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
         </activity>
 
         <meta-data

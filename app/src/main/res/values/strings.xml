@@ -17,10 +17,10 @@
     <string name="logout_dialog_message">Are you sure you want to log out? You will have to login in again to continue using the app</string>
     <string name="logout_dialog_title">Logout</string>
     <string name="time_today_title">Today</string>
-    <string name="time_here_title">Current location</string>
+    <string name="time_here_title">Current checkin</string>
     <string name="time_today_content">0m</string>
     <string name="time_here_content">0m</string>
-    <string name="last_checkin">Last checkin</string>
+    <string name="last_checkin">Current checkin location</string>
     <string name="add_a_note">Add a note</string>
     <string name="account">Account</string>
     <string name="logged_in_summary">"Logged in, tap to logout"</string>
@@ -31,4 +31,8 @@
     <string name="logged_in_twitter">Logged in with Twitter</string>
     <string name="location_rationale">Location permission is required for this app to function. Please enable it in the settings</string>
     <string name="ok">Ok</string>
+    <string name="placeholder_street">You are not checked in</string>
+    <string name="placeholder_city">Tap the green pin button to checkin</string>
+    <string name="login_rationale">In order to checkin at a location you need te be logged in. Please do so in the settings.</string>
+    <string name="loading">Loading ...</string>
 </resources>

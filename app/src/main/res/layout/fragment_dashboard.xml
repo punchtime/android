@@ -85,6 +85,7 @@
 
 
     <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/colorPrimary"
@@ -117,16 +118,17 @@
                 android:padding="@dimen/fab_margin">
 
                 <TextView
+                    android:id="@+id/streetText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Oudeheerweg 13"
+                    android:text="@string/loading"
                     android:textSize="20sp"
                     android:textColor="#FFFFFF"/>
 
                 <TextView
+                    android:id="@+id/cityText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sint-Denijs-Westrem, Belgium"
                     android:alpha="0.7"
                     android:textColor="@color/cardview_light_background"/>
             </LinearLayout>
@@ -139,6 +141,7 @@
                 android:layout_marginBottom="8dp">
 
                 <Button
+                    android:id="@+id/noteButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add_a_note"
@@ -146,6 +149,7 @@
                     android:textColor="@color/colorAccent" />
 
                 <Button
+                    android:id="@+id/showMapButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Show on map"
@@ -162,8 +166,7 @@
         app:layout_anchor="@id/map"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        android:src="@drawable/ic_pin_drop_24dp"/>
+        android:clickable="true" />
 
 
 </android.support.design.widget.CoordinatorLayout>
