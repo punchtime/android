@@ -33,6 +33,21 @@ public class HistoryFragment extends Fragment {
         activity.setTitle(R.string.menu_history);
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0: ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.nav_day);
+                            break;
+                    case 1: ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.nav_3days);
+                            break;
+                    case 2: ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.nav_week);
+                        break;
+                }
+            }
+        });
+
         setupViewPager(viewPager);
 
         AppBarLayout appBar = (AppBarLayout) activity.findViewById(R.id.appBar);

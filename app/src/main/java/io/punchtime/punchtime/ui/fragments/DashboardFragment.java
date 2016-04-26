@@ -1,36 +1,31 @@
 package io.punchtime.punchtime.ui.fragments;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
-import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,12 +34,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TooManyListenersException;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
@@ -54,7 +46,7 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
 /**
  * Created by Arnaud on 3/23/2016.
  */
-public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
+public class DashboardFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         CompoundButton.OnCheckedChangeListener {
@@ -76,6 +68,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         Bundle args = new Bundle();
         setArguments(args);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, final Bundle savedInstanceState) {
         context = getContext();
@@ -100,7 +93,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
 //        pulsesList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // get map fragment
-        mMapFragment =  (SupportMapFragment)getChildFragmentManager()
+        mMapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
 
@@ -116,19 +109,23 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
                         setTrackingLocation(!preferences.getBoolean("tracking_location", false));
                     } else {
                         getLocation();
-                        if (mLastLocation != null) {
-                            SnackbarFactory.createSnackbar(getContext(), view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude()).show();
-                            // gets current location, adds a marker, and changes the camera
-                            LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                        if (ContextCompat.checkSelfPermission(activity,
+                                Manifest.permission.ACCESS_FINE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            if (mLastLocation != null) {
+                                SnackbarFactory.createSnackbar(getContext(), view, "Location is " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude()).show();
+                                // gets current location, adds a marker, and changes the camera
+                                LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(latLng)
-                                    .title("Marker"));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-                            Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "some note", System.currentTimeMillis(), "google:116529723379255029542", "-KBdSPf90dvJCeH3J8m7", true);
-                            mRef.push().setValue(pulse);
-                        } else {
-                            SnackbarFactory.createSnackbar(getContext(), view, "Could not retrieve location").show();
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title("Marker"));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+                                Pulse pulse = new Pulse(latLng.latitude, latLng.longitude, "some note", System.currentTimeMillis(), "google:116529723379255029542", "-KBdSPf90dvJCeH3J8m7", true);
+                                mRef.push().setValue(pulse);
+                            } else {
+                                SnackbarFactory.createSnackbar(getContext(), view, "Could not retrieve location").show();
+                            }
                         }
                     }
                 }
@@ -138,16 +135,15 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     }
 
 
-
     // triggered soon after onCreateView
     // Any view setup should occur here.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
-        mGoogleApiClient = new GoogleApiClient.Builder( getActivity() )
-                .addConnectionCallbacks( this )
-                .addOnConnectionFailedListener( this )
-                .addApi( LocationServices.API )
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
                 .build();
     }
 
@@ -168,15 +164,24 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView.getId() == R.id.pin) {
-            // handle switch
-        }
+//        if(buttonView.getId() == R.id.pin) {
+//            // handle switch
+//        }
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         this.mMap = map;
-        map.getUiSettings().setMapToolbarEnabled(false);
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+        }
+
+
+        UiSettings settings = map.getUiSettings();
+        settings.setMapToolbarEnabled(false);
+        settings.setScrollGesturesEnabled(false);
+        settings.setMyLocationButtonEnabled(false);
+
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Marker"));
@@ -189,16 +194,7 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
         mRef = activity.getFirebaseRef();
 
         boolean trackingLocationMode = preferences.getBoolean("tracking_location_mode", false);
-        if(trackingLocationMode) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mSwitch.toggle();
-                }
-            }, 10);
-        }
-        Toast.makeText(activity, trackingLocationMode + "", Toast.LENGTH_SHORT).show();
+
         setTrackingLocationMode(trackingLocationMode);
 
 //        FirebaseRecyclerAdapter<Pulse, PulseViewHolder> mAdapter = new FirebaseRecyclerAdapter<Pulse, PulseViewHolder>(Pulse.class, android.R.layout.two_line_list_item, PulseViewHolder.class, mRef) {
@@ -235,59 +231,39 @@ public class DashboardFragment extends Fragment  implements OnMapReadyCallback,
     }
 
     private void getLocation() {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(context,
+        if (ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+                SnackbarFactory.createSnackbar(activity, getView(), getString(R.string.location_rationale))
+                        .setAction(R.string.ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ActivityCompat.requestPermissions(activity,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        1);
+                            }
+                        })
+                        .show();
 
             } else {
 
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions((Activity) context,
+                ActivityCompat.requestPermissions(activity,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         1);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         }
-
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    getLocation();
 
-                } else {
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
 
     public void setTrackingLocationMode(boolean b) {
         preferences.edit().putBoolean("tracking_location_mode", b).apply();

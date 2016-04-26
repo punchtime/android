@@ -1,12 +1,16 @@
 package io.punchtime.punchtime.ui.activities;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -43,6 +47,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     private Firebase mRef;
     private View headerView;
     private SharedPreferences preferences;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         mDrawer.addDrawerListener(drawerToggle);
 
         // find our drawer view
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         headerView = navigationView.getHeaderView(0);
         setupDrawerContent(navigationView);
 
@@ -85,13 +90,21 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         }
 
         View navHeader = headerView.findViewById(R.id.nav_header);
-            navHeader.setOnClickListener(new View.OnClickListener() {
+        navHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setFragment(new SettingsFragment());
                 mDrawer.closeDrawer(GravityCompat.START);
             }
         });
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Intent intent = new Intent(this, PermissionErrorActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -135,7 +148,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     public void removeViewFromAppBarLayout(View v) {
         appBar.removeView(v);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -220,7 +232,10 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
-        // Authentication just completed successfully :)
+        setFragment(new DashboardFragment());
+        navigationView.setCheckedItem(R.id.nav_dashboard);
+
+        // Store user data in firebase
         Map<String, String> map = new HashMap<>();
         map.put("provider", authData.getProvider());
         if(authData.getProviderData().containsKey("displayName")) {
@@ -277,5 +292,9 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     @Override
     protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
         Toast.makeText(MainActivity.this, firebaseLoginError.message, Toast.LENGTH_LONG).show();
+    }
+
+    public NavigationView getNavigationView() {
+        return navigationView;
     }
 }

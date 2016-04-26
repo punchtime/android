@@ -29,4 +29,6 @@
     <string name="location_mode_title">"Automatic location tracking"</string>
     <string name="logged_in_facebook">Logged in with Facebook</string>
     <string name="logged_in_twitter">Logged in with Twitter</string>
+    <string name="location_rationale">Location permission is required for this app to function. Please enable it in the settings</string>
+    <string name="ok">Ok</string>
 </resources>
