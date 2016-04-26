@@ -311,7 +311,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getChildrenCount() != 0) new LastPulseTask().execute(dataSnapshot);
+                    new LastPulseTask().execute(dataSnapshot);
                 }
 
                 @Override
@@ -455,7 +455,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
             try {
                 // Call the synchronous getFromLocation() method by passing in the lat/long values.
                 address = geocoder.getFromLocation(loc.latitude, loc.longitude, 1).get(0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return address;
@@ -464,7 +464,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
         @Override
         protected void onPostExecute(Address address) {
             super.onPostExecute(address);
-            updateCard(address);
+            if(address != null) updateCard(address);
         }
     }
 
@@ -472,6 +472,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
         @Override
         protected Pulse doInBackground(DataSnapshot... params) {
             DataSnapshot snap = params[0];
+            if(snap.getChildrenCount() == 0) return null;
 
             Pulse p;
             Pulse latestPulse = new Pulse();
@@ -493,9 +494,13 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
         @Override
         protected void onPostExecute(Pulse p) {
             super.onPostExecute(p);
-            setLastPulse(p);
-            if(p.getCheckout() == 0) setCheckedIn(true);
-            else setCheckedIn(false);
+            if(p != null) {
+                setLastPulse(p);
+                if(p.getCheckout() == 0) setCheckedIn(true);
+                else setCheckedIn(false);
+            }  else {
+                setCheckedIn(false);
+            }
         }
     }
 
@@ -509,22 +514,24 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Pulse p;
-                    long latestTimestamp, currentTimestamp;
-                    latestTimestamp = 0;
-                    String lastPulseKey ="";
+                    if(dataSnapshot.getChildrenCount() != 0) {
+                        Pulse p;
+                        long latestTimestamp, currentTimestamp;
+                        latestTimestamp = 0;
+                        String lastPulseKey = "";
 
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        p = child.getValue(Pulse.class);
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            p = child.getValue(Pulse.class);
 
-                        currentTimestamp = p.getCheckin();
-                        if(currentTimestamp > latestTimestamp) {
-                            latestTimestamp = currentTimestamp;
-                            lastPulseKey = child.getKey();
+                            currentTimestamp = p.getCheckin();
+                            if (currentTimestamp > latestTimestamp) {
+                                latestTimestamp = currentTimestamp;
+                                lastPulseKey = child.getKey();
+                            }
                         }
-                    }
 
-                    mRef.child("pulses").child(lastPulseKey).updateChildren(map);
+                        mRef.child("pulses").child(lastPulseKey).updateChildren(map);
+                    }
                 }
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {}
