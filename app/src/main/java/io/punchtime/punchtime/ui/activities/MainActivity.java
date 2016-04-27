@@ -283,7 +283,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         preferences.edit().putBoolean("logged_in", true).apply();
 
         new DownloadImageTask(pic)
-                .execute(authData.getProviderData().get("image").toString());
+                .execute(map.get("image").toString());
     }
 
     @Override
