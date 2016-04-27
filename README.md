@@ -2,6 +2,12 @@
 
 > Note: this is a work in progress, and not yet a deployed app.
 
+## screenshots
+
+> Note: these screenshots aren't definitive
+
+<img src="assets/Screenshot_20160427-181433.png" alt="screenshot of the main interface" align="right">
+
 ## info
 
 This is the android client of [punchtime.io](https://punchtime.io).
