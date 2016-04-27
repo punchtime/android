@@ -248,17 +248,30 @@ public class MainActivity extends FirebaseLoginBaseActivity {
             map.put("name", authData.getProviderData().get("displayName").toString());
         }
 
+        TextView mail = (TextView) headerView.findViewById(R.id.userMail);
+        TextView name = (TextView) headerView.findViewById(R.id.userName);
+        ImageView pic = (ImageView) headerView.findViewById(R.id.imageView);
+
         switch (authData.getProvider()) {
             case "facebook":
                 map.put("image","https://graph.facebook.com/"+authData.getProviderData().get("id")+"/picture?height=300");
+                name.setText(authData.getProviderData().get("displayName").toString());
+                mail.setText(R.string.logged_in_facebook);
                 break;
-
             case "twitter":
                 map.put("image","https://twitter.com/"+authData.getProviderData().get("username")+"/profile_image?size=original");
+                name.setText(authData.getProviderData().get("displayName").toString());
+                mail.setText(R.string.logged_in_twitter);
                 break;
             case "google":
+                map.put("image", authData.getProviderData().get("profileImageURL").toString());
+                name.setText(authData.getProviderData().get("displayName").toString());
+                mail.setText(authData.getProviderData().get("email").toString());
+                break;
             case "password":
                 map.put("image", authData.getProviderData().get("profileImageURL").toString());
+                name.setText(authData.getProviderData().get("email").toString());
+                mail.setText("");
                 break;
             default:
                 map.put("image","https://www.drupal.org/files/profile_default.png"); // TODO: 28/04/16 give a real url
@@ -268,28 +281,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         mRef.child("users").child(authData.getUid()).updateChildren(map);
 
         preferences.edit().putBoolean("logged_in", true).apply();
-
-        TextView mail = (TextView) headerView.findViewById(R.id.userMail);
-        TextView name = (TextView) headerView.findViewById(R.id.userName);
-        ImageView pic = (ImageView) headerView.findViewById(R.id.imageView);
-
-        // change to a switch
-        if (authData.getProvider().equals("password")) {
-            name.setText(authData.getProviderData().get("email").toString());
-            mail.setText("");
-        }
-        else if (authData.getProvider().equals("facebook")) {
-            name.setText(authData.getProviderData().get("displayName").toString());
-            mail.setText(R.string.logged_in_facebook);
-        }
-        else if (authData.getProvider().equals("twitter")) {
-            name.setText(authData.getProviderData().get("displayName").toString());
-            mail.setText(R.string.logged_in_twitter);
-        }
-        else if (authData.getProvider().equals("google")) {
-            name.setText(authData.getProviderData().get("displayName").toString());
-            mail.setText(authData.getProviderData().get("email").toString());
-        }
 
         new DownloadImageTask(pic)
                 .execute(authData.getProviderData().get("image").toString());
