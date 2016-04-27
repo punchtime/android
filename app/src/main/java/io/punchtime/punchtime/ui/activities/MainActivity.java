@@ -245,10 +245,10 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("provider", authData.getProvider());
         if(authData.getProviderData().containsKey("displayName")) {
-            map.put("displayName", authData.getProviderData().get("displayName").toString());
+            map.put("name", authData.getProviderData().get("displayName").toString());
         }
         if(authData.getProviderData().containsKey("profileImageURL")) {
-            map.put("imageURL", authData.getProviderData().get("profileImageURL").toString());
+            map.put("image", authData.getProviderData().get("profileImageURL").toString());
         }
         mRef.child("users").child(authData.getUid()).updateChildren(map);
 
@@ -258,6 +258,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         TextView name = (TextView) headerView.findViewById(R.id.userName);
         ImageView pic = (ImageView) headerView.findViewById(R.id.imageView);
 
+        // change to a switch
         if (authData.getProvider().equals("password")) {
             name.setText(authData.getProviderData().get("email").toString());
             mail.setText("");
@@ -270,7 +271,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
             name.setText(authData.getProviderData().get("displayName").toString());
             mail.setText(R.string.logged_in_twitter);
         }
-        else {
+        else if (authData.getProvider().equals("google")) {
             name.setText(authData.getProviderData().get("displayName").toString());
             mail.setText(authData.getProviderData().get("email").toString());
         }
