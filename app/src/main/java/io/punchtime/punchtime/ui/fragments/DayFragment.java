@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,19 @@ import android.os.Bundle;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import io.punchtime.punchtime.R;
+import io.punchtime.punchtime.data.Pulse;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
@@ -32,10 +40,16 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     private static final int TYPE_WEEK_VIEW = 3;
     private int mWeekViewType = TYPE_DAY_VIEW;
     private WeekView mWeekView;
+    private Firebase mRef;
+    private MainActivity activity;
+    private Pulse lastPulse;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_day, parent, false);
+
+        //set activity
+        activity = (MainActivity) getActivity();
         // get view
         mWeekView = (WeekView) v.findViewById(R.id.weekView);
 
@@ -61,6 +75,38 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
+        mRef = activity.getFirebaseRef();
+
+        lastPulse = new Pulse();
+
+        Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("Punchtime", dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     protected String getEventTitle(Calendar time) {
