@@ -6,7 +6,7 @@
     <string name="drawer_close">Sluit navigatiemenu</string>
 
     <string name="action_settings">Instellingen</string>
-    <string name="placeholder_email">test@punchtime.io</string>
+    <string name="placeholder_email">Klik hier om naar instellingen te gaan</string>
     <string name="placeholder_user">Punchtime Gebruiker</string>
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_history">Geschiedenis</string>
@@ -21,4 +21,18 @@
     <string name="time_today_content">0m</string>
     <string name="time_here_content">0m</string>
     <string name="add_a_note">Voeg een opmerking toe</string>
+    <string name="account">Gebruiker</string>
+    <string name="logged_in_facebook">Ingelogd bij Facebook</string>
+    <string name="logged_in_summary">Ingelogd, tik om uit te loggen</string>
+    <string name="last_checkin">Huidige checkin-locatie</string>
+    <string name="loading">Laden ...</string>
+    <string name="location_mode_summary">Deze optie zorgt ervoor dat je automatisch in- en uitgecheckt wordt</string>
+    <string name="logged_in_twitter">Ingelogd bij Twitter</string>
+    <string name="placeholder_street">Je bent niet ingecheckt</string>
+    <string name="placeholder_city">Tik op de groene pin om in te checken</string>
+    <string name="ok">Ok</string>
+    <string name="not_logged_in_summary">Niet ingelogd, tik om in te loggen</string>
+    <string name="login_rationale">Om in te kunnen checken moet je ingelogd zijn</string>
+    <string name="location_rationale">Deze app heeft toestemming nodig om je locatie te gebruiken. Gelieve dit in instelllingen toe te staan.</string>
+    <string name="location_mode_title">Automatische locatietracking</string>
 </resources>
