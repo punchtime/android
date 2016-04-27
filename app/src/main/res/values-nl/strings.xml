@@ -7,7 +7,7 @@
 
     <string name="action_settings">Instellingen</string>
     <string name="placeholder_email">Klik hier om naar instellingen te gaan</string>
-    <string name="placeholder_user">Punchtime Gebruiker</string>
+    <string name="placeholder_user">Niet ingelogd</string>
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_history">Geschiedenis</string>
     <string name="menu_day">Dag</string>
