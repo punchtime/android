@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Punchtime</string>
-    <string name="main_activity_title">Dashboard</string>
-
     <string name="drawer_open">Open navigatiemenu</string>
     <string name="drawer_close">Sluit navigatiemenu</string>
-
     <string name="action_settings">Instellingen</string>
     <string name="placeholder_email">Klik hier om naar instellingen te gaan</string>
     <string name="placeholder_user">Niet ingelogd</string>
@@ -25,7 +22,7 @@
     <string name="logged_in_facebook">Ingelogd bij Facebook</string>
     <string name="logged_in_summary">Ingelogd, tik om uit te loggen</string>
     <string name="last_checkin">Huidige checkin-locatie</string>
-    <string name="loading">Laden ...</string>
+    <string name="loading">Laden …</string>
     <string name="location_mode_summary">Deze optie zorgt ervoor dat je automatisch in- en uitgecheckt wordt</string>
     <string name="logged_in_twitter">Ingelogd bij Twitter</string>
     <string name="placeholder_street">Je bent niet ingecheckt</string>

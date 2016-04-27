@@ -104,7 +104,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
         v = inflater.inflate(R.layout.fragment_dashboard, parent, false);
 
         activity = (MainActivity) getActivity();
-        activity.setTitle(R.string.main_activity_title);
+        activity.setTitle(R.string.menu_dashboard);
         toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         mSwitch = (MaterialAnimatedSwitch) LayoutInflater.from(activity).inflate(R.layout.toolbar_switch, toolbar, false);
         activity.addViewToToolbar(mSwitch);
