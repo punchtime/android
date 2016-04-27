@@ -247,9 +247,24 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         if(authData.getProviderData().containsKey("displayName")) {
             map.put("name", authData.getProviderData().get("displayName").toString());
         }
-        if(authData.getProviderData().containsKey("profileImageURL")) {
-            map.put("image", authData.getProviderData().get("profileImageURL").toString());
+
+        switch (authData.getProvider()) {
+            case "facebook":
+                map.put("image","https://graph.facebook.com/"+authData.getProviderData().get("id")+"/picture?height=300");
+                break;
+
+            case "twitter":
+                map.put("image","https://twitter.com/"+authData.getProviderData().get("username")+"/profile_image?size=original");
+                break;
+            case "google":
+            case "password":
+                map.put("image", authData.getProviderData().get("profileImageURL").toString());
+                break;
+            default:
+                map.put("image","https://www.drupal.org/files/profile_default.png"); // TODO: 28/04/16 give a real url
+                break;
         }
+
         mRef.child("users").child(authData.getUid()).updateChildren(map);
 
         preferences.edit().putBoolean("logged_in", true).apply();
@@ -277,7 +292,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         }
 
         new DownloadImageTask(pic)
-                .execute(authData.getProviderData().get("profileImageURL").toString());
+                .execute(authData.getProviderData().get("image").toString());
     }
 
     @Override
