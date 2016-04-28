@@ -32,9 +32,8 @@ import com.firebase.ui.auth.core.FirebaseLoginError;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.punchtime.punchtime.logic.tasks.DownloadImageTask;
 import io.punchtime.punchtime.R;
-import io.punchtime.punchtime.data.Pulse;
+import io.punchtime.punchtime.logic.tasks.DownloadImageTask;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
 import io.punchtime.punchtime.ui.fragments.HistoryFragment;
 import io.punchtime.punchtime.ui.fragments.SettingsFragment;
@@ -49,7 +48,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     private View headerView;
     private SharedPreferences preferences;
     private NavigationView navigationView;
-    private Pulse lastPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +68,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         // find our drawer view
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        headerView = navigationView.getHeaderView(0);
+        headerView = (navigationView == null) ? null : navigationView.getHeaderView(0);
         setupDrawerContent(navigationView);
 
         Firebase.setAndroidContext(this);
@@ -154,9 +152,8 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -206,8 +203,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         setFragment(fragment);
 
         // close drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawer.closeDrawer(GravityCompat.START);
 
         return true;
     }
@@ -287,7 +283,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     public void onFirebaseLoggedOut() {
         ((TextView) headerView.findViewById(R.id.userName)).setText(R.string.placeholder_user);
         ((TextView) headerView.findViewById(R.id.userMail)).setText(R.string.placeholder_email);
-        ((ImageView) headerView.findViewById(R.id.imageView)).setImageDrawable(getResources().getDrawable(android.R.drawable.sym_def_app_icon));
+        ((ImageView) headerView.findViewById(R.id.imageView)).setImageDrawable(ContextCompat.getDrawable(this, android.R.drawable.sym_def_app_icon));
 
         preferences.edit().putBoolean("logged_in", false).apply();
     }

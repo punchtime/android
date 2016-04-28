@@ -2,6 +2,7 @@ package io.punchtime.punchtime.ui.views;
 
 /**
  * Created by Arnaud on 4/22/2016.
+ * for project: Punchtime
  */
 import android.content.Context;
 import android.support.v4.view.ViewPager;

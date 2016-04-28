@@ -13,6 +13,7 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
  * Created by haroenv on 26/03/16.
+ * for project: Punchtime
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
     SharedPreferences preferences;

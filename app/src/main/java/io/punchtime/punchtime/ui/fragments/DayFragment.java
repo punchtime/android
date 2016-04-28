@@ -31,6 +31,7 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
  * Created by Arnaud on 3/23/2016.
+ * for project: Punchtime
  */
 public class DayFragment extends Fragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener,
         WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
@@ -111,7 +112,7 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
 
     @Override
     public List<?extends WeekViewEvent> onMonthChange(int newYear,int newMonth) {
-        List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
+        List<WeekViewEvent> events = new ArrayList<>();
         for (Pulse pulse : pulseList) {
             // create calendar instance of checkin
             Calendar startTime = Calendar.getInstance();

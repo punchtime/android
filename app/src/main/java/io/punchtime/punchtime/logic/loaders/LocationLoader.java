@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationServices;
 
 /**
  * Created by elias on 28/04/16.
+ * for project: Punchtime
  */
 public class LocationLoader extends Loader<Location>
         implements GoogleApiClient.ConnectionCallbacks,

@@ -2,6 +2,7 @@ package io.punchtime.punchtime.ui.fragments;
 
 /**
  * Created by elias on 19/04/16.
+ * for project: Punchtime
  */
 
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 
 public class HistoryFragment extends Fragment {
-    private ViewPager viewPager;
     private TabLayout tabLayout;
     private MainActivity activity;
     @Override
@@ -32,7 +32,7 @@ public class HistoryFragment extends Fragment {
         activity = (MainActivity) getActivity();
         activity.setTitle(R.string.menu_history);
 
-        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+        ViewPager viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}

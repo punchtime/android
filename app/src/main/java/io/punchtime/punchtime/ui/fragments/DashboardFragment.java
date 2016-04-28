@@ -56,6 +56,7 @@ import io.punchtime.punchtime.ui.activities.MapDetailActivity;
 
 /**
  * Created by Arnaud on 3/23/2016.
+ * for project: Punchtime
  */
 public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -452,7 +453,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         Map<String, Object> map;
 
         @Override
-        protected Pulse doInBackground(Map<String,Object>... params) {
+        @SafeVarargs
+        protected final Pulse doInBackground(Map<String,Object>... params) {
             map = params[0];
             Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
             query.addListenerForSingleValueEvent(new ValueEventListener() {

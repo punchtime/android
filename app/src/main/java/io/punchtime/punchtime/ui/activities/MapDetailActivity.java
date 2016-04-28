@@ -37,6 +37,7 @@ import io.punchtime.punchtime.R;
 
 /**
  * Created by elias on 26/04/16.
+ * for project: Punchtime
  */
 public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -130,12 +131,6 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
-    }
-
     protected void startLocationUpdates() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -149,7 +144,6 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
                     mGoogleApiClient, this);
         }
     }
-
 
     @Override
     public void onLocationChanged(Location location) {

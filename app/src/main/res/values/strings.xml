@@ -33,4 +33,6 @@
     <string name="login_rationale">In order to checkin at a location you need te be logged in. Please do so in the settings.</string>
     <string name="loading">Loading …</string>
     <string name="no_location_error_message">Could not retrieve location, please try again</string>
+    <string name="show_on_map">Show on map</string>
+    <string name="recenter_map_on_current_location">Recenter map on current location</string>
 </resources>

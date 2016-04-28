@@ -19,6 +19,7 @@ import io.punchtime.punchtime.R;
 
 /**
  * Created by elias on 26/04/16.
+ * for project: Punchtime
  */
 public class PermissionErrorActivity extends AppCompatActivity {
 
@@ -26,7 +27,6 @@ public class PermissionErrorActivity extends AppCompatActivity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +77,7 @@ public class PermissionErrorActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 // If request is cancelled, the result arrays are empty.

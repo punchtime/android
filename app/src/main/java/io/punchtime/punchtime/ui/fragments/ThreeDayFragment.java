@@ -17,10 +17,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.punchtime.punchtime.R;
-import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
  * Created by haroenv on 26/03/16.
+ * for project: Punchtime
  */
 public class ThreeDayFragment extends Fragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener,
         WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener{

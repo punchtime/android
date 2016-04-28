@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by elias on 24/04/16.
+ * for project: Punchtime
  */
 public class AvoidSnackbarBehavior extends CoordinatorLayout.Behavior<View> {
         // We only support the child <> Snackbar shift movement on Honeycomb and above. This is

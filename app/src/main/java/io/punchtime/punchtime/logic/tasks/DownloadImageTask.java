@@ -3,8 +3,6 @@ package io.punchtime.punchtime.logic.tasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -12,6 +10,7 @@ import java.io.InputStream;
 
 /**
  * Created by elias on 22/04/16.
+ * for project: Punchtime
  */
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;

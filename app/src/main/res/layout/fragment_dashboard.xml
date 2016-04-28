@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:alpha="0.87"
-                        android:textAlignment="center"
+                        android:gravity="center"
                         android:text="@string/time_here_title"/>
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/timeHere"
@@ -108,6 +108,8 @@
                 android:alpha="0.7"
                 android:paddingLeft="16dp"
                 android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"/>
 
@@ -153,7 +155,7 @@
                     android:id="@+id/showMapButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Show on map"
+                    android:text="@string/show_on_map"
                     style="?attr/borderlessButtonStyle"
                     android:visibility="invisible"
                     android:textColor="@color/colorAccent" />
