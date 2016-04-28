@@ -91,12 +91,14 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                pulseList.clear();
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
                     pulseList.add(child.getValue(Pulse.class));
                 }
 
                 // Here we know pulsesList is filled
-                onMonthChange(0,0);
+                // updateCalenderView(pulsesList);
+                Log.d("Dank", pulseList.toString());
             }
 
             @Override
