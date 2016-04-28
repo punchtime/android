@@ -96,6 +96,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
             @Override
             public void onClick(View v) {
                 setFragment(new SettingsFragment());
+                navigationView.setCheckedItem(R.id.nav_settings);
                 mDrawer.closeDrawer(GravityCompat.START);
             }
         });
