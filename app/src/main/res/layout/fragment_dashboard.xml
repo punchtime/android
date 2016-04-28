@@ -166,6 +166,7 @@
         app:layout_anchor="@id/map"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="@dimen/fab_margin"
+        android:visibility="invisible"
         android:clickable="true" />
 
 

@@ -257,18 +257,14 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void updateCheckinUI(Pulse pulse) {
-        boolean trackingLocationMode = preferences.getBoolean("tracking_location_mode", false);
-
         if (pulse != null && pulse.getCheckout() == 0) {
             // Checked in
-            if(!trackingLocationMode)fab.setImageResource(R.drawable.ic_location_off_black_24dp);
             street.setText(pulse.getAddressStreet());
             city.setText(pulse.getAddressCityCountry());
             mapButton.setVisibility(View.VISIBLE);
             noteButton.setVisibility(View.VISIBLE);
         } else {
             // Not checked in
-            if(!trackingLocationMode) fab.setImageResource(R.drawable.ic_pin_drop_24dp);
             street.setText(R.string.placeholder_street);
             city.setText(R.string.placeholder_city);
             mapButton.setVisibility(View.INVISIBLE);
@@ -277,7 +273,16 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void setCheckedIn(boolean checkedIn) {
+        fab.show();
         isCheckedIn = checkedIn;
+
+        if(!preferences.getBoolean("tracking_location_mode", false)) {
+            if(checkedIn) {
+                fab.setImageResource(R.drawable.ic_location_off_black_24dp);
+            } else {
+                fab.setImageResource(R.drawable.ic_pin_drop_24dp);
+            }
+        }
     }
 
     public void setTrackingLocationMode(boolean trackingLocationMode) {
@@ -416,7 +421,10 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             try {
-                                updateCheckinUI(dataSnapshot.getChildren().iterator().next().getValue(Pulse.class));
+                                Pulse p = dataSnapshot.getChildren().iterator().next().getValue(Pulse.class);
+                                updateCheckinUI(p);
+                                if(p.getCheckout() == 0) setCheckedIn(true);
+
                             } catch (Exception e) {
                                 updateCheckinUI(null);
                             }
