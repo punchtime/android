@@ -50,6 +50,11 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
 
         //set activity
         activity = (MainActivity) getActivity();
+
+        mRef = activity.getFirebaseRef();
+        pulseList = new ArrayList<>();
+        getPulseData();
+
         // get view
         mWeekView = (WeekView) v.findViewById(R.id.weekView);
 
@@ -75,9 +80,7 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
-        mRef = activity.getFirebaseRef();
-        pulseList = new ArrayList<>();
-        getPulseData();
+
     }
 
     // gets the note for a given pulse
@@ -99,6 +102,8 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
                 // Here we know pulsesList is filled
                 // updateCalenderView(pulsesList);
                 Log.d("Dank", pulseList.toString());
+                //trigger update of pulselist
+                onMonthChange(0,0);
             }
 
             @Override
@@ -107,8 +112,7 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     }
 
     @Override
-    public List<?extends WeekViewEvent>onMonthChange(int newYear,int newMonth){
-        // simple hard coded event in eventlist
+    public List<?extends WeekViewEvent> onMonthChange(int newYear,int newMonth) {
         List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
         Log.d("Punchtime", pulseList.toString());
         for (Pulse pulse : pulseList) {
@@ -124,6 +128,11 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
             WeekViewEvent event=new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
             event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
             events.add(event);
+        }
+        //log starttime of all weekviewevents
+        for (WeekViewEvent event : events
+             ) {
+            Log.d("event", event.getStartTime().toString());
         }
         return events;
     }
