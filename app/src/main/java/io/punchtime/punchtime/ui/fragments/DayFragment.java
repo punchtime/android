@@ -80,7 +80,7 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
-
+        // TODO set view to automatically scroll down to nowline
     }
 
     // gets the note for a given pulse
