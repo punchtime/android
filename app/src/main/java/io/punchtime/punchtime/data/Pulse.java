@@ -5,6 +5,8 @@ package io.punchtime.punchtime.data;
  */
 
 public class Pulse {
+    private String addressStreet;
+    private String addressCityCountry;
     private double latitude;
     private double longitude;
     private String note;
@@ -16,7 +18,7 @@ public class Pulse {
 
     public Pulse() {}
 
-    public Pulse(double latitude, double longitude, String note, long checkin, long checkout, String employee, String employer, boolean confirmed) {
+    public Pulse(double latitude, double longitude, String note, long checkin, long checkout, String employee, String employer, boolean confirmed, String addressStreet, String addressCityCountry) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.note = note;
@@ -25,6 +27,8 @@ public class Pulse {
         this.employee = employee;
         this.employer = employer;
         this.confirmed = confirmed;
+        this.addressStreet = addressStreet;
+        this.addressCityCountry = addressCityCountry;
     }
 
     public Pulse(double latitude, double longitude, String note, long checkin, String employee, String employer, boolean confirmed) {
@@ -38,34 +42,55 @@ public class Pulse {
         this.confirmed = confirmed;
     }
 
+    public Pulse(double latitude, double longitude, String note, long checkin, String employee, String employer, boolean confirmed, String addressStreet, String addressCityCountry) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.note = note;
+        this.checkin = checkin;
+        this.checkout = 0;
+        this.employee = employee;
+        this.employer = employer;
+        this.confirmed = confirmed;
+        this.addressStreet = addressStreet;
+        this.addressCityCountry = addressCityCountry;
+    }
+
     public double getLatitude() {
         return latitude;
     }
     public double getLongitude() {
         return longitude;
     }
-
     public String getNote() {
         return note;
     }
-
     public String getEmployee() {
         return employee;
     }
-
     public String getEmployer() {
         return employer;
     }
-
     public long getCheckin() {
         return checkin;
     }
-
     public long getCheckout() {
         return checkout;
     }
-
     public boolean isConfirmed() {
         return confirmed;
+    }
+    public String getAddressStreet() {
+        return addressStreet;
+    }
+    public String getAddressCityCountry() {
+        return addressCityCountry;
+    }
+
+    public void setAddressStreet(String addressStreet) {
+        this.addressStreet = addressStreet;
+    }
+
+    public void setAddressCityCountry(String addressCityCountry) {
+        this.addressCityCountry = addressCityCountry;
     }
 }

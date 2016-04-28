@@ -12,24 +12,20 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,11 +35,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,13 +43,13 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
+import io.punchtime.punchtime.logic.loaders.LocationLoader;
 import io.punchtime.punchtime.ui.SnackbarFactory;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 import io.punchtime.punchtime.ui.activities.MapDetailActivity;
@@ -66,20 +57,11 @@ import io.punchtime.punchtime.ui.activities.MapDetailActivity;
 /**
  * Created by Arnaud on 3/23/2016.
  */
-public class DashboardFragment extends Fragment implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        CompoundButton.OnCheckedChangeListener,
-        LocationListener {
-    private GoogleApiClient mGoogleApiClient;
-    private SupportMapFragment mMapFragment;
+public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private Location mLastLocation;
-    private boolean connectedGoogleApi;
     private static Context context;
-    private RecyclerView pulsesList;
     private MainActivity activity;
-    private Toolbar toolbar;
     private MaterialAnimatedSwitch mSwitch;
     private Firebase mRef;
     private FloatingActionButton fab;
@@ -89,7 +71,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
     private boolean isCheckedIn;
     private View v;
     private Geocoder geocoder;
-    private Pulse lastPulse;
+    private TextView street;
+    private TextView city;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -98,17 +81,37 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, final Bundle savedInstanceState) {
-        context = getContext();
-
         // Defines the xml file for the fragment
         v = inflater.inflate(R.layout.fragment_dashboard, parent, false);
 
+        // Store context
+        context = getContext();
+
+        // Store calling activity (Always MainActivity)
         activity = (MainActivity) getActivity();
+
+        getLoaderManager().initLoader(0, null, locationLoaderCallbacks);
+
+        // Setup toolbar
         activity.setTitle(R.string.menu_dashboard);
-        toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         mSwitch = (MaterialAnimatedSwitch) LayoutInflater.from(activity).inflate(R.layout.toolbar_switch, toolbar, false);
         activity.addViewToToolbar(mSwitch);
 
+        street = (TextView) v.findViewById(R.id.streetText);
+        city = (TextView) v.findViewById(R.id.cityText);
+
+        // Load the map async
+        SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mMapFragment.getMapAsync(this);
+
+        // Get preferences from storage
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+
+        // Setup geocoder
+        geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+        // Setup switch in toolbar
         mSwitch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(boolean b) {
@@ -116,56 +119,35 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-//        pulsesList =  (RecyclerView) v.findViewById(R.id.pulsesList);
-//        pulsesList.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // get map fragment
-        mMapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-
-        mMapFragment.getMapAsync(this);
-
+        // Setup FAB action
         fab = (FloatingActionButton) v.findViewById(R.id.fab);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-
-        geocoder = new Geocoder(getContext(), Locale.getDefault());
-
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (preferences.getBoolean("tracking_location_mode", false)) {
-                        setTrackingLocation(!preferences.getBoolean("tracking_location", false));
-                    } else {
-                        if (ContextCompat.checkSelfPermission(activity,
-                                Manifest.permission.ACCESS_FINE_LOCATION)
-                                == PackageManager.PERMISSION_GRANTED && preferences.getBoolean("logged_in", false)) {
+                    if (ContextCompat.checkSelfPermission(activity,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED && preferences.getBoolean("logged_in", false)) {
+                        if (preferences.getBoolean("tracking_location_mode", false)) {
+                            // Tracking location mode, toggle play/stop
+                            setTrackingLocation(!preferences.getBoolean("tracking_location", false));
+                        } else {
+                            // Manual checkin mode
                             if (mLastLocation != null) {
+                                // If we have a location
                                 if(isCheckedIn) checkOut();
                                 else checkIn();
                             } else {
-                                SnackbarFactory.createSnackbar(getContext(), view, "Could not retrieve location").show();
+                                // No location found yet
+                                SnackbarFactory.createSnackbar(getContext(), view, activity.getString(R.string.no_location_error_message)).show();
                             }
-                        } else {
-                            Snackbar snackbar = Snackbar.make(v, R.string.login_rationale,
-                                    Snackbar.LENGTH_INDEFINITE)
-                                    .setAction(R.string.settings, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            activity.setFragment(new SettingsFragment());
-                                        }
-                                    });
-                            View snackbarView = snackbar.getView();
-                            TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-                            textView.setMaxLines(4);
-                            snackbar.show();
                         }
                     }
                 }
             });
         }
 
+        // Setup "Add a note" button action
         noteButton = (Button) v.findViewById(R.id.noteButton);
         noteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,6 +177,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
+        // Setup "Show on map" button action
         mapButton = (Button) v.findViewById(R.id.showMapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,45 +196,18 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
         SnackbarFactory.createSnackbar(activity, v, "Checked in at current location").show();
 
         Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), "-KBdSPf90dvJCeH3J8m7", true);
-        setLastPulse(pulse);
-
-        Firebase fb = mRef.child("pulses").push();
-        fb.setValue(pulse);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put(fb.getKey(),true);
-
-        mRef.child("users").child(activity.getAuth().getUid()).child("pulses").updateChildren(map);
+        new ReverseGeocodePulseTask().execute(pulse);
     }
 
     private void checkOut() {
         setCheckedIn(false);
         SnackbarFactory.createSnackbar(activity, v, "Checked out at current location").show();
 
+        updateCheckinUI(null);
+
         Map<String, Object> map = new HashMap<>();
         map.put("checkout", System.currentTimeMillis());
         new UpdateLastPulseTask().execute(map);
-    }
-
-    private void updateCard(Address address) {
-        TextView street = (TextView) v.findViewById(R.id.streetText);
-        TextView city = (TextView) v.findViewById(R.id.cityText);
-
-        street.setText(address.getAddressLine(0));
-        city.setText(address.getAddressLine(1) + ", " + address.getAddressLine(2));
-    }
-
-
-    // triggered soon after onCreateView
-    // Any view setup should occur here.
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
     }
 
     @Override
@@ -270,13 +226,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//        if(buttonView.getId() == R.id.pin) {
-//            // handle switch
-//        }
-    }
-
-    @Override
     public void onMapReady(GoogleMap map) {
         UiSettings settings = map.getUiSettings();
         settings.setMapToolbarEnabled(false);
@@ -290,88 +239,51 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
                 startActivity(intent);
             }
         });
-
-        getLocation();
-        onLocationChanged(mLastLocation);
     }
 
     public void onStart() {
-        mGoogleApiClient.connect();
-        getLocation();
         super.onStart();
 
         mRef = activity.getFirebaseRef();
 
-        lastPulse = new Pulse();
-
         if(!preferences.getBoolean("logged_in",false)) {
-            ((CardView) getView().findViewById(R.id.cardView)).setVisibility(View.INVISIBLE);
+            // If the user is not logged in, show login rationale and prompt to login
+            v.findViewById(R.id.cardView).setVisibility(View.INVISIBLE);
+            Snackbar snackbar = Snackbar.make(v, R.string.login_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.settings, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            activity.setFragment(new SettingsFragment());
+                        }
+                    });
+            View snackbarView = snackbar.getView();
+            TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setMaxLines(4);
+            snackbar.show();
         } else {
-            Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    new LastPulseTask().execute(dataSnapshot);
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {}
-            });
+            new GetLastPulseTask().execute();
         }
 
-        boolean trackingLocationMode = preferences.getBoolean("tracking_location_mode", false);
-        setTrackingLocationMode(trackingLocationMode);
+        setTrackingLocationMode(preferences.getBoolean("tracking_location_mode", false));
     }
 
-    public void onStop() {
-        stopLocationUpdates();
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
+    public void setTrackingLocationMode(boolean trackingLocationMode) {
+        preferences.edit().putBoolean("tracking_location_mode", trackingLocationMode).apply();
+        setTrackingLocation(false);
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        this.connectedGoogleApi = true;
-        getLocation();
-        startLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        this.connectedGoogleApi = false;
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        this.connectedGoogleApi = false;
-    }
-
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
-    }
-
-
-
-    public void setTrackingLocationMode(boolean b) {
-        preferences.edit().putBoolean("tracking_location_mode", b).apply();
-
-        if (b) {
-            setTrackingLocation(false);
-        } else {
+        if (!trackingLocationMode) {
             if(isCheckedIn) {
                 fab.setImageResource(R.drawable.ic_location_off_black_24dp);
             } else {
                 fab.setImageResource(R.drawable.ic_pin_drop_24dp);
             }
-            setTrackingLocation(false);
         }
-
     }
 
     public void setTrackingLocation(boolean trackingLocation) {
         preferences.edit().putBoolean("tracking_location", trackingLocation).apply();
+
         if (preferences.getBoolean("tracking_location_mode", false)) {
             if(trackingLocation) {
                 fab.setImageResource(R.drawable.ic_stop_black);
@@ -383,124 +295,136 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
 
     public void setCheckedIn(boolean checkedIn) {
         isCheckedIn = checkedIn;
-        if(isCheckedIn) {
-            fab.setImageResource(R.drawable.ic_location_off_black_24dp);
+    }
+
+    public void updateCheckinUI(Pulse pulse) {
+        boolean trackingLocationMode = preferences.getBoolean("tracking_location_mode", false);
+
+        if (pulse != null && pulse.getCheckout() == 0) {
+            if(!trackingLocationMode)fab.setImageResource(R.drawable.ic_location_off_black_24dp);
+            street.setText(pulse.getAddressStreet());
+            city.setText(pulse.getAddressCityCountry());
             mapButton.setVisibility(View.VISIBLE);
             noteButton.setVisibility(View.VISIBLE);
-
-            new ReverseGeocodingTask().execute(new LatLng(lastPulse.getLatitude(),lastPulse.getLongitude()));
         } else {
-            fab.setImageResource(R.drawable.ic_pin_drop_24dp);
-            mapButton.setVisibility(View.INVISIBLE);
-            noteButton.setVisibility(View.INVISIBLE);
-            TextView street = (TextView) v.findViewById(R.id.streetText);
-            TextView city = (TextView) v.findViewById(R.id.cityText);
-
+            if(!trackingLocationMode) fab.setImageResource(R.drawable.ic_pin_drop_24dp);
             street.setText(R.string.placeholder_street);
             city.setText(R.string.placeholder_city);
+            mapButton.setVisibility(View.INVISIBLE);
+            noteButton.setVisibility(View.INVISIBLE);
         }
     }
 
-    protected void startLocationUpdates() {
-        if(ContextCompat.checkSelfPermission(activity,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, LocationRequest.create().setInterval(1000).setFastestInterval(100), this);
-        }
-    }
+    // Callbacks for LocationLoader
+    private LoaderManager.LoaderCallbacks<Location> locationLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<Location>() {
+                @Override
+                public Loader<Location> onCreateLoader(
+                        int id, Bundle args) {
+                    return new LocationLoader(context);
+                }
+                @Override
+                public void onLoadFinished(Loader<Location> loader, Location location) {
+                    // Update mLastLocation
+                    mLastLocation = location;
+                    if(location != null) {
+                        LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-    protected void stopLocationUpdates() {
-        if(mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(
-                    mGoogleApiClient, this);
-        }
-    }
+                        // Draw location and accuracy on map
+                        mMap.clear();
+                        mMap.addCircle(new CircleOptions()
+                                .center(locationLatLng)
+                                .radius(2.5)
+                                .strokeColor(Color.WHITE)
+                                .strokeWidth(2)
+                                .fillColor(0xFF1DE9B6))
+                                .setZIndex(1);
+
+                        mMap.addCircle(new CircleOptions()
+                                .center(locationLatLng)
+                                .radius(location.getAccuracy())
+                                .strokeColor(0xFF282F3F)
+                                .strokeWidth(1)
+                                .fillColor(0x663B4358));
+
+                        // Move camera to new location
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationLatLng, 18));
+                    }
+                }
+                @Override
+                public void onLoaderReset(Loader<Location> loader) {}
+            };
 
 
-    @Override
-    public void onLocationChanged(Location location) {
-        mLastLocation = location;
-        if(location != null) {
-            LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationLatLng, 18));
-
-            mMap.clear();
-            mMap.addCircle(new CircleOptions()
-                    .center(locationLatLng)
-                    .radius(2.5)
-                    .strokeColor(Color.WHITE)
-                    .strokeWidth(2)
-                    .fillColor(0xFF1DE9B6))
-                    .setZIndex(1);
-
-            mMap.addCircle(new CircleOptions()
-                    .center(locationLatLng)
-                    .radius(location.getAccuracy())
-                    .strokeColor(0xFF282F3F)
-                    .strokeWidth(1)
-                    .fillColor(0x663B4358));
-        }
-    }
-
-    public void setLastPulse(Pulse lastPulse) {
-        this.lastPulse = lastPulse;
-        if(isCheckedIn) new ReverseGeocodingTask().execute(new LatLng(lastPulse.getLatitude(),lastPulse.getLongitude()));
-    }
-
-    private class ReverseGeocodingTask extends AsyncTask<LatLng, Address, Address> {
-        Address address;
+    private class ReverseGeocodePulseTask extends AsyncTask<Pulse, Pulse, Pulse> {
         @Override
-        protected Address doInBackground(LatLng... params) {
-
-            LatLng loc = params[0];
+        protected Pulse doInBackground(Pulse... params) {
+            Pulse p = params[0];
             try {
-                // Call the synchronous getFromLocation() method by passing in the lat/long values.
-                address = geocoder.getFromLocation(loc.latitude, loc.longitude, 1).get(0);
+                Address address = geocoder.getFromLocation(p.getLatitude(), p.getLongitude(), 1).get(0);
+                p.setAddressStreet(address.getAddressLine(0));
+                p.setAddressCityCountry(address.getAddressLine(1) + ", " + address.getAddressLine(2));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return address;
+            return p;
         }
 
         @Override
-        protected void onPostExecute(Address address) {
-            super.onPostExecute(address);
-            if(address != null) updateCard(address);
+        protected void onPostExecute(Pulse pulse) {
+            super.onPostExecute(pulse);
+            // Update UI
+            updateCheckinUI(pulse);
+
+            // Push to firebase
+            new PushPulseToFirebaseTask().execute(pulse);
         }
     }
 
-    private class LastPulseTask extends AsyncTask<DataSnapshot, Pulse, Pulse> {
+    private class PushPulseToFirebaseTask extends AsyncTask<Pulse, Void, Void> {
         @Override
-        protected Pulse doInBackground(DataSnapshot... params) {
-            DataSnapshot snap = params[0];
-            if(snap.getChildrenCount() == 0) return null;
+        protected Void doInBackground(Pulse... params) {
+            Pulse p = params[0];
+            // Push the new pulse to firebase
+            Firebase fb = mRef.child("pulses").push();
+            fb.setValue(p);
 
-            Pulse p;
-            Pulse latestPulse = new Pulse();
-            long latestTimestamp, currentTimestamp;
-            latestTimestamp = 0;
+            // Add pulse key to users in firebase
+            Map<String, Object> map = new HashMap<>();
+            map.put(fb.getKey(),true);
+            mRef.child("users").child(activity.getAuth().getUid()).child("pulses").updateChildren(map);
 
-            for (DataSnapshot child : snap.getChildren()) {
-                p = child.getValue(Pulse.class);
-                currentTimestamp = p.getCheckin();
-                if(currentTimestamp > latestTimestamp) {
-                    latestTimestamp = currentTimestamp;
-                    latestPulse = p;
-                }
-            }
-
-            return latestPulse;
+            return null;
         }
+    }
 
+    private class GetLastPulseTask extends AsyncTask<Void, Void, Void> {
         @Override
-        protected void onPostExecute(Pulse p) {
-            super.onPostExecute(p);
-            if(p != null) {
-                setLastPulse(p);
-                if(p.getCheckout() == 0) setCheckedIn(true);
-                else setCheckedIn(false);
-            }  else {
-                setCheckedIn(false);
-            }
+        protected Void doInBackground(Void... params) {
+            Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Query query = dataSnapshot.getRef().orderByChild("checkin").limitToLast(1);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            try {
+                                updateCheckinUI(dataSnapshot.getChildren().iterator().next().getValue(Pulse.class));
+                            } catch (Exception e) {
+                                updateCheckinUI(null);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+                        }
+                    });
+                }
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {}
+            });
+            return null;
         }
     }
 
@@ -515,23 +439,35 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback,
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getChildrenCount() != 0) {
-                        Pulse p;
-                        long latestTimestamp, currentTimestamp;
-                        latestTimestamp = 0;
-                        String lastPulseKey = "";
-
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            p = child.getValue(Pulse.class);
-
-                            currentTimestamp = p.getCheckin();
-                            if (currentTimestamp > latestTimestamp) {
-                                latestTimestamp = currentTimestamp;
-                                lastPulseKey = child.getKey();
+                        Query query = dataSnapshot.getRef().orderByChild("checkin").limitToLast(1);
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getChildren().iterator().next().getRef().updateChildren(map);
                             }
-                        }
 
-                        mRef.child("pulses").child(lastPulseKey).updateChildren(map);
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+                            }
+                        });
                     }
+
+//                        Pulse p;
+//                        long latestTimestamp, currentTimestamp;
+//                        latestTimestamp = 0;
+//                        String lastPulseKey = "";
+//
+//                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                            p = child.getValue(Pulse.class);
+//
+//                            currentTimestamp = p.getCheckin();
+//                            if (currentTimestamp > latestTimestamp) {
+//                                latestTimestamp = currentTimestamp;
+//                                lastPulseKey = child.getKey();
+//                            }
+//                        }
+//
+//                        mRef.child("pulses").child(lastPulseKey)
                 }
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {}

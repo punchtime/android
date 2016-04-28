@@ -1,4 +1,4 @@
-package io.punchtime.punchtime;
+package io.punchtime.punchtime.logic.tasks;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

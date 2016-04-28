@@ -32,4 +32,5 @@
     <string name="placeholder_city">Tap the green pin button to checkin</string>
     <string name="login_rationale">In order to checkin at a location you need te be logged in. Please do so in the settings.</string>
     <string name="loading">Loading …</string>
+    <string name="no_location_error_message">Could not retrieve location, please try again</string>
 </resources>
