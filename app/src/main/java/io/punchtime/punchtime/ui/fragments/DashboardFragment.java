@@ -134,7 +134,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                         } else {
                             // Manual checkin mode
                             if (mLastLocation != null) {
-                                // If we have a location
+                                // Location found
                                 if(isCheckedIn) checkOut();
                                 else checkIn();
                             } else {
@@ -191,56 +191,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         return v;
     }
 
-    private void checkIn() {
-        setCheckedIn(true);
-        SnackbarFactory.createSnackbar(activity, v, "Checked in at current location").show();
-
-        Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), "-KBdSPf90dvJCeH3J8m7", true);
-        new ReverseGeocodePulseTask().execute(pulse);
-    }
-
-    private void checkOut() {
-        setCheckedIn(false);
-        SnackbarFactory.createSnackbar(activity, v, "Checked out at current location").show();
-
-        updateCheckinUI(null);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("checkout", System.currentTimeMillis());
-        new UpdateLastPulseTask().execute(map);
-    }
-
     @Override
-    public void onDestroyView() {
-
-        FragmentManager fm = getFragmentManager();
-
-        Fragment xmlFragment = fm.findFragmentById(R.id.map);
-        if (xmlFragment != null) {
-            fm.beginTransaction().remove(xmlFragment).commit();
-        }
-
-        activity.removeViewFromToolbar(mSwitch);
-
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        UiSettings settings = map.getUiSettings();
-        settings.setMapToolbarEnabled(false);
-        settings.setScrollGesturesEnabled(false);
-        this.mMap = map;
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Intent intent = new Intent(activity, MapDetailActivity.class);
-                intent.putExtra("location", mLastLocation);
-                startActivity(intent);
-            }
-        });
-    }
-
     public void onStart() {
         super.onStart();
 
@@ -268,6 +219,67 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         setTrackingLocationMode(preferences.getBoolean("tracking_location_mode", false));
     }
 
+    @Override
+    public void onDestroyView() {
+        FragmentManager fm = getFragmentManager();
+
+        Fragment xmlFragment = fm.findFragmentById(R.id.map);
+        if (xmlFragment != null) {
+            fm.beginTransaction().remove(xmlFragment).commit();
+        }
+        activity.removeViewFromToolbar(mSwitch);
+
+        super.onDestroyView();
+    }
+
+    private void checkIn() {
+        setCheckedIn(true);
+        SnackbarFactory.createSnackbar(activity, v, "Checked in at current location").show();
+
+        // Create pulse without geocoding
+        Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), "-KBdSPf90dvJCeH3J8m7", true);
+
+        // Add geocoding to pulse, will also update UI and push to Firebase
+        new ReverseGeocodePulseTask().execute(pulse);
+    }
+
+    private void checkOut() {
+        setCheckedIn(false);
+        SnackbarFactory.createSnackbar(activity, v, "Checked out at current location").show();
+
+        // Update UI
+        updateCheckinUI(null);
+
+        // Update last pulse with checkout timestamp
+        Map<String, Object> map = new HashMap<>();
+        map.put("checkout", System.currentTimeMillis());
+        new UpdateLastPulseTask().execute(map);
+    }
+
+    public void updateCheckinUI(Pulse pulse) {
+        boolean trackingLocationMode = preferences.getBoolean("tracking_location_mode", false);
+
+        if (pulse != null && pulse.getCheckout() == 0) {
+            // Checked in
+            if(!trackingLocationMode)fab.setImageResource(R.drawable.ic_location_off_black_24dp);
+            street.setText(pulse.getAddressStreet());
+            city.setText(pulse.getAddressCityCountry());
+            mapButton.setVisibility(View.VISIBLE);
+            noteButton.setVisibility(View.VISIBLE);
+        } else {
+            // Not checked in
+            if(!trackingLocationMode) fab.setImageResource(R.drawable.ic_pin_drop_24dp);
+            street.setText(R.string.placeholder_street);
+            city.setText(R.string.placeholder_city);
+            mapButton.setVisibility(View.INVISIBLE);
+            noteButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void setCheckedIn(boolean checkedIn) {
+        isCheckedIn = checkedIn;
+    }
+
     public void setTrackingLocationMode(boolean trackingLocationMode) {
         preferences.edit().putBoolean("tracking_location_mode", trackingLocationMode).apply();
         setTrackingLocation(false);
@@ -293,26 +305,20 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void setCheckedIn(boolean checkedIn) {
-        isCheckedIn = checkedIn;
-    }
-
-    public void updateCheckinUI(Pulse pulse) {
-        boolean trackingLocationMode = preferences.getBoolean("tracking_location_mode", false);
-
-        if (pulse != null && pulse.getCheckout() == 0) {
-            if(!trackingLocationMode)fab.setImageResource(R.drawable.ic_location_off_black_24dp);
-            street.setText(pulse.getAddressStreet());
-            city.setText(pulse.getAddressCityCountry());
-            mapButton.setVisibility(View.VISIBLE);
-            noteButton.setVisibility(View.VISIBLE);
-        } else {
-            if(!trackingLocationMode) fab.setImageResource(R.drawable.ic_pin_drop_24dp);
-            street.setText(R.string.placeholder_street);
-            city.setText(R.string.placeholder_city);
-            mapButton.setVisibility(View.INVISIBLE);
-            noteButton.setVisibility(View.INVISIBLE);
-        }
+    @Override
+    public void onMapReady(GoogleMap map) {
+        UiSettings settings = map.getUiSettings();
+        settings.setMapToolbarEnabled(false);
+        settings.setScrollGesturesEnabled(false);
+        this.mMap = map;
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Intent intent = new Intent(activity, MapDetailActivity.class);
+                intent.putExtra("location", mLastLocation);
+                startActivity(intent);
+            }
+        });
     }
 
     // Callbacks for LocationLoader
@@ -451,23 +457,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                             }
                         });
                     }
-
-//                        Pulse p;
-//                        long latestTimestamp, currentTimestamp;
-//                        latestTimestamp = 0;
-//                        String lastPulseKey = "";
-//
-//                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                            p = child.getValue(Pulse.class);
-//
-//                            currentTimestamp = p.getCheckin();
-//                            if (currentTimestamp > latestTimestamp) {
-//                                latestTimestamp = currentTimestamp;
-//                                lastPulseKey = child.getKey();
-//                            }
-//                        }
-//
-//                        mRef.child("pulses").child(lastPulseKey)
                 }
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {}
