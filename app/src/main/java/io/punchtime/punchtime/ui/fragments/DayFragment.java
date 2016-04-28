@@ -76,7 +76,8 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
         mRef = activity.getFirebaseRef();
-        pulseList = new ArrayList<Pulse>();
+        pulseList = new ArrayList<>();
+        getPulseData();
     }
 
     // gets the note for a given pulse
@@ -84,44 +85,29 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
         return pulse.getNote();
     }
 
-    // method for returning all the pulses in a list
+    // Gets pulses ASYNC from Firebase
     public void getPulseData() {
         Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
-        query.addChildEventListener(new ChildEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("Punchtime", "adding pulse to list");
-                pulseList.add(dataSnapshot.getValue(Pulse.class));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()) {
+                    pulseList.add(child.getValue(Pulse.class));
+                }
+
+                // Here we know pulsesList is filled
+                onMonthChange(0,0);
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
+            public void onCancelled(FirebaseError firebaseError) {}
         });
     }
 
     @Override
     public List<?extends WeekViewEvent>onMonthChange(int newYear,int newMonth){
-
         // simple hard coded event in eventlist
         List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
-        getPulseData();
         Log.d("Punchtime", pulseList.toString());
         for (Pulse pulse : pulseList) {
             // create calendar instance of checkin
