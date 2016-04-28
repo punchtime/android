@@ -100,10 +100,8 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
                 }
 
                 // Here we know pulsesList is filled
-                // updateCalenderView(pulsesList);
-                Log.d("Dank", pulseList.toString());
                 //trigger update of pulselist
-                onMonthChange(0,0);
+                mWeekView.notifyDatasetChanged();
             }
 
             @Override
@@ -114,7 +112,6 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     @Override
     public List<?extends WeekViewEvent> onMonthChange(int newYear,int newMonth) {
         List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
-        Log.d("Punchtime", pulseList.toString());
         for (Pulse pulse : pulseList) {
             // create calendar instance of checkin
             Calendar startTime = Calendar.getInstance();
@@ -122,18 +119,16 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
             // create calendar instance of checkout
             Calendar endTime = Calendar.getInstance();
             endTime.setTimeInMillis(pulse.getCheckout());
-            Log.d("Punchtime", endTime.getTime().toString());
-
             // add event to the eventlist
             WeekViewEvent event=new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
             event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
             events.add(event);
         }
-        //log starttime of all weekviewevents
+        /*log starttime of all weekviewevents might be useful to debug pulses
         for (WeekViewEvent event : events
              ) {
-            Log.d("event", event.getStartTime().toString());
-        }
+            Log.d("event", event.getStartTime().toString() + "\n" + event.getEndTime().toString());
+        }*/
         return events;
     }
     @Override
