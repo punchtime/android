@@ -424,9 +424,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                                 Pulse p = dataSnapshot.getChildren().iterator().next().getValue(Pulse.class);
                                 updateCheckinUI(p);
                                 if(p.getCheckout() == 0) setCheckedIn(true);
-
                             } catch (Exception e) {
                                 updateCheckinUI(null);
+                                setCheckedIn(false);
                             }
                         }
 
