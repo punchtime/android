@@ -11,12 +11,19 @@ import android.view.ViewGroup;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import io.punchtime.punchtime.R;
+import io.punchtime.punchtime.data.Pulse;
+import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
  * Created by haroenv on 26/03/16.
@@ -29,10 +36,21 @@ public class ThreeDayFragment extends Fragment implements WeekView.EventClickLis
     private static final int TYPE_WEEK_VIEW = 3;
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
+    private Firebase mRef;
+    private MainActivity activity;
+    List<Pulse> pulseList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_three_day, parent, false);
+
+        //set activity
+        activity = (MainActivity) getActivity();
+
+        mRef = activity.getFirebaseRef();
+        pulseList = new ArrayList<>();
+        getPulseData();
+
         // get view
         mWeekView = (WeekView) v.findViewById(R.id.weekView);
 
@@ -60,29 +78,58 @@ public class ThreeDayFragment extends Fragment implements WeekView.EventClickLis
         // Setup any handles to view objects
     }
 
-    protected String getEventTitle(Calendar time) {
-        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY),
-                time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
+
+    // gets the note for a given pulse
+    protected String getEventTitle(Pulse pulse) {
+        return pulse.getAddressCityCountry();
+    }
+
+    // Gets pulses ASYNC from Firebase
+    public void getPulseData() {
+        Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                pulseList.clear();
+                for(DataSnapshot child : dataSnapshot.getChildren()) {
+                    pulseList.add(child.getValue(Pulse.class));
+                }
+
+                // Here we know pulsesList is filled
+                //trigger update of weekview;
+                mWeekView.notifyDatasetChanged();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {}
+        });
     }
 
     @Override
-    public List<?extends WeekViewEvent> onMonthChange(int newYear, int newMonth){
-
-        // simple hard coded event in eventlist
-        List<WeekViewEvent>events=new ArrayList<WeekViewEvent>();
-
-        Calendar startTime=Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY,3);
-        startTime.set(Calendar.MINUTE,0);
-        startTime.set(Calendar.MONTH,newMonth-1);
-        startTime.set(Calendar.YEAR,newYear);
-        Calendar endTime=(Calendar)startTime.clone();
-        endTime.add(Calendar.HOUR,1);
-        endTime.set(Calendar.MONTH,newMonth-1);
-        WeekViewEvent event=new WeekViewEvent(1,getEventTitle(startTime),startTime,endTime);
-        event.setColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
-        events.add(event);
-
+    public List<?extends WeekViewEvent> onMonthChange(int newYear,int newMonth) {
+        List<WeekViewEvent> events = new ArrayList<>();
+        for (Pulse pulse : pulseList) {
+            Calendar startTime = Calendar.getInstance();
+            startTime.setTimeInMillis(pulse.getCheckin());
+            int pulseMonth = startTime.get(Calendar.MONTH);
+            int pulseYear = startTime.get(Calendar.YEAR);
+            if (newMonth == pulseMonth && newYear == pulseYear) {
+                // create calendar instance of checkin
+                startTime.setTimeInMillis(pulse.getCheckin());
+                // create calendar instance of checkout
+                Calendar endTime = Calendar.getInstance();
+                endTime.setTimeInMillis(pulse.getCheckout());
+                // add event to the eventlist
+                WeekViewEvent event=new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
+                event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+                events.add(event);
+            }
+        }
+        /*log starttime of all weekviewevents might be useful to debug pulses
+        for (WeekViewEvent event : events
+             ) {
+            Log.d("event", event.getStartTime().toString() + "\n" + event.getEndTime().toString());
+        }*/
         return events;
     }
     @Override
