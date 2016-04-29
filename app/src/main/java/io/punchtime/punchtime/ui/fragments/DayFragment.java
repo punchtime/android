@@ -86,7 +86,7 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
 
     // gets the note for a given pulse
     protected String getEventTitle(Pulse pulse) {
-        return pulse.getNote();
+        return pulse.getAddressStreet() + "\n" + pulse.getAddressCityCountry();
     }
 
     // Gets pulses ASYNC from Firebase
@@ -101,7 +101,7 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
                 }
 
                 // Here we know pulsesList is filled
-                //trigger update of pulselist
+                //trigger update of weekview;
                 mWeekView.notifyDatasetChanged();
             }
 
@@ -114,16 +114,21 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     public List<?extends WeekViewEvent> onMonthChange(int newYear,int newMonth) {
         List<WeekViewEvent> events = new ArrayList<>();
         for (Pulse pulse : pulseList) {
-            // create calendar instance of checkin
             Calendar startTime = Calendar.getInstance();
             startTime.setTimeInMillis(pulse.getCheckin());
-            // create calendar instance of checkout
-            Calendar endTime = Calendar.getInstance();
-            endTime.setTimeInMillis(pulse.getCheckout());
-            // add event to the eventlist
-            WeekViewEvent event=new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
-            event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
-            events.add(event);
+            int pulseMonth = startTime.get(Calendar.MONTH);
+            int pulseYear = startTime.get(Calendar.YEAR);
+            if (newMonth == pulseMonth && newYear == pulseYear) {
+                // create calendar instance of checkin
+                startTime.setTimeInMillis(pulse.getCheckin());
+                // create calendar instance of checkout
+                Calendar endTime = Calendar.getInstance();
+                endTime.setTimeInMillis(pulse.getCheckout());
+                // add event to the eventlist
+                WeekViewEvent event=new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
+                event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+                events.add(event);
+            }
         }
         /*log starttime of all weekviewevents might be useful to debug pulses
         for (WeekViewEvent event : events
