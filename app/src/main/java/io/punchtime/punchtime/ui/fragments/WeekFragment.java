@@ -172,7 +172,7 @@ public class WeekFragment extends Fragment  implements WeekView.EventClickListen
     }
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-
+        // TODO: 01/05/16 Haroen: go to a view where pulse can be seen and edited
     }
     @Override
     public void onEmptyViewLongPress(Calendar calendar) {
