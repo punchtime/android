@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Punchtime</string>
+    <string name="account">Accountje xd</string>
+    <string name="action_settings">Inshctellinge</string>
+    <string name="add_a_note">Notichie</string>
+    <string name="drawer_close">owpe het allemaals </string>
+    <string name="drawer_open">doe het dicht xddd</string>
+    <string name="last_checkin">ja daar he loser</string>
+    <string name="loading">jep jep jep duurt lang he :DDDD</string>
+    <string name="location_mode_summary">tis allemaal vanzelf </string>
+    <string name="location_mode_title">vanzelf</string>
+    <string name="location_rationale">euh ja kweenie wa dacht je nu zelf eigenlijk dat deze app ging lukken zonder locatie hahahahaha ik lach me een breuk xd</string>
+    <string name="logged_in_facebook">tis me smoelenboek</string>
+    <string name="logged_in_summary">ga ter eki ut</string>
+    <string name="logged_in_twitter">tis ier ingelogt me den vogelei</string>
+    <string name="login_rationale">ja kik ja ge moe wel derin gelogt zijn eh</string>
+    <string name="logout_dialog_message">zie je het wel zekers? tis wel nin zo simple vo in terug te loggen eee</string>
+    <string name="logout_dialog_title">utloggen </string>
+    <string name="menu_3_day">nen alve weeke</string>
+    <string name="menu_dashboard">kieloemietriek</string>
+    <string name="menu_day">dagh</string>
+    <string name="menu_history">skienisse</string>
+    <string name="menu_week">wieke</string>
+    <string name="not_logged_in_summary">nie ingehlogdt</string>
+    <string name="ok">jap</string>
+    <string name="placeholder_city">klik op da groen spillement vo in te loggn</string>
+    <string name="placeholder_email">klik op alier voe na d\'instelling te goan</string>
+    <string name="placeholder_street">ge zi nog altie nie ingelohd</string>
+    <string name="placeholder_user">Nie ingelohdt</string>
+    <string name="settings">inspiekeringen</string>
+    <string name="time_here_content">nietent</string>
+    <string name="time_here_title">iere</string>
+    <string name="time_today_content">niksniemendal</string>
+    <string name="time_today_title">just vandoage</string>
+    <string name="add_company_summary">stik je ne ki in ne bedrief</string>
+    <string name="add_company_title">Jupla erin!</string>
+    <string name="no_location_error_message">kiek jongen ik vind ik ier da nie ze, miskien ku je et ernieuw proberen</string>
+    <string name="add_company_dialog_title">Stikt er nen utnodiging in</string>
+    <string name="show_on_map">Show et ne ki in da koartjen</string>
+    <string name="recenter_map_on_current_location">stik et int middel</string>
+</resources>

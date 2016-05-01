@@ -2,25 +2,36 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.punchtime.punchtime" >
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:label="Punchtime"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.PermissionErrorActivity"
+            android:label="Error"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher" >
+        </activity>
+        <activity
+            android:name=".ui.activities.MapDetailActivity"
+            android:label="Map Detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
         </activity>
 
         <meta-data
