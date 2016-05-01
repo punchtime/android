@@ -125,7 +125,12 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
                 startTime.setTimeInMillis(pulse.getCheckin());
                 // create calendar instance of checkout
                 Calendar endTime = Calendar.getInstance();
-                endTime.setTimeInMillis(pulse.getCheckout());
+                Calendar now = Calendar.getInstance();
+                if (pulse.getCheckout() == 0) {
+                    endTime.setTimeInMillis(now.getTimeInMillis());
+                } else {
+                    endTime.setTimeInMillis(pulse.getCheckout());
+                }
                 // add event to the eventlist
                 WeekViewEvent event=new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
                 event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));

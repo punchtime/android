@@ -4,6 +4,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +158,12 @@ public class WeekFragment extends Fragment  implements WeekView.EventClickListen
                 startTime.setTimeInMillis(pulse.getCheckin());
                 // create calendar instance of checkout
                 Calendar endTime = Calendar.getInstance();
-                endTime.setTimeInMillis(pulse.getCheckout());
+                Calendar now = Calendar.getInstance();
+                if (pulse.getCheckout() == 0) {
+                    endTime.setTimeInMillis(now.getTimeInMillis());
+                } else {
+                    endTime.setTimeInMillis(pulse.getCheckout());
+                }
                 // add event to the eventlist
                 WeekViewEvent event=new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
                 event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
