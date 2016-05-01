@@ -30,7 +30,6 @@
         <activity
             android:name=".ui.activities.MapDetailActivity"
             android:label="@string/map_detail_title"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
 
