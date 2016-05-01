@@ -39,4 +39,6 @@
     <string name="location_mode_title">Mode automatique</string>
     <string name="location_mode_summary">Ce mode fera les connections pour vous, basé sur la localisation de votre portable</string>
     <string name="loading">Charger …</string>
+    <string name="checkin_message">Enrégistré ici</string>
+    <string name="checkout_message">Quitté l\'emplacement actuel</string>
 </resources>

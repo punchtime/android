@@ -39,4 +39,6 @@
     <string name="add_company_dialog_title">Stikt er nen utnodiging in</string>
     <string name="show_on_map">Show et ne ki in da koartjen</string>
     <string name="recenter_map_on_current_location">stik et int middel</string>
+    <string name="checkin_message">je ziet er geraakt; tscjekt in lik dame zeggen</string>
+    <string name="checkout_message">jow groetjes nog e allemoale; cheketut</string>
 </resources>

@@ -39,4 +39,6 @@
     <string name="no_location_error_message">Kon geen locatie vinden, probeer het opnieuw</string>
     <string name="recenter_map_on_current_location">Centreer kaart op huidige locatie</string>
     <string name="show_on_map">Toon op kaart</string>
+    <string name="checkin_message">Ingecheckt in huidige locatie</string>
+    <string name="checkout_message">Uitgecheckt uit huidige locatie</string>
 </resources>
