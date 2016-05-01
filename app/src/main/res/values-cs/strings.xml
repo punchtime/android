@@ -33,4 +33,8 @@
     <string name="time_here_title">iere</string>
     <string name="time_today_content">niksniemendal</string>
     <string name="time_today_title">just vandoage</string>
+    <string name="add_company_summary">stik je ne ki in ne bedrief</string>
+    <string name="add_company_title">Jupla erin!</string>
+    <string name="no_location_error_message"></string>
+    <string name="add_company_dialog_title"></string>
 </resources>

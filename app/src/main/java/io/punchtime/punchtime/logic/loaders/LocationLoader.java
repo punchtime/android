@@ -73,7 +73,7 @@ public class LocationLoader extends Loader<Location>
         if (mLastLocation != null) {
             deliverResult(mLastLocation);
         }
-        // Try to reconnect if we aren’t connected
+        // Try to reconnect if we aren't connected
         if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }

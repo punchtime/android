@@ -27,31 +27,51 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings);
-        android.support.v7.preference.Preference pref = findPreference("pref_key_account");
+        android.support.v7.preference.Preference prefLogin = findPreference("pref_key_account");
 
         if(preferences.getBoolean("logged_in", false)) {
-            pref.setSummary(R.string.logged_in_summary);
+            prefLogin.setSummary(R.string.logged_in_summary);
         } else {
-            pref.setSummary(R.string.not_logged_in_summary);
+            prefLogin.setSummary(R.string.not_logged_in_summary);
         }
 
-        pref.setOnPreferenceClickListener(new android.support.v7.preference.Preference.OnPreferenceClickListener() {
+        prefLogin.setOnPreferenceClickListener(new android.support.v7.preference.Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
-                if(preferences.getBoolean("logged_in", false)) {
-                    new AlertDialog.Builder(activity)
-                            .setTitle(getString(R.string.logout_dialog_title))
-                            .setMessage(getString(R.string.logout_dialog_message))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            if(preferences.getBoolean("logged_in", false)) {
+                new AlertDialog.Builder(activity)
+                        .setTitle(getString(R.string.logout_dialog_title))
+                        .setMessage(getString(R.string.logout_dialog_message))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    activity.logout();
-                                    pref.setSummary(R.string.not_logged_in_summary);
-                                }})
-                            .setNegativeButton(android.R.string.no, null).show();
-                } else {
-                    activity.showFirebaseLoginPrompt();
-                }
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                activity.logout();
+                                pref.setSummary(R.string.not_logged_in_summary);
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+            } else {
+                activity.showFirebaseLoginPrompt();
+            }
+            return false;
+            }
+        });
+
+        android.support.v7.preference.Preference prefAddCompany = findPreference("pref_key_add_company");
+
+        prefAddCompany.setOnPreferenceClickListener(new android.support.v7.preference.Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
+                // TODO: 01/05/16 Haroen: make a real input for this setting
+                // TODO: 01/05/16 Haroen: allow user to be brought to this immediately
+                new AlertDialog.Builder(activity)
+                    .setTitle(getString(R.string.add_company_dialog_title))
+                    .setMessage(getString(R.string.logout_dialog_message))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        // TODO: 01/05/16 do the firebase push
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }})
+                    .setNegativeButton(android.R.string.no, null).show();
+
                 return false;
             }
         });

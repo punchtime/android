@@ -32,4 +32,6 @@
     <string name="login_rationale">Om in te kunnen checken moet je ingelogd zijn</string>
     <string name="location_rationale">Deze app heeft toestemming nodig om je locatie te gebruiken. Gelieve dit in instelllingen toe te staan.</string>
     <string name="location_mode_title">Automatische locatietracking</string>
+    <string name="add_company_summary">Voeg jezelf aan een bedrijf toe met een uitnodiging</string>
+    <string name="add_company_title">Voeg jezelf aan een bedrijf toe</string>
 </resources>
