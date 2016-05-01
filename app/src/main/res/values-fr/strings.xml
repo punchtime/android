@@ -20,7 +20,7 @@
     <string name="placeholder_user">Ne pas connecté</string>
     <string name="placeholder_street">Vous n\'êtes pas enrégistré</string>
     <string name="placeholder_email">Appuyez ici pour aller aux préférences</string>
-    <string name="placeholder_city">Appuyez sur l\'épingle vert pour enrégistrer</string>
+    <string name="placeholder_city">Appuyez sur l\'épingle verte pour enrégistrer</string>
     <string name="ok">Oui</string>
     <string name="not_logged_in_summary">Pas connecté, appuyez pour se connecter</string>
     <string name="no_location_error_message">Aucun location trouvé, essayez encore une fois</string>
