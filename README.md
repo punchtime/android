@@ -6,7 +6,7 @@
 
 > Note: these screenshots aren't definitive
 
-<img src="assets/Screenshot_20160427-181433-large.png" alt="screenshot of the main interface" width="100px" align="right">
+<img src="assets/Screenshot_20160427-181433-large.png" alt="screenshot of the main interface" width="200px" align="right">
 
 ## info
 
