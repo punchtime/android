@@ -34,4 +34,9 @@
     <string name="location_mode_title">Automatische locatietracking</string>
     <string name="add_company_summary">Voeg jezelf aan een bedrijf toe met een uitnodiging</string>
     <string name="add_company_title">Voeg jezelf aan een bedrijf toe</string>
+    <string name="add_company_dialog_title">Voer een uitnodiging in</string>
+    <string name="facebook_app_id"></string>
+    <string name="no_location_error_message">Kon geen locatie vinden, probeer het opnieuw</string>
+    <string name="recenter_map_on_current_location">Centreer kaart op huidige locatie</string>
+    <string name="show_on_map">Toon op kaart</string>
 </resources>
