@@ -41,4 +41,5 @@
     <string name="loading">Charger …</string>
     <string name="checkin_message">Enrégistré ici</string>
     <string name="checkout_message">Quitté l\'emplacement actuel</string>
+    <string name="map_detail_title">Carte détail</string>
 </resources>

@@ -41,4 +41,5 @@
     <string name="show_on_map">Toon op kaart</string>
     <string name="checkin_message">Ingecheckt in huidige locatie</string>
     <string name="checkout_message">Uitgecheckt uit huidige locatie</string>
+    <string name="map_detail_title">Detailkaart</string>
 </resources>

@@ -40,4 +40,5 @@
     <string name="add_company_dialog_title">Enter an invitation</string>
     <string name="checkin_message">Checked in at current location</string>
     <string name="checkout_message">Checked out at current location</string>
+    <string name="map_detail_title">Map Detail</string>
 </resources>
