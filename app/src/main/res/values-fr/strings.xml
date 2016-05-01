@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Punchtime</string>
+    <string name="account">Utitlisateur</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="add_a_note">Ajoutez une note</string>
+    <string name="add_company_dialog_title">Remplissez une invitation</string>
+    <string name="add_company_summary">Ajoutez vous-même dans une entreprise</string>
+    <string name="add_company_title">Ajouter dans une entreprise</string>
+    <string name="drawer_close">Fermez la navigation</string>
+    <string name="drawer_open">Ouvrez la navigation</string>
+    <string name="last_checkin">Location courant</string>
+    <string name="time_today_content">0m</string>
+    <string name="time_here_title">Ici</string>
+    <string name="time_today_title">Aujourd\'hui</string>
+    <string name="time_here_content">0m</string>
+    <string name="show_on_map">Montrez sur la carte</string>
+    <string name="settings">Préferences</string>
+    <string name="recenter_map_on_current_location">Centrez sur la location</string>
+    <string name="placeholder_user">Non connecté</string>
+    <string name="placeholder_street">Vous n\'êtes pas enrégistré</string>
+    <string name="placeholder_email">Appuyez ici pour aller aux préférences</string>
+    <string name="placeholder_city">Appuyez sur l\'épingle verte pour enrégistrer</string>
+    <string name="ok">Oui</string>
+    <string name="not_logged_in_summary">Pas connecté, appuyez pour se connecter</string>
+    <string name="no_location_error_message">Aucune location trouvée, essayez encore une fois</string>
+    <string name="menu_week">Semaine</string>
+    <string name="menu_history">Historique</string>
+    <string name="menu_day">Jour</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="menu_3_day">3 Jours</string>
+    <string name="logout_dialog_title">Se déconnecter</string>
+    <string name="logout_dialog_message">Vous voulez sûrement vous déconnecter? Vous devez être connecter pour utiliser l\'appli.</string>
+    <string name="login_rationale">Pour donner un location, vouz devez vous connecter</string>
+    <string name="logged_in_twitter">Connecté avec Twitter</string>
+    <string name="logged_in_summary">Connecté, appuyez pour vous déconnecter</string>
+    <string name="logged_in_facebook">Connecté avec Facebook</string>
+    <string name="location_rationale">Cette appli a besoin d\'utiliser la location pour fonctionner</string>
+    <string name="location_mode_title">Mode automatique</string>
+    <string name="location_mode_summary">Ce mode fera les connections pour vous, basé sur la localisation de votre portable</string>
+    <string name="loading">Charger …</string>
+</resources>
