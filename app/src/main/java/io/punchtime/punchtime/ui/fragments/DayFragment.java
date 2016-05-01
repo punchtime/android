@@ -23,6 +23,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.punchtime.punchtime.R;
@@ -81,7 +82,8 @@ public class DayFragment extends Fragment implements WeekView.EventClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
-        // TODO set view to automatically scroll down to nowline
+        Calendar cal = Calendar.getInstance();
+        mWeekView.goToHour(cal.get(Calendar.HOUR_OF_DAY) - 1);
     }
 
     // gets the note for a given pulse

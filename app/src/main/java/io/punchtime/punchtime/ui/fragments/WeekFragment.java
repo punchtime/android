@@ -86,7 +86,8 @@ public class WeekFragment extends Fragment  implements WeekView.EventClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
-
+        Calendar cal = Calendar.getInstance();
+        mWeekView.goToHour(cal.get(Calendar.HOUR_OF_DAY) - 1);
     }
 
     // gets the note for a given pulse

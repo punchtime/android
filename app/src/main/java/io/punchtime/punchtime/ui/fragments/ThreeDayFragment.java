@@ -76,6 +76,8 @@ public class ThreeDayFragment extends Fragment implements WeekView.EventClickLis
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
+        Calendar cal = Calendar.getInstance();
+        mWeekView.goToHour(cal.get(Calendar.HOUR_OF_DAY) - 1);
     }
 
 
