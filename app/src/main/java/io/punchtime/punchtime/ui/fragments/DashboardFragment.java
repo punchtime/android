@@ -413,32 +413,27 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private class GetLastPulseTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
+            Query query = mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").limitToLast(1);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    try {
-                        Pulse p;
-                        Pulse latestPulse = new Pulse();
-                        long latestTimestamp, currentTimestamp;
-                        latestTimestamp = 0;
-
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            p = child.getValue(Pulse.class);
-                            currentTimestamp = p.getCheckin();
-                            if(currentTimestamp > latestTimestamp) {
-                                latestTimestamp = currentTimestamp;
-                                latestPulse = p;
+                        mRef.child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                try {
+                                    Pulse latestPulse = dataSnapshot.getValue(Pulse.class);
+                                    updateCheckinUI(latestPulse);
+                                    if(latestPulse.getCheckout() == 0) setCheckedIn(true);
+                                    else setCheckedIn(false);
+                                } catch (Exception e) {
+                                    updateCheckinUI(null);
+                                    setCheckedIn(false);
+                                }
                             }
-                        }
 
-                        updateCheckinUI(latestPulse);
-                        if(latestPulse.getCheckout() == 0) setCheckedIn(true);
-                        else setCheckedIn(false);
-                    } catch (Exception e) {
-                        updateCheckinUI(null);
-                        setCheckedIn(false);
-                    }
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {}
+                        });
                 }
 
                 @Override
@@ -449,32 +444,18 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private class UpdateLastPulseTask extends AsyncTask<Map<String,Object>, Pulse, Pulse> {
+    private class UpdateLastPulseTask extends AsyncTask<Map<String,Object>, Void, Void> {
         Map<String, Object> map;
 
         @Override
         @SafeVarargs
-        protected final Pulse doInBackground(Map<String,Object>... params) {
+        protected final Void doInBackground(Map<String,Object>... params) {
             map = params[0];
-            Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
+            Query query = mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").limitToLast(1);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Pulse p;
-                    long latestTimestamp, currentTimestamp;
-                    latestTimestamp = 0;
-                    String lastPulseKey ="";
-
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        p = child.getValue(Pulse.class);
-
-                        currentTimestamp = p.getCheckin();
-                        if(currentTimestamp > latestTimestamp) {
-                            latestTimestamp = currentTimestamp;
-                            lastPulseKey = child.getKey();
-                        }
-                    }
-                    mRef.child("pulses").child(lastPulseKey).updateChildren(map);
+                    mRef.child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).updateChildren(map);
                 }
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {}
