@@ -235,7 +235,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
 
     private void checkIn() {
         setCheckedIn(true);
-        SnackbarFactory.createSnackbar(activity, v, String.valueOf(R.string.checkin_message)).show();
+        SnackbarFactory.createSnackbar(activity, v, getString(R.string.checkin_message)).show();
 
         // Create pulse without geocoding
         Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), "-KBdSPf90dvJCeH3J8m7", true);
@@ -246,7 +246,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
 
     private void checkOut() {
         setCheckedIn(false);
-        SnackbarFactory.createSnackbar(activity, v, String.valueOf(R.string.checkout_message)).show();
+        SnackbarFactory.createSnackbar(activity, v, getString(R.string.checkout_message)).show();
 
         // Update UI
         updateCheckinUI(null);
