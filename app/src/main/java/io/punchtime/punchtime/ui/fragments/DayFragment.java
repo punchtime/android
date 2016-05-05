@@ -13,7 +13,7 @@ import io.punchtime.punchtime.R;
  * Created by Arnaud on 3/23/2016.
  * for project: Punchtime
  */
-public class DayFragment extends CalendarSetup {
+public class DayFragment extends CalendarFragment {
     private WeekView mWeekView;
 
     @Override

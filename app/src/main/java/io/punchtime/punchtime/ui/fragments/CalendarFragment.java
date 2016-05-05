@@ -27,7 +27,7 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
 /**
  * Created by arnaud on 05/05/16.
  */
-public class CalendarSetup extends Fragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener,
+public class CalendarFragment extends Fragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener,
         WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
     private WeekView mWeekView;
     private Firebase mRef;

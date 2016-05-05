@@ -18,7 +18,7 @@ import io.punchtime.punchtime.data.Pulse;
 /**
  * Created by haroenv on 26/03/16.
  */
-public class WeekFragment extends CalendarSetup {
+public class WeekFragment extends CalendarFragment {
     private WeekView mWeekView;
 
     @Override
