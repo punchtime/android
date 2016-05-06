@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
+import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitchState;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,13 +46,17 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.xml.datatype.Duration;
+
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
 import io.punchtime.punchtime.logic.loaders.LocationLoader;
+import io.punchtime.punchtime.logic.loaders.TimerLoader;
 import io.punchtime.punchtime.ui.SnackbarFactory;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 import io.punchtime.punchtime.ui.activities.MapDetailActivity;
@@ -74,6 +81,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private Geocoder geocoder;
     private TextView street;
     private TextView city;
+    private TextView timeCheckin;
+    private  TextView timeToday;
+    private Pulse mLastPulse;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -92,15 +102,19 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         activity = (MainActivity) getActivity();
 
         getLoaderManager().initLoader(0, null, locationLoaderCallbacks);
+        getLoaderManager().initLoader(1, null, timerLoaderCallbacks);
 
         // Setup toolbar
         activity.setTitle(R.string.menu_dashboard);
         Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         mSwitch = (MaterialAnimatedSwitch) LayoutInflater.from(activity).inflate(R.layout.toolbar_switch, toolbar, false);
+
         activity.addViewToToolbar(mSwitch);
 
         street = (TextView) v.findViewById(R.id.streetText);
         city = (TextView) v.findViewById(R.id.cityText);
+        timeCheckin = (TextView) v.findViewById(R.id.timeHere);
+        timeToday = (TextView) v.findViewById(R.id.timeToday);
 
         // Load the map async
         SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -189,6 +203,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        setTrackingLocationMode(preferences.getBoolean("tracking_location_mode", false));
+
         return v;
     }
 
@@ -216,9 +232,13 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         } else {
             new GetLastPulseTask().execute();
         }
-
-        setTrackingLocationMode(preferences.getBoolean("tracking_location_mode", false));
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -234,11 +254,14 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void checkIn() {
-        setCheckedIn(true);
         SnackbarFactory.createSnackbar(activity, v, getString(R.string.checkin_message)).show();
 
         // Create pulse without geocoding
         Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), "-KBdSPf90dvJCeH3J8m7", true);
+
+        mLastPulse = pulse;
+
+        setCheckedIn(true);
 
         // Add geocoding to pulse, will also update UI and push to Firebase
         new ReverseGeocodePulseTask().execute(pulse);
@@ -280,8 +303,10 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         if(!preferences.getBoolean("tracking_location_mode", false)) {
             if(checkedIn) {
                 fab.setImageResource(R.drawable.ic_location_off_black_24dp);
+                timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – now");
             } else {
                 fab.setImageResource(R.drawable.ic_pin_drop_24dp);
+                timeCheckin.setText("-");
             }
         }
     }
@@ -291,11 +316,21 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         setTrackingLocation(false);
 
         if (!trackingLocationMode) {
+            mSwitch.setOnInitFinishedListener(null);
             if(isCheckedIn) {
                 fab.setImageResource(R.drawable.ic_location_off_black_24dp);
             } else {
                 fab.setImageResource(R.drawable.ic_pin_drop_24dp);
             }
+        } else {
+            mSwitch.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mSwitch.isChecked()) {
+                        mSwitch.toggle();
+                    }
+                }
+            });
         }
     }
 
@@ -367,6 +402,26 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                 public void onLoaderReset(Loader<Location> loader) {}
             };
 
+    // Callbacks for TimerLoader
+    private LoaderManager.LoaderCallbacks<Void> timerLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<Void>() {
+                @Override
+                public Loader<Void> onCreateLoader(
+                        int id, Bundle args) {
+                    return new TimerLoader(context);
+                }
+                @Override
+                public void onLoadFinished(Loader<Void> loader, Void mNull) {
+                    // Fires every minute
+                    if(mLastPulse != null) {
+                        timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – now");
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Void> loader) {}
+            };
+
 
     private class ReverseGeocodePulseTask extends AsyncTask<Pulse, Pulse, Pulse> {
         @Override
@@ -385,6 +440,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         @Override
         protected void onPostExecute(Pulse pulse) {
             super.onPostExecute(pulse);
+
+            mLastPulse = pulse;
+
             // Update UI
             updateCheckinUI(pulse);
 
@@ -417,11 +475,13 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
                         mRef.child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 try {
                                     Pulse latestPulse = dataSnapshot.getValue(Pulse.class);
+                                    mLastPulse = latestPulse;
                                     updateCheckinUI(latestPulse);
                                     if(latestPulse.getCheckout() == 0) setCheckedIn(true);
                                     else setCheckedIn(false);
@@ -434,6 +494,10 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onCancelled(FirebaseError firebaseError) {}
                         });
+                    } catch (Exception e) {
+                        updateCheckinUI(null);
+                        setCheckedIn(false);
+                    }
                 }
 
                 @Override
@@ -441,6 +505,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                 }
             });
             return null;
+
+
         }
     }
 

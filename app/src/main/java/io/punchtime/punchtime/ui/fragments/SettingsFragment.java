@@ -7,6 +7,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
+import android.widget.EditText;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.ui.activities.MainActivity;
@@ -61,17 +69,65 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefAddCompany.setOnPreferenceClickListener(new android.support.v7.preference.Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
-                // TODO: 01/05/16 Haroen: make a real input for this setting
                 // TODO: 01/05/16 Haroen: allow user to be brought to this immediately
-                new AlertDialog.Builder(activity)
-                    .setTitle(getString(R.string.add_company_dialog_title))
-                    .setMessage(getString(R.string.logout_dialog_message))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        // TODO: 01/05/16 do the firebase push
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                        }})
-                    .setNegativeButton(android.R.string.no, null).show();
+                final AlertDialog.Builder inviteAlert = new AlertDialog.Builder(activity);
+                inviteAlert.setTitle("Enter your invitation code");
+                final EditText userInput = new EditText(activity);
+                inviteAlert.setView(userInput);
+                inviteAlert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    activity.getFirebaseRef().child("invites").child(userInput.getText().toString().trim()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                // Claim invite
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("claimed", true);
+                                dataSnapshot.getRef().updateChildren(map);
+
+                                // Add company to user
+                                Map<String, Object> mapUser = new HashMap<>();
+                                mapUser.put(dataSnapshot.child("company/id").getValue().toString(), true);
+                                activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("employee").updateChildren(mapUser);
+
+                                // Add user to company
+                                Map<String, Object> mapCompany = new HashMap<>();
+                                mapCompany.put(activity.getAuth().getUid(), true);
+                                activity.getFirebaseRef().child("companies").child(dataSnapshot.child("company/id").getValue().toString()).child("employees").updateChildren(mapCompany);
+
+                                // Alert success
+                                new AlertDialog.Builder(activity)
+                                        .setTitle("Success")
+                                        .setMessage("You have successfully joined " + dataSnapshot.child("company/name").getValue().toString())
+                                        .create().show();
+
+                            } else {
+                                // Alert failure
+                                new AlertDialog.Builder(activity)
+                                        .setTitle("Invitation code error")
+                                        .setMessage("Please verify that you entered the right code and try again.")
+                                        .create().show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+                    }
+                });
+                inviteAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = inviteAlert.create();
+                alertDialog.show();
                 return false;
             }
         });

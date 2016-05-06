@@ -9,6 +9,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
+        android:name="PunchtimeApplication"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
@@ -16,9 +17,16 @@
             android:label="Punchtime"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher" >
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http" android:host="punchtime.io" />
+                <data android:scheme="https" android:host="punchtime.io" />
+                <data android:scheme="http" android:host="www.punchtime.io" />
+                <data android:scheme="https" android:host="www.punchtime.io" />
             </intent-filter>
         </activity>
         <activity

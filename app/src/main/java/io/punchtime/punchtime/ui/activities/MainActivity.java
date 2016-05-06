@@ -71,8 +71,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         headerView = (navigationView == null) ? null : navigationView.getHeaderView(0);
         setupDrawerContent(navigationView);
 
-        Firebase.setAndroidContext(this);
-
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // connect to firebase
@@ -275,8 +273,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         preferences.edit().putBoolean("logged_in", true).apply();
 
-        new DownloadImageTask(pic)
-                .execute(map.get("image").toString());
+        new DownloadImageTask(pic).execute(map.get("image").toString());
     }
 
     @Override

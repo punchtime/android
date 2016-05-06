@@ -26,7 +26,7 @@ android {
 
 repositories {
     maven {
-        url "http://dl.bintray.com/glomadrian/maven"
+        url "https://jitpack.io"
     }
 }
 
@@ -40,11 +40,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.firebase:firebase-client-android:2.5.1'
-    compile 'com.github.glomadrian:MaterialAnimatedSwitch:1.1@aar'
     compile 'com.firebaseui:firebase-ui:0.3.1'
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'org.twitter4j:twitter4j-core:4.0.2'
     compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.github.eliasmeire:material-animated-switch:0.0.8'
 }

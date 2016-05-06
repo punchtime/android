@@ -15,8 +15,8 @@
     <string name="logout_dialog_title">Logout</string>
     <string name="time_today_title">Today</string>
     <string name="time_here_title">Current checkin</string>
-    <string name="time_today_content">0m</string>
-    <string name="time_here_content">0m</string>
+    <string name="time_today_content">-</string>
+    <string name="time_here_content">-</string>
     <string name="last_checkin">Current checkin location</string>
     <string name="add_a_note">Add a note</string>
     <string name="account">Account</string>
