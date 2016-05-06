@@ -39,6 +39,15 @@ public class WeekFragment extends CalendarFragment {
         return v;
     }
 
+    // fixes bug where it goes to last week
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        // Setup any handles to view objects
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 7);
+        mWeekView.goToDate(cal);
+    }
+
     private void setupDateTimeInterpreter(final boolean shortDate) {
         mWeekView.setDateTimeInterpreter(new DateTimeInterpreter() {
             @Override

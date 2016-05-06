@@ -31,8 +31,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
     private WeekView mWeekView;
     private Firebase mRef;
-    private MainActivity activity;
-    List<Pulse> pulseList;
+    private List<Pulse> pulseList;
 
 
     // triggered soon after onCreateView
@@ -111,7 +110,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     }
     public void setupVariables() {
         //set activity
-        activity = (MainActivity) getActivity();
+        MainActivity activity = (MainActivity) getActivity();
 
         mRef = activity.getFirebaseRef();
         pulseList = new ArrayList<>();
