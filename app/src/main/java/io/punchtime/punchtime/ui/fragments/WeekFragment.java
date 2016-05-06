@@ -1,6 +1,7 @@
 package io.punchtime.punchtime.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,14 @@ public class WeekFragment extends CalendarFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 7);
+        SimpleDateFormat format = new SimpleDateFormat("H", Locale.getDefault());
+        int hour = Integer.parseInt(format.format(cal.getTime()));
+        mWeekView.goToHour(hour - 1);
+        //dodgy fix to fix the start week, but I guess it works so yeah there's that
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        if (day > 2 && day < 8) {
+            cal.add(Calendar.DATE, 7);
+        }
         mWeekView.goToDate(cal);
     }
 
@@ -54,7 +62,7 @@ public class WeekFragment extends CalendarFragment {
             public String interpretDate(Calendar date) {
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEE", Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
-                SimpleDateFormat format = new SimpleDateFormat(" M/d", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat(" d/M", Locale.getDefault());
 
                 // All android api level do not have a standard way of getting the first letter of
                 // the week day name. Hence we get the first char programmatically.
@@ -66,7 +74,7 @@ public class WeekFragment extends CalendarFragment {
 
             @Override
             public String interpretTime(int hour) {
-                return hour > 11 ? (hour - 12) + " PM" : (hour == 0 ? "12 AM" : hour + " AM");
+                return hour < 10 ? "0" + hour + ":00" : hour + ":00";
             }
         });
     }

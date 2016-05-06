@@ -37,6 +37,7 @@ import io.punchtime.punchtime.logic.tasks.DownloadImageTask;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
 import io.punchtime.punchtime.ui.fragments.HistoryFragment;
 import io.punchtime.punchtime.ui.fragments.SettingsFragment;
+import io.punchtime.punchtime.ui.fragments.StatsFragment;
 
 public class MainActivity extends FirebaseLoginBaseActivity {
 
@@ -190,6 +191,9 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 fragment = new HistoryFragment();
                 args.putInt("fragment",R.id.nav_week);
                 fragment.setArguments(args);
+                break;
+            case R.id.nav_stats:
+                fragment = new StatsFragment();
                 break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
