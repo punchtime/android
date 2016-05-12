@@ -524,7 +524,10 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                     mRef.child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).updateChildren(map);
                 }
                 @Override
-                public void onCancelled(FirebaseError firebaseError) {}
+                public void onCancelled(FirebaseError firebaseError) {
+                    // We allow cancelling and then weep
+                    // TODO: maybe try calling it again?
+                }
             });
             return null;
         }
