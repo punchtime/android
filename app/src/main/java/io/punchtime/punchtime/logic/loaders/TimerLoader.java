@@ -15,7 +15,7 @@ import java.util.Locale;
  * for project: Punchtime
  */
 public class TimerLoader extends Loader<Void> {
-    BroadcastReceiver mBroadcastReceiver;
+    private BroadcastReceiver mBroadcastReceiver;
 
     public TimerLoader(Context context) {
         super(context);

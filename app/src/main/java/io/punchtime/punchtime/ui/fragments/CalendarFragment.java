@@ -65,7 +65,10 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {}
+            public void onCancelled(FirebaseError firebaseError) {
+                // Firebase isn't allowed to be cancelled
+                // get a better connection already
+            }
         });
     }
 

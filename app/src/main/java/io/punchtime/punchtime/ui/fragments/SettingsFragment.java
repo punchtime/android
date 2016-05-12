@@ -114,7 +114,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                         @Override
                         public void onCancelled(FirebaseError firebaseError) {
-
+                            // don't disconnect from Firebase please
                         }
                     });
 
