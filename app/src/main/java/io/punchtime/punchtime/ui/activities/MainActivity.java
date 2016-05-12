@@ -200,6 +200,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 break;
             default:
                 fragment = new DashboardFragment();
+                break;
         }
 
         setFragment(fragment);
