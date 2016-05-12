@@ -511,7 +511,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private class UpdateLastPulseTask extends AsyncTask<Map<String,Object>, Void, Void> {
-        Map<String, Object> map;
+        private Map<String, Object> map;
 
         @Override
         @SafeVarargs
