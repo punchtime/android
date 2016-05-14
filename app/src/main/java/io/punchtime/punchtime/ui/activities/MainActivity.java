@@ -61,7 +61,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         // Handle punchime intents
         Intent intent = getIntent();
         String action = intent.getAction();
-        if (action == "android.intent.action.VIEW") {
+        if (action.equals("android.intent.action.VIEW")) {
             Uri data = intent.getData();
             if (data.getHost().equals("invite")) {
                 // open settings
