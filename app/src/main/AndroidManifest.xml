@@ -22,8 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
-                <data android:scheme="https" android:host="punchtime.io"/>
-                
+                <!-- this would redirect all punchtime.io links to the app -->
+                <!-- <data android:scheme="https" android:host="punchtime.io"/> -->
+
+                <!-- Accepts URIs that begin with "punchtime://invite" -->
+                <data android:scheme="punchtime" android:host="invite" />
+
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE"/>

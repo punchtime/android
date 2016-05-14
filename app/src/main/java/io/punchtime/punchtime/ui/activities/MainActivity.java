@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -16,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,6 +57,20 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Handle punchime intents
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (action == "android.intent.action.VIEW") {
+            Uri data = intent.getData();
+            if (data.getHost().equals("invite")) {
+                // open settings
+                setFragment(new SettingsFragment());
+                // open the invitation field
+                // fill in invitation id
+                Log.d("data",data.getLastPathSegment().toString());
+            }
+        }
 
         // find our drawer layout view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -102,8 +118,8 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            Intent intent = new Intent(this, PermissionErrorActivity.class);
-            startActivity(intent);
+            Intent permissionIntent = new Intent(this, PermissionErrorActivity.class);
+            startActivity(permissionIntent);
         }
     }
 
