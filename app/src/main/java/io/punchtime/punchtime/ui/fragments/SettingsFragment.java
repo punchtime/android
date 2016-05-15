@@ -78,7 +78,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefAddCompany.setOnPreferenceClickListener(new android.support.v7.preference.Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
-                // TODO: 01/05/16 Haroen: allow user to be brought to this immediately
                 final AlertDialog.Builder inviteAlert = new AlertDialog.Builder(activity);
                 inviteAlert.setTitle("Enter your invitation code");
                 final EditText userInput = new EditText(activity);
@@ -124,18 +123,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                     // Claim invite
                     Map<String, Object> map = new HashMap<>();
+                    map.put("user", activity.getAuth().getUid());
                     map.put("claimed", true);
                     dataSnapshot.getRef().updateChildren(map);
-
-                    // Add company to user
-                    Map<String, Object> mapUser = new HashMap<>();
-                    mapUser.put(dataSnapshot.child("company/id").getValue().toString(), true);
-                    activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("employee").updateChildren(mapUser);
-
-                    // Add user to company
-                    Map<String, Object> mapCompany = new HashMap<>();
-                    mapCompany.put(activity.getAuth().getUid(), true);
-                    activity.getFirebaseRef().child("companies").child(dataSnapshot.child("company/id").getValue().toString()).child("employees").updateChildren(mapCompany);
 
                     // Alert success
                     new AlertDialog.Builder(activity)
