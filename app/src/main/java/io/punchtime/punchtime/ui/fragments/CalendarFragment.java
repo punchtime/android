@@ -6,7 +6,6 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -23,9 +22,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
