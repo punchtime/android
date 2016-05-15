@@ -77,7 +77,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private TextView street;
     private TextView city;
     private TextView timeCheckin;
-    private  TextView timeToday;
     private Pulse mLastPulse;
 
     public DashboardFragment() {
@@ -109,7 +108,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         street = (TextView) v.findViewById(R.id.streetText);
         city = (TextView) v.findViewById(R.id.cityText);
         timeCheckin = (TextView) v.findViewById(R.id.timeHere);
-        timeToday = (TextView) v.findViewById(R.id.timeToday);
 
         // Load the map async
         SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -294,12 +292,14 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             mapButton.setVisibility(View.VISIBLE);
             if(pulse.getNote() != null && !pulse.getNote().isEmpty()) noteButton.setText(getString(R.string.edit_note));
             noteButton.setVisibility(View.VISIBLE);
+            timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – now");
         } else {
             // Not checked in
             street.setText(R.string.placeholder_street);
             city.setText(R.string.placeholder_city);
             mapButton.setVisibility(View.INVISIBLE);
             noteButton.setVisibility(View.INVISIBLE);
+            timeCheckin.setText("");
         }
     }
 
@@ -310,10 +310,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         if(!preferences.getBoolean("tracking_location_mode", false)) {
             if(checkedIn) {
                 fab.setImageResource(R.drawable.ic_location_off_black_24dp);
-                timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – now");
             } else {
                 fab.setImageResource(R.drawable.ic_pin_drop_24dp);
-                timeCheckin.setText("-");
             }
         }
     }
@@ -420,9 +418,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onLoadFinished(Loader<Void> loader, Void mNull) {
                     // Fires every minute
-                    if(mLastPulse != null) {
-                        timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – now");
-                    }
                 }
 
                 @Override
@@ -463,14 +458,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         protected Void doInBackground(Pulse... params) {
             Pulse p = params[0];
             // Push the new pulse to firebase
-            Firebase fb = mRef.child("pulses").push();
+            Firebase fb = mRef.child("users/" + mRef.getAuth().getUid()).child("pulses").push();
             fb.setValue(p);
-
-            // Add pulse key to users in firebase
-            Map<String, Object> map = new HashMap<>();
-            map.put(fb.getKey(),true);
-            mRef.child("users").child(activity.getAuth().getUid()).child("pulses").updateChildren(map);
-
             return null;
         }
     }
@@ -478,29 +467,15 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private class GetLastPulseTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            Query query = mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").limitToLast(1);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
+            mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     try {
-                        mRef.child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                try {
-                                    Pulse latestPulse = dataSnapshot.getValue(Pulse.class);
-                                    mLastPulse = latestPulse;
-                                    updateCheckinUI(latestPulse);
-                                    if(latestPulse.getCheckout() == 0) setCheckedIn(true);
-                                    else setCheckedIn(false);
-                                } catch (Exception e) {
-                                    updateCheckinUI(null);
-                                    setCheckedIn(false);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(FirebaseError firebaseError) {}
-                        });
+                        Pulse latestPulse = dataSnapshot.getChildren().iterator().next().getValue(Pulse.class);
+                        mLastPulse = latestPulse;
+                        updateCheckinUI(latestPulse);
+                        if(latestPulse.getCheckout() == 0) setCheckedIn(true);
+                        else setCheckedIn(false);
                     } catch (Exception e) {
                         updateCheckinUI(null);
                         setCheckedIn(false);
@@ -512,8 +487,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                 }
             });
             return null;
-
-
         }
     }
 
@@ -528,7 +501,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    mRef.child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).updateChildren(map);
+                    mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).updateChildren(map);
                 }
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {

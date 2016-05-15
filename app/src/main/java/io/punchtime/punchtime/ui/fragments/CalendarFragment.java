@@ -54,8 +54,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
 
     // Gets pulses ASYNC from Firebase
     public void getPulseData() {
-        Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
-        query.addValueEventListener(new ValueEventListener() {
+        mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 pulseList.clear();
