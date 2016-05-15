@@ -34,6 +34,7 @@ public class WeekFragment extends CalendarFragment {
 
         setupDateTimeInterpreter(true);
 
+
         //return view
 
         return v;
