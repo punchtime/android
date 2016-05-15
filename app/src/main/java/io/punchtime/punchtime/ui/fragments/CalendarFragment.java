@@ -1,10 +1,15 @@
 package io.punchtime.punchtime.ui.fragments;
 
 
+import android.content.DialogInterface;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
+import android.support.v4.util.LongSparseArray;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 
 import com.alamkanak.weekview.MonthLoader;
@@ -18,7 +23,9 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
@@ -31,7 +38,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
     private WeekView mWeekView;
     private Firebase mRef;
-    private List<Pulse> pulseList;
+    private LongSparseArray<Pulse> pulseList;
 
 
     // triggered soon after onCreateView
@@ -55,8 +62,10 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 pulseList.clear();
+                long key = 0;
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
-                    pulseList.add(child.getValue(Pulse.class));
+                    pulseList.put(key, child.getValue(Pulse.class));
+                    key++;
                 }
 
                 // Here we know pulsesList is filled
@@ -75,11 +84,17 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     @Override
     public List<?extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
         List<WeekViewEvent> events = new ArrayList<>();
-        for (Pulse pulse : pulseList) {
+        for(int i = 0; i < pulseList.size(); i++) {
+            // get the key
+            long key = pulseList.keyAt(i);
+            // get the object by the key.
+            Pulse pulse = pulseList.get(key);
             Calendar startTime = Calendar.getInstance();
             startTime.setTimeInMillis(pulse.getCheckin());
             int pulseMonth = startTime.get(Calendar.MONTH);
             int pulseYear = startTime.get(Calendar.YEAR);
+            // checks if the pulse belongs to a new year/month
+            // else we get triple entries
             if (newMonth == pulseMonth && newYear == pulseYear) {
                 // create calendar instance of checkin
                 startTime.setTimeInMillis(pulse.getCheckin());
@@ -92,7 +107,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
                     endTime.setTimeInMillis(pulse.getCheckout());
                 }
                 // add event to the eventlist
-                WeekViewEvent event = new WeekViewEvent(1,getEventTitle(pulse),startTime,endTime);
+                WeekViewEvent event = new WeekViewEvent(key, getEventTitle(pulse),startTime,endTime);
                 event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
                 events.add(event);
             }
@@ -101,7 +116,35 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     }
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
 
+        Log.d("PUNCH", String.valueOf(event.getId()));
+        Pulse pulse = pulseList.get(event.getId());
+        String pulseNote = pulse.getNote();
+        String noteInputMessage = getString(R.string.edit_note);
+        if (pulseNote == "") {
+            pulseNote = getString(R.string.no_note_added);
+            noteInputMessage = getString(R.string.add_a_note);
+        }
+        alertDialogBuilder.setTitle(getString(R.string.info_pulse_title));
+        alertDialogBuilder.setMessage(pulseNote + "\n"
+                + pulse.getAddressStreet() + "\n" +  pulse.getAddressCityCountry());
+
+        alertDialogBuilder.setPositiveButton(noteInputMessage, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // continue with delete
+            }
+        })
+        .setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // do nothing
+            }
+        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
     }
     @Override
     public void onEmptyViewLongPress(Calendar calendar) {
@@ -114,9 +157,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     public void setupVariables() {
         //set activity
         MainActivity activity = (MainActivity) getActivity();
-
         mRef = activity.getFirebaseRef();
-        pulseList = new ArrayList<>();
+        pulseList = new LongSparseArray<>();
         getPulseData();
     }
     public void setupWeekView(WeekView weekView) {
