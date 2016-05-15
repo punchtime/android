@@ -36,7 +36,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     private WeekView mWeekView;
     private Firebase mRef;
     private PulseOperations operations;
-    private LongSparseArray<Pulse> pulseList;
+    private LongSparseArray<Pulse> pulseArray;
+    private LongSparseArray<Pulse> keyArray;
     private static Context context;
     private MainActivity activity;
 
@@ -57,12 +58,12 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     @Override
     public List<?extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
         List<WeekViewEvent> events = new ArrayList<>();
-        for(int i = 0; i < pulseList.size(); i++) {
+        for(int i = 0; i < pulseArray.size(); i++) {
             // get the key
-            long key = pulseList.keyAt(i);
+            long key = pulseArray.keyAt(i);
 
             // get the object by the key.
-            Pulse pulse = pulseList.get(key);
+            Pulse pulse = pulseArray.get(key);
             Calendar startTime = Calendar.getInstance();
             startTime.setTimeInMillis(pulse.getCheckin());
             int pulseMonth = startTime.get(Calendar.MONTH);
@@ -95,10 +96,9 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        final EditText input = new EditText(context);
 
         //get pulse and assign note variable
-        Pulse pulse = pulseList.get(event.getId());
+        Pulse pulse = pulseArray.get(event.getId());
         String pulseNote = pulse.getNote();
 
         // change message if no note is found
@@ -118,6 +118,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         alertDialogBuilder.setPositiveButton(noteInputMessage, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // show new dialog that lets you edit the note / add a new one
+                // handled by the CustomListener
             }
         })
         .setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -131,7 +132,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         // show it
         alertDialog.show();
         Button theButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialog, context, pulseNote));
+        theButton.setOnClickListener(new CustomListener(alertDialog, context, pulseNote, event.getId()));
     }
     @Override
     public void onEmptyViewLongPress(Calendar calendar) {
@@ -148,14 +149,14 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         activity = (MainActivity) getActivity();
         mRef = activity.getFirebaseRef();
         operations = new PulseOperations(mRef);
-        pulseList = new LongSparseArray<>();
+        pulseArray = new LongSparseArray<>();
     }
     public void setupWeekView(WeekView weekView) {
 
         mWeekView = weekView;
 
         // get pulse data and notify mWeekview of change when all the data is pulled
-        pulseList = operations.getPulseData(mWeekView);
+        pulseArray = operations.getPulseData(mWeekView);
 
         // event click listener
         mWeekView.setOnEventClickListener(this);
@@ -174,9 +175,12 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     class CustomListener implements View.OnClickListener {
         private final Dialog dialog;
         private final String note;
-        public CustomListener(Dialog dialog, Context context, String note) {
+        private Long key;
+
+        public CustomListener(Dialog dialog, Context context, String note, Long key) {
             this.dialog = dialog;
             this.note = note;
+            this.key = key;
         }
         @Override
         public void onClick(View v) {
@@ -191,7 +195,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             inputAlert.setPositiveButton(getString(R.string.submit), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
+                    // update note for pulse in Firebase
+                    operations.updatePulseNote(key, note);
                 }
             });
             inputAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

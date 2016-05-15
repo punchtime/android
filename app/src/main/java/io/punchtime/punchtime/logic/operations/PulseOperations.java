@@ -1,5 +1,6 @@
 package io.punchtime.punchtime.logic.operations;
 
+import android.os.AsyncTask;
 import android.support.v4.util.LongSparseArray;
 
 import com.alamkanak.weekview.WeekView;
@@ -9,6 +10,9 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.punchtime.punchtime.data.Pulse;
 
 /**
@@ -16,11 +20,30 @@ import io.punchtime.punchtime.data.Pulse;
  */
 public class PulseOperations {
     private Firebase mRef;
-    private LongSparseArray<Pulse> pulseList;
+    private LongSparseArray<Pulse> pulseArray;
+    private LongSparseArray<String> keyArray;
 
     public PulseOperations(Firebase mRef) {
         this.mRef = mRef;
-        pulseList = new LongSparseArray<Pulse>();
+        pulseArray = new LongSparseArray<>();
+        keyArray = new LongSparseArray<>();
+    }
+
+    public LongSparseArray<String> getKeyArray() {
+        return this.keyArray;
+    }
+
+    /*
+        Could be replaced with a more general method that updates any child of a pulse
+     */
+    public void updatePulseNote(Long longKey, String noteString) {
+        //get key for pulse
+        String key = keyArray.get(longKey);
+
+        Firebase query = mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").child(key);
+        Map<String, Object> note = new HashMap<>();
+        note.put("note", noteString);
+        query.updateChildren(note);
     }
 
     /*
@@ -30,10 +53,11 @@ public class PulseOperations {
         mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                pulseList.clear();
+                pulseArray.clear();
                 long key = 0;
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
-                    pulseList.put(key, child.getValue(Pulse.class));
+                    pulseArray.put(key, child.getValue(Pulse.class));
+                    keyArray.put(key, child.getKey());
                     key++;
                 }
 
@@ -48,6 +72,6 @@ public class PulseOperations {
                 // get a better connection already
             }
         });
-        return pulseList;
+        return pulseArray;
     }
 }
