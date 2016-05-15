@@ -79,7 +79,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private TextView city;
     private TextView timeCheckin;
     private Pulse mLastPulse;
-    PulseOperations operations;
+    private PulseOperations operations;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
