@@ -1,10 +1,13 @@
 package io.punchtime.punchtime.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by elias on 12/04/16.
  */
 
-public class Pulse {
+public class Pulse implements Parcelable {
     private String addressStreet;
     private String addressCityCountry;
     private double latitude;
@@ -97,4 +100,46 @@ public class Pulse {
     public void setNote(String note) {
         this.note = note;
     }
+
+    // Parcelling part
+    public Pulse(Parcel in){
+        addressStreet = in.readString();
+        addressCityCountry= in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        note = in.readString();
+        checkin = in.readLong();
+        checkout = in.readLong();
+        employee = in.readString();
+        employer = in.readString();
+        confirmed = false;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(addressStreet);
+        out.writeString(addressCityCountry);
+        out.writeDouble(latitude);
+        out.writeDouble(longitude);
+        out.writeString(note);
+        out.writeLong(checkin);
+        out.writeLong(checkout);
+        out.writeString(employee);
+        out.writeString(employer);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Pulse createFromParcel(Parcel in) {
+            return new Pulse(in);
+        }
+
+        public Pulse[] newArray(int size) {
+            return new Pulse[size];
+        }
+    };
 }

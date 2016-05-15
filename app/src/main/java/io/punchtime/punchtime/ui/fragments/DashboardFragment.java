@@ -244,12 +244,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-
-    @Override
     public void onDestroyView() {
         FragmentManager fm = getFragmentManager();
 
