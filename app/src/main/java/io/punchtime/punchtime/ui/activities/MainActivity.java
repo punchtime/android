@@ -60,17 +60,22 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         // Handle punchime intents
         Intent intent = getIntent();
-        String action = intent.getAction();
-        if (action.equals("android.intent.action.VIEW")) {
-            Uri data = intent.getData();
-            if (data.getHost().equals("invite")) {
-                // open settings
-                setFragment(new SettingsFragment());
-                // open the invitation field
-                // fill in invitation id
-                Log.d("data",data.getLastPathSegment().toString());
+
+        if (intent != null) {
+            String action = intent.getAction();
+            if (action != null && action.equals("android.intent.action.VIEW")) {
+                Uri data = intent.getData();
+                if (data.getHost().equals("invite")) {
+                    // open settings
+                    setFragment(new SettingsFragment());
+                    // open the invitation field
+                    // fill in invitation id
+                    Log.d("data",data.getLastPathSegment().toString());
+                }
             }
         }
+
+
 
         // find our drawer layout view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
