@@ -103,7 +103,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
 
         // change message if no note is found
         String noteInputMessage = getString(R.string.edit_note);
-        if (pulseNote == "") {
+        if (pulseNote.equals("")) {
             pulseNote = getString(R.string.no_note_added);
             noteInputMessage = getString(R.string.add_a_note);
         }
