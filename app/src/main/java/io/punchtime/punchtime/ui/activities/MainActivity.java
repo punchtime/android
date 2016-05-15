@@ -58,7 +58,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Handle punchime intents
+        // Handle punchtgime intents
         Intent intent = getIntent();
 
         if (intent != null) {
