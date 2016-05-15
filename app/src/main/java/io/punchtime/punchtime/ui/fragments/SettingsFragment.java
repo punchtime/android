@@ -36,6 +36,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         if (getArguments() != null) {
             String invite = getArguments().getString("invite");
             if (invite != null) {
+                ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.nav_settings);
                 joinCompany(invite);
             }
         }
