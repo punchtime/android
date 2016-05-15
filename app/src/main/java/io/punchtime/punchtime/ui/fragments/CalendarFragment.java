@@ -14,11 +14,7 @@ import android.view.View;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +22,7 @@ import java.util.List;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
+import io.punchtime.punchtime.logic.operations.PulseOperations;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 
 /**
@@ -35,8 +32,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
     private WeekView mWeekView;
     private Firebase mRef;
+    private PulseOperations operations;
     private LongSparseArray<Pulse> pulseList;
-
 
     // triggered soon after onCreateView
     // Any view setup should occur here.
@@ -50,32 +47,6 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     // gets the note for a given pulse
     protected String getEventTitle(Pulse pulse) {
         return pulse.getAddressStreet() + "\n" + pulse.getAddressCityCountry();
-    }
-
-    // Gets pulses ASYNC from Firebase
-    public void getPulseData() {
-        Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                pulseList.clear();
-                long key = 0;
-                for(DataSnapshot child : dataSnapshot.getChildren()) {
-                    pulseList.put(key, child.getValue(Pulse.class));
-                    key++;
-                }
-
-                // Here we know pulsesList is filled
-                //trigger update of weekview;
-                mWeekView.notifyDatasetChanged();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                // Firebase isn't allowed to be cancelled
-                // get a better connection already
-            }
-        });
     }
 
     @Override
@@ -155,12 +126,15 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         //set activity
         MainActivity activity = (MainActivity) getActivity();
         mRef = activity.getFirebaseRef();
+        operations = new PulseOperations(mRef);
         pulseList = new LongSparseArray<>();
-        getPulseData();
     }
     public void setupWeekView(WeekView weekView) {
 
         mWeekView = weekView;
+
+        // get pulse data and notify mWeekview of change when all the data is pulled
+        pulseList = operations.getPulseData(mWeekView);
 
         // event click listener
         mWeekView.setOnEventClickListener(this);

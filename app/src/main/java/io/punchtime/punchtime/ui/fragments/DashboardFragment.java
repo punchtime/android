@@ -50,6 +50,7 @@ import java.util.Map;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
+import io.punchtime.punchtime.logic.operations.PulseOperations;
 import io.punchtime.punchtime.logic.loaders.LocationLoader;
 import io.punchtime.punchtime.logic.loaders.TimerLoader;
 import io.punchtime.punchtime.ui.SnackbarFactory;
@@ -79,6 +80,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private TextView timeCheckin;
     private  TextView timeToday;
     private Pulse mLastPulse;
+    PulseOperations operations;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -219,6 +221,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         super.onStart();
 
         mRef = activity.getFirebaseRef();
+
+        // create PulseOperations instance
+        operations = new PulseOperations(mRef);
 
         if(!preferences.getBoolean("logged_in",false)) {
             // If the user is not logged in, show login rationale and prompt to login
