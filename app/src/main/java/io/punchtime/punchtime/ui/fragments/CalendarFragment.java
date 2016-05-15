@@ -1,6 +1,7 @@
 package io.punchtime.punchtime.ui.fragments;
 
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -8,14 +9,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.firebase.client.Firebase;
-
+import android.content.Context;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -34,6 +37,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     private Firebase mRef;
     private PulseOperations operations;
     private LongSparseArray<Pulse> pulseList;
+    private static Context context;
+    private MainActivity activity;
 
     // triggered soon after onCreateView
     // Any view setup should occur here.
@@ -55,17 +60,21 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         for(int i = 0; i < pulseList.size(); i++) {
             // get the key
             long key = pulseList.keyAt(i);
+
             // get the object by the key.
             Pulse pulse = pulseList.get(key);
             Calendar startTime = Calendar.getInstance();
             startTime.setTimeInMillis(pulse.getCheckin());
             int pulseMonth = startTime.get(Calendar.MONTH);
             int pulseYear = startTime.get(Calendar.YEAR);
+
             // checks if the pulse belongs to a new year/month
             // else we get triple entries
             if (newMonth == pulseMonth && newYear == pulseYear) {
+
                 // create calendar instance of checkin
                 startTime.setTimeInMillis(pulse.getCheckin());
+
                 // create calendar instance of checkout
                 Calendar endTime = Calendar.getInstance();
                 Calendar now = Calendar.getInstance();
@@ -74,6 +83,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
                 } else {
                     endTime.setTimeInMillis(pulse.getCheckout());
                 }
+
                 // add event to the eventlist
                 WeekViewEvent event = new WeekViewEvent(key, getEventTitle(pulse),startTime,endTime);
                 event.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
@@ -84,28 +94,35 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     }
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        final EditText input = new EditText(context);
 
-        Log.d("PUNCH", String.valueOf(event.getId()));
+        //get pulse and assign note variable
         Pulse pulse = pulseList.get(event.getId());
         String pulseNote = pulse.getNote();
+
+        // change message if no note is found
         String noteInputMessage = getString(R.string.edit_note);
         if (pulseNote == "") {
             pulseNote = getString(R.string.no_note_added);
             noteInputMessage = getString(R.string.add_a_note);
         }
+
+        // set title
         alertDialogBuilder.setTitle(getString(R.string.info_pulse_title));
+
+        // set message
         alertDialogBuilder.setMessage(pulseNote + "\n"
                 + pulse.getAddressStreet() + "\n" +  pulse.getAddressCityCountry());
 
         alertDialogBuilder.setPositiveButton(noteInputMessage, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                // continue with delete
+                // show new dialog that lets you edit the note / add a new one
             }
         })
         .setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                // do nothing
+
             }
         });
 
@@ -113,6 +130,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         AlertDialog alertDialog = alertDialogBuilder.create();
         // show it
         alertDialog.show();
+        Button theButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        theButton.setOnClickListener(new CustomListener(alertDialog, context, pulseNote));
     }
     @Override
     public void onEmptyViewLongPress(Calendar calendar) {
@@ -125,6 +144,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     public void setupVariables() {
         //set activity
         MainActivity activity = (MainActivity) getActivity();
+        context = getContext();
+        activity = (MainActivity) getActivity();
         mRef = activity.getFirebaseRef();
         operations = new PulseOperations(mRef);
         pulseList = new LongSparseArray<>();
@@ -149,5 +170,39 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         // Set long press listener for empty view
         mWeekView.setEmptyViewLongPressListener(this);
     }
-}
 
+    class CustomListener implements View.OnClickListener {
+        private final Dialog dialog;
+        private final String note;
+        public CustomListener(Dialog dialog, Context context, String note) {
+            this.dialog = dialog;
+            this.note = note;
+        }
+        @Override
+        public void onClick(View v) {
+            final AlertDialog.Builder inputAlert = new AlertDialog.Builder(context);
+
+            inputAlert.setMessage(getString(R.string.write_current_note_message));
+            final EditText userInput = new EditText(context);
+            inputAlert.setView(userInput);
+
+            inputAlert.setTitle(note);
+
+            inputAlert.setPositiveButton(getString(R.string.submit), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            inputAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            AlertDialog alertDialog = inputAlert.create();
+            alertDialog.show();
+        }
+    }
+
+}
