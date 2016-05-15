@@ -42,4 +42,11 @@
     <string name="checkin_message">Ingecheckt in huidige locatie</string>
     <string name="checkout_message">Uitgecheckt uit huidige locatie</string>
     <string name="map_detail_title">Detailkaart</string>
+    <string name="edit_note">Pas opmerking aan</string>
+    <string name="menu_stats">Statistieken</string>
+    <string name="no_note_added">Geen opmerking toegevoegd</string>
+    <string name="close">Sluiten</string>
+    <string name="info_pulse_title">Info voor deze pulse</string>
+    <string name="submit">Voeg toe</string>
+    <string name="cancel">Annuleer</string>
 </resources>

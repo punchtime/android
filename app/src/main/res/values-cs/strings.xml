@@ -42,4 +42,11 @@
     <string name="checkin_message">je ziet er geraakt; tscjekt in lik dame zeggen</string>
     <string name="checkout_message">jow groetjes nog e allemoale; cheketut</string>
     <string name="map_detail_title">Kaartjesvergrotering</string>
+    <string name="edit_note">verander notitietje xdd</string>
+    <string name="menu_stats">statistiekjessss</string>
+    <string name="no_note_added">geen notitietje gevonden loool</string>
+    <string name="close">Toe doen eeh</string>
+    <string name="info_pulse_title">Informatietjes voor deze pulse</string>
+    <string name="submit">Awel voeg et moar toe ze</string>
+    <string name="cancel">Ow stop maar</string>
 </resources>

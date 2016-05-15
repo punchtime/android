@@ -20,6 +20,10 @@
     <string name="time_here_content">-</string>
     <string name="last_checkin">Current checkin location</string>
     <string name="add_a_note">Add a note</string>
+    <string name="write_current_note_message">Write a note for your current checkin</string>
+    <string name="no_note_added">No note was added</string>
+    <string name="edit_note">Edit note</string>
+    <string name="info_pulse_title">Info for this pulse</string>
     <string name="account">Account</string>
     <string name="logged_in_summary">Logged in, tap to logout</string>
     <string name="not_logged_in_summary">Not logged in, tap to login</string>
@@ -42,4 +46,7 @@
     <string name="checkin_message">Checked in at current location</string>
     <string name="checkout_message">Checked out at current location</string>
     <string name="map_detail_title">Map Detail</string>
+    <string name="close">Close</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
 </resources>

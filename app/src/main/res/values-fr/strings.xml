@@ -42,4 +42,11 @@
     <string name="checkin_message">Enrégistré ici</string>
     <string name="checkout_message">Quitté l\'emplacement actuel</string>
     <string name="map_detail_title">Carte détail</string>
+    <string name="edit_note">Modifier la note</string>
+    <string name="menu_stats">Statistiques</string>
+    <string name="no_note_added">Aucune note a été ajoutée</string>
+    <string name="close">Fermez</string>
+    <string name="info_pulse_title">Information pour cette pulse</string>
+    <string name="submit">Soumettre</string>
+    <string name="cancel">Annuler</string>
 </resources>
