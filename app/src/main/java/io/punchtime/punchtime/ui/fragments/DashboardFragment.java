@@ -168,11 +168,11 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder inputAlert = new AlertDialog.Builder(context);
-                inputAlert.setTitle("Add a note");
-                inputAlert.setMessage("write a note for your current checkin");
+                inputAlert.setTitle(getString(R.string.add_a_note));
+                inputAlert.setMessage(getString(R.string.write_current_note_message));
                 final EditText userInput = new EditText(context);
                 inputAlert.setView(userInput);
-                inputAlert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                inputAlert.setPositiveButton(getString(R.string.submit), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Map<String, Object> map = new HashMap<>();
@@ -180,7 +180,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                         new UpdateLastPulseTask().execute(map);
                     }
                 });
-                inputAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                inputAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
