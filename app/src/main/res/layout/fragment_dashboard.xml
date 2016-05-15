@@ -15,74 +15,11 @@
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="@dimen/map_height"
-        android:layout_weight="0.3"
+        android:layout_weight="0.7"
         android:layout_gravity="top"
         map:cameraZoom="13"
         map:mapType="normal"
-        map:liteMode="true"
-        />
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="0.5">
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:alpha="0.87"
-                        android:gravity="center"
-                        android:text="@string/time_today_title"/>
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/timeToday"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:text="@string/time_today_content"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/listDivider"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="0.5">
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:alpha="0.87"
-                        android:gravity="center"
-                        android:text="@string/time_here_title"/>
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/timeHere"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:text="@string/time_here_content"/>
-                </LinearLayout>
-            </LinearLayout>
-
-    </android.support.v7.widget.LinearLayoutCompat>
-
+        map:liteMode="true" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
@@ -90,7 +27,7 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/colorPrimary"
         android:layout_margin="8dp"
-        android:layout_weight="0.45"
+        android:layout_weight="0.3"
         android:layout_gravity="bottom"
         app:layout_behavior="io.punchtime.punchtime.ui.behaviors.AvoidSnackbarBehavior">
 
@@ -99,19 +36,34 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/last_checkin"
-                android:background="@color/colorPrimaryDark"
-                android:textColor="#FFFFFF"
-                android:alpha="0.7"
+                android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingStart="16dp"
                 android:paddingRight="16dp"
                 android:paddingEnd="16dp"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp"/>
+                android:paddingBottom="8dp"
+                android:background="@color/colorPrimaryDark">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/last_checkin"
+                    android:textColor="#FFFFFF"
+                    android:alpha="0.7"
+                    />
+
+                <TextView
+                    android:id="@+id/timeHere"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:alpha="0.9"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

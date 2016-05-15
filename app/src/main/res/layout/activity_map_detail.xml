@@ -25,14 +25,12 @@
             map:cameraZoom="13"
             map:mapType="normal" />
 
-        <ImageButton
+        <Button
             android:id="@+id/centerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:contentDescription="@string/recenter_map_on_current_location"
-            android:src="@drawable/ic_my_location_black_24dp"
-            style="?android:attr/buttonStyle"
+            android:text = "@string/recenter_button_text"
+            style="@style/AppTheme.Button"
             android:layout_gravity="end|top"/>
 
     </FrameLayout>
