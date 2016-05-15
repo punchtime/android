@@ -93,4 +93,8 @@ public class Pulse {
     public void setAddressCityCountry(String addressCityCountry) {
         this.addressCityCountry = addressCityCountry;
     }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

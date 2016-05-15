@@ -163,16 +163,28 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder inputAlert = new AlertDialog.Builder(context);
-                inputAlert.setTitle(getString(R.string.add_a_note));
+
                 inputAlert.setMessage(getString(R.string.write_current_note_message));
                 final EditText userInput = new EditText(context);
                 inputAlert.setView(userInput);
+
+                String title;
+                if (mLastPulse.getNote() == null || mLastPulse.getNote().isEmpty()) {
+                    title = getString(R.string.add_a_note);
+                } else {
+                    title = getString(R.string.edit_note);
+                    userInput.setText(mLastPulse.getNote());
+                }
+                inputAlert.setTitle(title);
+
                 inputAlert.setPositiveButton(getString(R.string.submit), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Map<String, Object> map = new HashMap<>();
                         map.put("note", userInput.getText().toString());
+                        mLastPulse.setNote(userInput.getText().toString());
                         new UpdateLastPulseTask().execute(map);
+                        noteButton.setText(getText(R.string.edit_note));
                     }
                 });
                 inputAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -183,7 +195,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                 });
                 AlertDialog alertDialog = inputAlert.create();
                 alertDialog.show();
-
             }
         });
 
@@ -281,6 +292,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             street.setText(pulse.getAddressStreet());
             city.setText(pulse.getAddressCityCountry());
             mapButton.setVisibility(View.VISIBLE);
+            if(pulse.getNote() != null && !pulse.getNote().isEmpty()) noteButton.setText(getString(R.string.edit_note));
             noteButton.setVisibility(View.VISIBLE);
         } else {
             // Not checked in
