@@ -33,6 +33,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         activity.setTitle(R.string.settings);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
 
+        if (getArguments() != null) {
+            String invite = getArguments().getString("invite");
+            if (invite != null) {
+                joinCompany(invite);
+            }
+        }
+
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings);
         android.support.v7.preference.Preference prefLogin = findPreference("pref_key_account");
@@ -59,6 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         .setNegativeButton(android.R.string.no, null).show();
             } else {
                 activity.showFirebaseLoginPrompt();
+                activity.setLaunchedFromIntent(false);
             }
             return false;
             }
@@ -77,47 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 inviteAlert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                    activity.getFirebaseRef().child("invites").child(userInput.getText().toString().trim()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getValue() != null) {
-                                // Claim invite
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("claimed", true);
-                                dataSnapshot.getRef().updateChildren(map);
-
-                                // Add company to user
-                                Map<String, Object> mapUser = new HashMap<>();
-                                mapUser.put(dataSnapshot.child("company/id").getValue().toString(), true);
-                                activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("employee").updateChildren(mapUser);
-
-                                // Add user to company
-                                Map<String, Object> mapCompany = new HashMap<>();
-                                mapCompany.put(activity.getAuth().getUid(), true);
-                                activity.getFirebaseRef().child("companies").child(dataSnapshot.child("company/id").getValue().toString()).child("employees").updateChildren(mapCompany);
-
-                                // Alert success
-                                new AlertDialog.Builder(activity)
-                                        .setTitle("Success")
-                                        .setMessage("You have successfully joined " + dataSnapshot.child("company/name").getValue().toString())
-                                        .create().show();
-
-                            } else {
-                                // Alert failure
-                                new AlertDialog.Builder(activity)
-                                        .setTitle("Invitation code error")
-                                        .setMessage("Please verify that you entered the right code and try again.")
-                                        .create().show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-                            // don't disconnect from Firebase please
-                        }
-                    });
-
+                        joinCompany(userInput.getText().toString().trim());
                     }
                 });
                 inviteAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -138,5 +106,55 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects
+    }
+
+    private void joinCompany(String inviteCode) {
+        activity.getFirebaseRef().child("invites").child(inviteCode).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    if(dataSnapshot.child("claimed").getValue(boolean.class)) {
+                        // Alert already joined
+                        new AlertDialog.Builder(activity)
+                                .setTitle("Invitation code error")
+                                .setMessage("This invite code has already been claimed")
+                                .create().show();
+                        return;
+                    }
+                    // Claim invite
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("claimed", true);
+                    dataSnapshot.getRef().updateChildren(map);
+
+                    // Add company to user
+                    Map<String, Object> mapUser = new HashMap<>();
+                    mapUser.put(dataSnapshot.child("company/id").getValue().toString(), true);
+                    activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("employee").updateChildren(mapUser);
+
+                    // Add user to company
+                    Map<String, Object> mapCompany = new HashMap<>();
+                    mapCompany.put(activity.getAuth().getUid(), true);
+                    activity.getFirebaseRef().child("companies").child(dataSnapshot.child("company/id").getValue().toString()).child("employees").updateChildren(mapCompany);
+
+                    // Alert success
+                    new AlertDialog.Builder(activity)
+                            .setTitle("Success")
+                            .setMessage("You have successfully joined " + dataSnapshot.child("company/name").getValue().toString())
+                            .create().show();
+
+                } else {
+                    // Alert failure
+                    new AlertDialog.Builder(activity)
+                            .setTitle("Invitation code error")
+                            .setMessage("Please verify that you entered the right code and try again.")
+                            .create().show();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                // don't disconnect from Firebase please
+            }
+        });
     }
 }

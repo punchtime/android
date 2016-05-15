@@ -51,6 +51,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     private View headerView;
     private SharedPreferences preferences;
     private NavigationView navigationView;
+    private boolean isLaunchedFromIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,24 +59,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Handle punchime intents
-        Intent intent = getIntent();
-
-        if (intent != null) {
-            String action = intent.getAction();
-            if (action != null && action.equals("android.intent.action.VIEW")) {
-                Uri data = intent.getData();
-                if (data.getHost().equals("invite")) {
-                    // open settings
-                    setFragment(new SettingsFragment());
-                    // open the invitation field
-                    // fill in invitation id
-                    Log.d("data",data.getLastPathSegment().toString());
-                }
-            }
-        }
-
-
+        isLaunchedFromIntent = false;
 
         // find our drawer layout view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -98,15 +82,31 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         // connect to firebase
         mRef = new Firebase( getString(R.string.firebase_url));
 
-        // set default view as dashboard
-        if (savedInstanceState == null) {
-            Fragment fragment = null;
-            try {
-                fragment = DashboardFragment.class.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
+        // Handle punchime intents
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (action != null && action.equals("android.intent.action.VIEW")) {
+            Uri data = intent.getData();
+            if (data.getHost().equals("invite")) {
+                // prepare fragment with invite data
+                Fragment fragment = new SettingsFragment();
+                Bundle args = new Bundle();
+                args.putString("invite",data.getLastPathSegment());
+                fragment.setArguments(args);
+
+                // launch fragment
+                setFragment(fragment);
+                isLaunchedFromIntent = true;
+            } else if (savedInstanceState == null) {
+                // set default view as dashboard
+                Fragment fragment = null;
+                try {
+                    fragment = DashboardFragment.class.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                setFragment(fragment);
             }
-            setFragment(fragment);
         }
 
         View navHeader = headerView.findViewById(R.id.nav_header);
@@ -255,7 +255,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedIn(final AuthData authData) {
-        setFragment(new DashboardFragment());
+        if(!isLaunchedFromIntent) setFragment(new DashboardFragment());
         navigationView.setCheckedItem(R.id.nav_dashboard);
 
         // Store user data in firebase
@@ -327,5 +327,9 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     public NavigationView getNavigationView() {
         return navigationView;
+    }
+
+    public void setLaunchedFromIntent(boolean launchedFromIntent) {
+        isLaunchedFromIntent = launchedFromIntent;
     }
 }
