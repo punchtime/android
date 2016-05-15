@@ -260,6 +260,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         SnackbarFactory.createSnackbar(activity, v, getString(R.string.checkin_message)).show();
 
         // Create pulse without geocoding
+        // TODO: 15/05/16 Haroen: the current company should be set in settings (default if there's only one) 
         Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), "-KBdSPf90dvJCeH3J8m7", true);
 
         mLastPulse = pulse;
