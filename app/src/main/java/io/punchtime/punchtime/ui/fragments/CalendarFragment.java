@@ -100,19 +100,28 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         //get pulse and assign note variable
         Pulse pulse = pulseArray.get(event.getId());
         String pulseNote = pulse.getNote();
+        String notePlaceholder = pulseNote;
+        String noteInputMessage;
+
+        // extra string for new dialog
+        String addNoteTitle;
 
         // change message if no note is found
-        String noteInputMessage = getString(R.string.edit_note);
-        if ("".equals(pulseNote)) {
-            pulseNote = getString(R.string.no_note_added);
+        if ("".equals(notePlaceholder)) {
+            notePlaceholder = getString(R.string.no_note_added);
             noteInputMessage = getString(R.string.add_a_note);
+            addNoteTitle = noteInputMessage;
+        }
+        else {
+            noteInputMessage = getString(R.string.edit_note);
+            addNoteTitle = noteInputMessage;
         }
 
         // set title
         alertDialogBuilder.setTitle(getString(R.string.info_pulse_title));
 
         // set message
-        alertDialogBuilder.setMessage(pulseNote + "\n"
+        alertDialogBuilder.setMessage(notePlaceholder + "\n"
                 + pulse.getAddressStreet() + "\n" +  pulse.getAddressCityCountry());
 
         alertDialogBuilder.setPositiveButton(noteInputMessage, new DialogInterface.OnClickListener() {
@@ -132,7 +141,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         // show it
         alertDialog.show();
         Button theButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialog, context, pulseNote, event.getId()));
+        theButton.setOnClickListener(new CustomListener(alertDialog, pulseNote, addNoteTitle, event.getId()));
     }
     @Override
     public void onEmptyViewLongPress(Calendar calendar) {
@@ -173,30 +182,54 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     }
 
     class CustomListener implements View.OnClickListener {
-        private final Dialog dialog;
-        private final String note;
+        private final Dialog upperDialog;
+        private String note;
+        private String noteTitle;
         private Long key;
 
-        public CustomListener(Dialog dialog, Context context, String note, Long key) {
-            this.dialog = dialog;
+        public CustomListener(Dialog dialog, String note, String noteTitle, Long key) {
+            this.upperDialog = dialog;
             this.note = note;
             this.key = key;
+            this.noteTitle = noteTitle;
         }
+        // opens new alert dialog that lets you edit/add a note
         @Override
         public void onClick(View v) {
             final AlertDialog.Builder inputAlert = new AlertDialog.Builder(context);
 
-            inputAlert.setMessage(getString(R.string.write_current_note_message));
             final EditText userInput = new EditText(context);
             inputAlert.setView(userInput);
 
-            inputAlert.setTitle(note);
+            // set placeholder on text
+            userInput.setText(note);
+
+            inputAlert.setTitle(noteTitle);
 
             inputAlert.setPositiveButton(getString(R.string.submit), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    String input = userInput.getText().toString();
                     // update note for pulse in Firebase
-                    operations.updatePulseNote(key, note);
+                    operations.updatePulseNote(key, input);
+
+                    // update the pulse manually
+                    // don't think Firebase automatically updates it
+                    Pulse pulse = pulseArray.get(key);
+                    pulse.setNote(input);
+                    pulseArray.put(key, pulse);
+
+                    // notifiy the weekview to refresh
+                    mWeekView.notifyDatasetChanged();
+
+                    // try and hide keyboard because it's still up on the upperDialog, doesn't really work rip
+                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(upperDialog.getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                    //TODO Don't dismiss upperDialog and update to include new message
+
+                    // now we just hide the upperDialog
+                    upperDialog.dismiss();
                 }
             });
             inputAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
