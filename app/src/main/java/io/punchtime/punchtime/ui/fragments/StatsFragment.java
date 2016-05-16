@@ -18,6 +18,9 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
  * Created by arnaud on 06/05/16.
  */
 public class StatsFragment extends Fragment {
+    private  MainActivity activity;
+    private DecoView weekArcView;
+    private DecoView dayArcView;
 
     public StatsFragment() {
         Bundle args = new Bundle();
@@ -30,12 +33,25 @@ public class StatsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_stats, parent, false);
 
         // Store calling activity (Always MainActivity)
-        MainActivity activity = (MainActivity) getActivity();
+        activity = (MainActivity) getActivity();
 
+
+        // Store charts
+        weekArcView = (DecoView) getView().findViewById(R.id.weekArcView);
+        dayArcView = (DecoView) v.findViewById(R.id.dayArcView);
+
+        // Setup charts
+        setupWeekArc();
+        setupDayArc();
+
+        return v;
+    }
+
+    private void setupDayArc() {
         // Setup toolbar
         activity.setTitle(R.string.menu_stats);
 
-        DecoView dayArcView = (DecoView) v.findViewById(R.id.dayArcView);
+
         // Create background track
         dayArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
                 .setRange(0, 100, 100)
@@ -54,9 +70,10 @@ public class StatsFragment extends Fragment {
                 .setDelay(0)
                 .setDuration(500)
                 .build());
+    }
 
+    private void setupWeekArc() {
 
-        DecoView weekArcView = (DecoView) v.findViewById(R.id.weekArcView);
         // Create background track
         weekArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
                 .setRange(0, 100, 100)
@@ -76,7 +93,6 @@ public class StatsFragment extends Fragment {
                 .setDuration(500)
                 .build());
 
-        return v;
     }
 
     @Override
