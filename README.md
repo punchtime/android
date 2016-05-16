@@ -8,7 +8,7 @@
 
 > Note: these screenshots aren't definitive
 
-<img src="assets/screenshot_dashboard-large" alt="screenshot of the main interface" width="200px" align="right">
+<img src="assets/screenshot_dashboard-large.png" alt="screenshot of the main interface" width="200px" align="right">
 
 ## info
 
