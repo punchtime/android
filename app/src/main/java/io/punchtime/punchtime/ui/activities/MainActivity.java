@@ -291,7 +291,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 mail.setText("");
                 break;
             default:
-                map.put("image","https://www.drupal.org/files/profile_default.png"); // TODO: 28/04/16 give a real url
+                map.put("image","https://www.drupal.org/files/profile_default.png");
                 break;
         }
 
