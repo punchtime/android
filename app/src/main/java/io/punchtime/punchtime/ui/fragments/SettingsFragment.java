@@ -107,7 +107,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         final ListPreference currentCompany = (ListPreference) findPreference("pref_current_company");
         // TODO: 16/05/16 Make this wait on firebase
-        setCompaniesData(currentCompany);
+        if(activity.getAuth() != null) setCompaniesData(currentCompany);
         currentCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

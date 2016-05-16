@@ -176,7 +176,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         mWeekView = weekView;
 
         // get pulse data and notify mWeekview of change when all the data is pulled
-        pulseArray = operations.getPulseData(mWeekView);
+        if(activity.getAuth() != null) pulseArray = operations.getPulseData(mWeekView);
 
         // event click listener
         mWeekView.setOnEventClickListener(this);
