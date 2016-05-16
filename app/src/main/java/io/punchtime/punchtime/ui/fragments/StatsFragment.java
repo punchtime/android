@@ -1,10 +1,15 @@
 package io.punchtime.punchtime.ui.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.hookedonplay.decoviewlib.DecoView;
+import com.hookedonplay.decoviewlib.charts.SeriesItem;
+import com.hookedonplay.decoviewlib.events.DecoEvent;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.ui.activities.MainActivity;
@@ -30,6 +35,47 @@ public class StatsFragment extends Fragment {
         // Setup toolbar
         activity.setTitle(R.string.menu_stats);
 
+        DecoView dayArcView = (DecoView) v.findViewById(R.id.dayArcView);
+        // Create background track
+        dayArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
+                .setRange(0, 100, 100)
+                .setLineWidth(32f)
+                .build());
+
+        //Create data series track
+        SeriesItem seriesItem2 = new SeriesItem.Builder(getResources().getColor(R.color.colorAccent))
+                .setRange(0, 100, 0)
+                .setLineWidth(32f)
+                .build();
+
+        dayArcView.addSeries(seriesItem2);
+
+        dayArcView.addEvent(new DecoEvent.Builder(DecoEvent.EventType.EVENT_SHOW, true)
+                .setDelay(0)
+                .setDuration(500)
+                .build());
+
+
+        DecoView weekArcView = (DecoView) v.findViewById(R.id.weekArcView);
+        // Create background track
+        weekArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
+                .setRange(0, 100, 100)
+                .setLineWidth(32f)
+                .build());
+
+        //Create data series track
+        SeriesItem seriesItem1 = new SeriesItem.Builder(getResources().getColor(R.color.colorAccent))
+                .setRange(0, 100, 0)
+                .setLineWidth(32f)
+                .build();
+
+        weekArcView.addSeries(seriesItem1);
+
+        weekArcView.addEvent(new DecoEvent.Builder(DecoEvent.EventType.EVENT_SHOW, true)
+                .setDelay(0)
+                .setDuration(500)
+                .build());
+
         return v;
     }
 
@@ -42,7 +88,6 @@ public class StatsFragment extends Fragment {
     public void onResume() {
         super.onResume();
     }
-
 
     @Override
     public void onDestroyView() {

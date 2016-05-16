@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="8dp">
 
+    <com.hookedonplay.decoviewlib.DecoView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:padding="8dp"
+        android:id="@+id/dayArcView"
+        />
+
+    <com.hookedonplay.decoviewlib.DecoView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        android:layout_weight="0.5"
+        android:id="@+id/weekArcView"
+        />
 </LinearLayout>
