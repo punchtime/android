@@ -49,4 +49,6 @@
     <string name="info_pulse_title">Information pour cette pulse</string>
     <string name="submit">Soumettre</string>
     <string name="cancel">Annuler</string>
+    <string name="current_company_summary">Vous régistrez pour cette employeur</string>
+    <string name="current_company_title">Employeur actuel</string>
 </resources>

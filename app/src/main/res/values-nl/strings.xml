@@ -49,4 +49,6 @@
     <string name="info_pulse_title">Info voor deze pulse</string>
     <string name="submit">Voeg toe</string>
     <string name="cancel">Annuleer</string>
+    <string name="current_company_summary">Je bent voor deze werkgever aan het werken</string>
+    <string name="current_company_title">Huidige werkgever</string>
 </resources>

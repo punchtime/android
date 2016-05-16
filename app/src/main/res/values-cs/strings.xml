@@ -49,4 +49,6 @@
     <string name="info_pulse_title">Informatietjes voor deze pulse</string>
     <string name="submit">Awel voeg et moar toe ze</string>
     <string name="cancel">Ow stop maar</string>
+    <string name="current_company_summary">EM IS DE BOAS va joen</string>
+    <string name="current_company_title">Het bedrief</string>
 </resources>

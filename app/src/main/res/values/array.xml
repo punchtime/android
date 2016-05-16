@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--todo: fill in the real values from firebase -->
+    <string-array name="CompanyValues">
+        <item>-KAERAZER</item>
+        <item>-EROXEZR</item>
+    </string-array>
+    <string-array name="CompanyData">
+        <item>my-company</item>
+        <item>Punchtime</item>
+    </string-array>
+</resources>

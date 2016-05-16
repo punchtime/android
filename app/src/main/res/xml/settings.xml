@@ -10,16 +10,23 @@
         android:summary="@string/not_logged_in_summary"
         android:title="@string/account" />
 
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="tracking_location_mode"
+        android:summary="@string/location_mode_summary"
+        android:title="@string/location_mode_title" />
+
     <android.support.v7.preference.Preference
         android:key="pref_key_add_company"
         android:summary="@string/add_company_summary"
         android:title="@string/add_company_title"
         android:dependency="pref_key_account" />
 
-    <android.support.v7.preference.SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="tracking_location_mode"
-        android:summary="@string/location_mode_summary"
-        android:title="@string/location_mode_title" />
+    <android.support.v7.preference.ListPreference
+        android:entries="@array/CompanyData"
+        android:entryValues="@array/CompanyValues"
+        android:key="pref_current_company"
+        android:title="@string/current_company_title"
+        android:summary="@string/current_company_summary" />
 
 </android.support.v7.preference.PreferenceScreen>
