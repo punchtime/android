@@ -35,6 +35,8 @@ public class StatsFragment extends Fragment {
         // Store calling activity (Always MainActivity)
         activity = (MainActivity) getActivity();
 
+        // Setup toolbar
+        activity.setTitle(R.string.menu_stats);
 
         // Store charts
         weekArcView = (DecoView) getView().findViewById(R.id.weekArcView);
@@ -48,10 +50,6 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupDayArc() {
-        // Setup toolbar
-        activity.setTitle(R.string.menu_stats);
-
-
         // Create background track
         dayArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
                 .setRange(0, 100, 100)
