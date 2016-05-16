@@ -51,4 +51,5 @@
     <string name="cancel">Annuler</string>
     <string name="current_company_summary">Vous régistrez pour cette employeur</string>
     <string name="current_company_title">Employeur actuel</string>
+    <string name="invitation_prompt">Code d\'invitation</string>
 </resources>

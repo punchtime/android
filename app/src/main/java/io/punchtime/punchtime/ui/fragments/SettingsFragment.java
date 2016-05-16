@@ -81,16 +81,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
                 final AlertDialog.Builder inviteAlert = new AlertDialog.Builder(activity);
-                inviteAlert.setTitle("Enter your invitation code");
+                inviteAlert.setTitle(R.string.invitation_prompt);
                 final EditText userInput = new EditText(activity);
                 inviteAlert.setView(userInput);
-                inviteAlert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                inviteAlert.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         joinCompany(userInput.getText().toString().trim());
                     }
                 });
-                inviteAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                inviteAlert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

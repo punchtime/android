@@ -52,4 +52,5 @@
     <string name="recenter_button_text">Recenter</string>
     <string name="current_company_summary">This is the company you\'re currently working for</string>
     <string name="current_company_title">Current company</string>
+    <string name="invitation_prompt">Enter invitation code</string>
 </resources>
