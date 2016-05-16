@@ -1,14 +1,18 @@
 package io.punchtime.punchtime.ui.fragments;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.RectF;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -27,6 +31,7 @@ import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
 import io.punchtime.punchtime.logic.operations.PulseOperations;
 import io.punchtime.punchtime.ui.activities.MainActivity;
+import io.punchtime.punchtime.ui.activities.MapDetailActivity;
 
 /**
  * Created by arnaud on 05/05/16.
@@ -98,7 +103,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         //get pulse and assign note variable
-        Pulse pulse = pulseArray.get(event.getId());
+        final Pulse pulse = pulseArray.get(event.getId());
         String pulseNote = pulse.getNote();
 
         // change message if no note is found
@@ -121,6 +126,16 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
                 // handled by the CustomListener
             }
         })
+        .setNeutralButton(getString(R.string.show_on_map), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent((Activity) getActivity(), MapDetailActivity.class);
+                final Location l = new Location("pulse");
+                l.setLatitude(pulse.getLatitude());
+                l.setLongitude(pulse.getLongitude());
+                intent.putExtra("location", l);
+                startActivity(intent);
+            }
+        })
         .setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
@@ -132,7 +147,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         // show it
         alertDialog.show();
         Button theButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialog, context, pulseNote, event.getId()));
+        theButton.setOnClickListener(new NoteListener(alertDialog, context, pulseNote, event.getId()));
     }
     @Override
     public void onEmptyViewLongPress(Calendar calendar) {
@@ -172,12 +187,12 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         mWeekView.setEmptyViewLongPressListener(this);
     }
 
-    class CustomListener implements View.OnClickListener {
+    class NoteListener implements View.OnClickListener {
         private final Dialog dialog;
         private final String note;
         private Long key;
 
-        public CustomListener(Dialog dialog, Context context, String note, Long key) {
+        public NoteListener(Dialog dialog, Context context, String note, Long key) {
             this.dialog = dialog;
             this.note = note;
             this.key = key;
