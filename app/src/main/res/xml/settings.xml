@@ -23,8 +23,6 @@
         android:dependency="pref_key_account" />
 
     <android.support.v7.preference.ListPreference
-        android:entries="@array/CompanyData"
-        android:entryValues="@array/CompanyValues"
         android:key="pref_current_company"
         android:title="@string/current_company_title"
         android:summary="@string/current_company_summary" />

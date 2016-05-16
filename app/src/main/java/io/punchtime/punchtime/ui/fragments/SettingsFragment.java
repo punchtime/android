@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
@@ -75,7 +77,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         android.support.v7.preference.Preference prefAddCompany = findPreference("pref_key_add_company");
 
-        prefAddCompany.setOnPreferenceClickListener(new android.support.v7.preference.Preference.OnPreferenceClickListener() {
+        prefAddCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
                 final AlertDialog.Builder inviteAlert = new AlertDialog.Builder(activity);
@@ -100,8 +102,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        // TODO: 16/05/16 Add setting to pick a company here 
+        final ListPreference currentCompany = (ListPreference) findPreference("pref_current_company");
+        setCompaniesData(currentCompany);
+        currentCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+
+                setCompaniesData(currentCompany);
+                return false;
+            }
+        });
         // TODO: 16/05/16 show contact of company
+    }
+
+    protected static void setCompaniesData(ListPreference lp) {
+        // TODO: 16/05/16 get companies from firebase
+        CharSequence[] entries = { "English", "French" };
+        CharSequence[] entryValues = {"1" , "2"};
+        lp.setEntries(entries);
+        lp.setDefaultValue("1");
+        lp.setEntryValues(entryValues);
     }
 
     // triggered soon after onCreateView
