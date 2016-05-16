@@ -99,6 +99,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
+
+        // TODO: 16/05/16 Add setting to pick a company here 
+        // TODO: 16/05/16 show contact of company 
     }
 
     // triggered soon after onCreateView
