@@ -85,27 +85,32 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         // Handle punchime intents
         Intent intent = getIntent();
         String action = intent.getAction();
-        if (action != null && action.equals("android.intent.action.VIEW")) {
-            Uri data = intent.getData();
-            if (data.getHost().equals("invite")) {
-                // prepare fragment with invite data
-                Fragment fragment = new SettingsFragment();
-                Bundle args = new Bundle();
-                args.putString("invite",data.getLastPathSegment());
-                fragment.setArguments(args);
+        if (action != null) {
+            switch (action) {
+                case "android.intent.action.VIEW":
+                    Uri data = intent.getData();
+                    if (data.getHost().equals("invite")) {
+                        // prepare fragment with invite data
+                        Fragment fragment = new SettingsFragment();
+                        Bundle args = new Bundle();
+                        args.putString("invite", data.getLastPathSegment());
+                        fragment.setArguments(args);
 
-                // launch fragment
-                setFragment(fragment);
-                isLaunchedFromIntent = true;
-            } else if (savedInstanceState == null) {
-                // set default view as dashboard
-                Fragment fragment = null;
-                try {
-                    fragment = DashboardFragment.class.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                setFragment(fragment);
+                        // launch fragment
+                        setFragment(fragment);
+                        isLaunchedFromIntent = true;
+                    }
+                    break;
+                case "android.intent.action.MAIN":
+                    // set default view as dashboard
+                    Fragment fragment = null;
+                    try {
+                        fragment = DashboardFragment.class.newInstance();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    setFragment(fragment);
+                    break;
             }
         }
 
