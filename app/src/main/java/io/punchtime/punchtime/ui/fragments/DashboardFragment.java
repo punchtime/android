@@ -404,7 +404,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                     }
                 }
                 @Override
-                public void onLoaderReset(Loader<Location> loader) {}
+                public void onLoaderReset(Loader<Location> loader) {
+                    // do nothing
+                }
             };
 
     // Callbacks for TimerLoader
@@ -421,7 +423,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                 }
 
                 @Override
-                public void onLoaderReset(Loader<Void> loader) {}
+                public void onLoaderReset(Loader<Void> loader) {
+                    // do nothing
+                }
             };
 
 
@@ -484,6 +488,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
+                    // don't cancel you memelord
                 }
             });
             return null;

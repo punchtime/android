@@ -13,7 +13,6 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
  * Created by arnaud on 06/05/16.
  */
 public class StatsFragment extends Fragment {
-    private View v;
 
     public StatsFragment() {
         Bundle args = new Bundle();
@@ -23,7 +22,7 @@ public class StatsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, final Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        v = inflater.inflate(R.layout.fragment_stats, parent, false);
+        View v = inflater.inflate(R.layout.fragment_stats, parent, false);
 
         // Store calling activity (Always MainActivity)
         MainActivity activity = (MainActivity) getActivity();

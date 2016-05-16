@@ -14,7 +14,6 @@ import io.punchtime.punchtime.R;
  * for project: Punchtime
  */
 public class DayFragment extends CalendarFragment {
-    private WeekView mWeekView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -23,7 +22,7 @@ public class DayFragment extends CalendarFragment {
         super.setupVariables();
 
         // get view
-        mWeekView = (WeekView) v.findViewById(R.id.weekView);
+        WeekView mWeekView = (WeekView) v.findViewById(R.id.weekView);
 
         super.setupWeekView(mWeekView);
 

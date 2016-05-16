@@ -39,10 +39,8 @@ import io.punchtime.punchtime.ui.activities.MapDetailActivity;
 public class CalendarFragment extends Fragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener,
         WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
     private WeekView mWeekView;
-    private Firebase mRef;
     private PulseOperations operations;
     private LongSparseArray<Pulse> pulseArray;
-    private LongSparseArray<Pulse> keyArray;
     private static Context context;
     private MainActivity activity;
 
@@ -147,7 +145,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         })
         .setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
+                // does nothing, just closes the dialog
             }
         });
 
@@ -160,18 +158,17 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     }
     @Override
     public void onEmptyViewLongPress(Calendar calendar) {
-
+        // no use for this listener
     }
     @Override
     public void onEventLongPress(WeekViewEvent event,RectF eventRect) {
-
+        // no use for this listener (yet)
     }
     public void setupVariables() {
-        //set activity
-        MainActivity activity = (MainActivity) getActivity();
+        //set context and activity
         context = getContext();
         activity = (MainActivity) getActivity();
-        mRef = activity.getFirebaseRef();
+        Firebase mRef = activity.getFirebaseRef();
         operations = new PulseOperations(mRef);
         pulseArray = new LongSparseArray<>();
     }
@@ -250,7 +247,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             inputAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
+                    // does nothing, just closes the dialog
                 }
             });
             AlertDialog alertDialog = inputAlert.create();

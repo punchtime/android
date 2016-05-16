@@ -24,7 +24,7 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
  * for project: Punchtime
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
 
     private MainActivity activity;
     @Override
