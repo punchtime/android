@@ -24,8 +24,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import io.punchtime.punchtime.R;
 
@@ -161,14 +163,9 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
                     .strokeWidth(1)
                     .fillColor(0x663B4358));
 
-            // TODO: 16/05/16 Haroen: add a better way to show picked location *and* current location
-            mMap.addCircle(new CircleOptions()
-                    .center(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
-                    .radius(1.5)
-                    .strokeColor(Color.WHITE)
-                    .strokeWidth(2)
-                    .fillColor(0xFF1DE9B6))
-                    .setZIndex(1);
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp)));
         }
     }
 }
