@@ -458,7 +458,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         protected Void doInBackground(Pulse... params) {
             Pulse p = params[0];
             // Push the new pulse to firebase
-            Firebase fb = mRef.child("users/" + mRef.getAuth().getUid()).child("pulses").push();
+            Firebase fb = mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").push();
             fb.setValue(p);
             return null;
         }

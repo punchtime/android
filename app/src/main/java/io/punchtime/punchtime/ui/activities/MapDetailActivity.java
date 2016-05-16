@@ -160,6 +160,15 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
                     .strokeColor(0xFF282F3F)
                     .strokeWidth(1)
                     .fillColor(0x663B4358));
+
+            // TODO: 16/05/16 Haroen: add a better way to show picked location *and* current location
+            mMap.addCircle(new CircleOptions()
+                    .center(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
+                    .radius(1.5)
+                    .strokeColor(Color.WHITE)
+                    .strokeWidth(2)
+                    .fillColor(0xFF1DE9B6))
+                    .setZIndex(1);
         }
     }
 }
