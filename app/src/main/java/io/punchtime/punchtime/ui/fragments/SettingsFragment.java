@@ -8,6 +8,7 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -15,7 +16,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.punchtime.punchtime.R;
@@ -103,6 +106,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         final ListPreference currentCompany = (ListPreference) findPreference("pref_current_company");
+        // TODO: 16/05/16 Make this wait on firebase
         setCompaniesData(currentCompany);
         currentCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -115,13 +119,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // TODO: 16/05/16 show contact of company
     }
 
-    protected static void setCompaniesData(ListPreference lp) {
-        // TODO: 16/05/16 get companies from firebase
-        CharSequence[] entries = { "English", "French" };
-        CharSequence[] entryValues = {"1" , "2"};
-        lp.setEntries(entries);
-        lp.setDefaultValue("1");
-        lp.setEntryValues(entryValues);
+    protected void setCompaniesData(final ListPreference lp) {
+        activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("employer").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<CharSequence> entries = new ArrayList<>();
+                List<CharSequence> entryValues = new ArrayList<>();
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot i : children) {
+                    entries.add(i.toString());
+                    entryValues.add(i.getKey());
+                }
+                lp.setEntries(entries.toArray(new CharSequence[entries.size()]));
+                lp.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                // we only need to get the data once.
+            }
+        });
     }
 
     // triggered soon after onCreateView
