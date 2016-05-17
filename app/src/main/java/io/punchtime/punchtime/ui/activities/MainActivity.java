@@ -57,7 +57,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         isLaunchedFromIntent = false;
 
         // find our drawer layout view
@@ -109,6 +109,9 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                         e.printStackTrace();
                     }
                     setFragment(fragment);
+                    break;
+                default:
+                    //todo: what should the action be? show dashboard seems wrong.
                     break;
             }
         }
