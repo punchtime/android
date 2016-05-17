@@ -122,8 +122,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                // TODO: 17/05/16 extract string
-                builder.setTitle("Contact");
+                builder.setTitle(R.string.contact_title);
                 // TODO: 17/05/16 get contact info from firebase and current employer
                 final CharSequence[] contactArray = new CharSequence[3];
                 contactArray[0] = "0032497466234";

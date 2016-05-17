@@ -52,4 +52,6 @@
     <string name="current_company_summary">EM IS DE BOAS va joen</string>
     <string name="current_company_title">Het bedrief</string>
     <string name="invitation_prompt">Vul je kodetje maar in</string>
+    <string name="contact_summary">valt er hem me lastig</string>
+    <string name="contact_title">Kontackt</string>
 </resources>

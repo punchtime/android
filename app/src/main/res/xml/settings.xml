@@ -30,8 +30,8 @@
     <!-- todo: put this in strings.xml -->
     <android.support.v7.preference.Preference
         android:key="pref_contact"
-        android:title="Contact"
-        android:summary="contact your employer directly"
+        android:title="@string/contact_title"
+        android:summary="@string/contact_summary"
         android:dependency="pref_current_company" />
 
 </android.support.v7.preference.PreferenceScreen>
