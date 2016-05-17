@@ -90,7 +90,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         prefAddCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
+            public boolean onPreferenceClick(final Preference pref) {
                 final AlertDialog.Builder inviteAlert = new AlertDialog.Builder(activity);
                 inviteAlert.setTitle(R.string.invitation_prompt);
                 final EditText userInput = new EditText(activity);
@@ -123,7 +123,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        // TODO: 18/05/16 figure out when to call setContact() so it's updated when the company changes 
+        // TODO: 18/05/16 figure out when to call setContact() so it's updated when the company changes
         /*currentCompany.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
