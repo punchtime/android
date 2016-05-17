@@ -63,4 +63,13 @@
     <string name="invitation_success_title">congrats ermee</string>
     <string name="recenter_button_text">intmiddden</string>
     <string name="write_current_note_message">skrief een noot voe je sjekin</string>
+    <string name="stats_today_description">Uurkes vandage</string>
+    <string name="stats_week_description">Juren van deze weke</string>
+    <string name="pref_day_default">8</string>
+    <string name="pref_week_default">5</string>
+    <string name="hours_quota_day">travailleeruurtjes</string>
+    <string name="hours_quota_day_summary">Uurkes per dag da je travailleert in de werktuin</string>
+    <string name="hours_quota_summary">Stikt er je uurtjes in want we hebben rechtstreeks banden met NSA</string>
+    <string name="hours_quota_week">Hoeverderhijd van werkdagen</string>
+    <string name="hours_quota_week_summary">Dagerkes per wiek da je ge werkt</string>
 </resources>
