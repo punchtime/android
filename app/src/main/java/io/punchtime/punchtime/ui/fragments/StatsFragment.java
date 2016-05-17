@@ -39,7 +39,7 @@ public class StatsFragment extends Fragment {
         activity.setTitle(R.string.menu_stats);
 
         // Store charts
-        weekArcView = (DecoView) getView().findViewById(R.id.weekArcView);
+        weekArcView = (DecoView) v.findViewById(R.id.weekArcView);
         dayArcView = (DecoView) v.findViewById(R.id.dayArcView);
 
         // Setup charts
@@ -50,6 +50,8 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupDayArc() {
+        // TODO: 17/05/16 fill in arcview with data from firebase (month and day) 
+        // TODO: 17/05/16 where in firebase is this stored and how is it changed
         // Create background track
         dayArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
                 .setRange(0, 100, 100)
@@ -71,7 +73,6 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupWeekArc() {
-
         // Create background track
         weekArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
                 .setRange(0, 100, 100)
@@ -90,7 +91,6 @@ public class StatsFragment extends Fragment {
                 .setDelay(0)
                 .setDuration(500)
                 .build());
-
     }
 
     @Override
