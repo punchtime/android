@@ -1,8 +1,8 @@
 package io.punchtime.punchtime.ui.fragments;
 
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.RectF;
@@ -21,7 +21,7 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.firebase.client.Firebase;
-import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;

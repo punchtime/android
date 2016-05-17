@@ -50,9 +50,9 @@ import java.util.Map;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
-import io.punchtime.punchtime.logic.operations.PulseOperations;
 import io.punchtime.punchtime.logic.loaders.LocationLoader;
 import io.punchtime.punchtime.logic.loaders.TimerLoader;
+import io.punchtime.punchtime.logic.operations.PulseOperations;
 import io.punchtime.punchtime.ui.SnackbarFactory;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 import io.punchtime.punchtime.ui.activities.MapDetailActivity;

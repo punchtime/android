@@ -14,7 +14,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.EdgeDetail;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 
