@@ -5,33 +5,65 @@
     android:layout_width="match_parent"
     android:theme="@style/AppTheme">
 
-    <android.support.v7.preference.Preference
-        android:key="pref_key_account"
-        android:summary="@string/not_logged_in_summary"
-        android:title="@string/account" />
+    <android.support.v7.preference.ListPreference
+        android:key="pref_key_hours_week"
+        android:summary="@string/hours_quota_week_summary"
+        android:title="@string/hours_quota_week"
+        android:icon="@drawable/ic_access_time_black_24dp"
+        android:dialogTitle="@string/hours_quota_week"
+        android:entries="@array/pref_week_entries"
+        android:entryValues="@array/pref_week_values"
+        android:defaultValue="@string/pref_week_default"
+        />
+
+    <android.support.v7.preference.ListPreference
+        android:key="pref_key_hours_day"
+        android:summary="@string/hours_quota_day_summary"
+        android:title="@string/hours_quota_day"
+        android:icon="@drawable/ic_access_time_black_24dp"
+        android:dialogTitle="@string/hours_quota_day"
+        android:entries="@array/pref_day_entries"
+        android:entryValues="@array/pref_day_values"
+        android:defaultValue="@string/pref_day_default"
+        />
 
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="tracking_location_mode"
+        android:icon="@drawable/ic_near_me_black_24dp1"
         android:summary="@string/location_mode_summary"
         android:title="@string/location_mode_title" />
 
-    <android.support.v7.preference.Preference
-        android:key="pref_key_add_company"
-        android:summary="@string/add_company_summary"
-        android:title="@string/add_company_title"
-        android:dependency="pref_key_account" />
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Account">
+        <android.support.v7.preference.Preference
+            android:key="pref_key_account"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:summary="@string/not_logged_in_summary"
+            android:title="@string/account" />
 
-    <android.support.v7.preference.ListPreference
-        android:key="pref_current_company"
-        android:title="@string/current_company_title"
-        android:summary="@string/current_company_summary" />
+    </android.support.v7.preference.PreferenceCategory>
 
-    <!-- todo: put this in strings.xml -->
-    <android.support.v7.preference.Preference
-        android:key="pref_contact"
-        android:title="@string/contact_title"
-        android:summary="@string/contact_summary"
-        android:dependency="pref_current_company" />
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Company">
+        <android.support.v7.preference.Preference
+            android:key="pref_key_add_company"
+            android:icon="@drawable/ic_group_add_black_24dp"
+            android:summary="@string/add_company_summary"
+            android:title="@string/add_company_title"
+            android:dependency="pref_key_account" />
 
+        <android.support.v7.preference.ListPreference
+            android:key="pref_current_company"
+            android:icon="@drawable/ic_business_black_24dp"
+            android:title="@string/current_company_title"
+            android:summary="@string/current_company_summary" />
+
+        <android.support.v7.preference.Preference
+            android:key="pref_contact"
+            android:icon="@drawable/ic_call_black_24dp"
+            android:title="@string/contact_title"
+            android:summary="@string/contact_summary"
+            android:dependency="pref_current_company" />
+    </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>
