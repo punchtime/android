@@ -8,18 +8,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
+import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -29,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -59,7 +56,7 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ((ImageButton) findViewById(R.id.centerButton)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.centerButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
@@ -166,6 +163,10 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
                     .strokeColor(0xFF282F3F)
                     .strokeWidth(1)
                     .fillColor(0x663B4358));
+
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp)));
         }
     }
 }

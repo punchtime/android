@@ -39,4 +39,84 @@
     <string name="no_location_error_message">Kon geen locatie vinden, probeer het opnieuw</string>
     <string name="recenter_map_on_current_location">Centreer kaart op huidige locatie</string>
     <string name="show_on_map">Toon op kaart</string>
+    <string name="checkin_message">Ingecheckt in huidige locatie</string>
+    <string name="checkout_message">Uitgecheckt uit huidige locatie</string>
+    <string name="map_detail_title">Detailkaart</string>
+    <string name="edit_note">Pas opmerking aan</string>
+    <string name="menu_stats">Statistieken</string>
+    <string name="no_note_added">Geen opmerking toegevoegd</string>
+    <string name="close">Sluiten</string>
+    <string name="info_pulse_title">Info voor deze pulse</string>
+    <string name="submit">Voeg toe</string>
+    <string name="cancel">Annuleer</string>
+    <string name="current_company_summary">Je bent voor deze werkgever aan het werken</string>
+    <string name="current_company_title">Huidige werkgever</string>
+    <string name="invitation_prompt">Vul uitnodigingscode in</string>
+    <string name="contact_title">Contact</string>
+    <string name="contact_summary">Contacteer je werkgever direct</string>
+    <string name="email_title">Stuur een e-mail</string>
+    <string name="invitation_claimed_text">Deze code is al ingewisseld</string>
+    <string name="invitation_error_text">Controleer of je de juiste code ingevuldl hebt en probeer opnieuw</string>
+    <string name="invitation_claimed_title">Uitnodigingsfout</string>
+    <string name="invitation_error_title">Uitnodigingsfout</string>
+    <string name="invitation_success_text">"Je maakt nu deel uit van "</string>
+    <string name="invitation_success_title">Succes</string>
+    <string name="recenter_button_text">Centreren</string>
+    <string name="write_current_note_message">Schrijf een notitie voor je checkin</string>
+    <string name="stats_today_description">uur vandaag gewerkt</string>
+    <string name="twitter_app_key"></string>
+    <string name="stats_week_description">uur deze week gewerkt</string>
+    <string name="pref_day_default">8</string>
+    <string name="pref_week_default">5</string>
+    <string name="hours_quota_week">Aantal werkdagen</string>
+    <string name="hours_quota_day">Werkuren</string>
+    <string name="hours_quota_day_summary">Hoe lang je per dag werkt (in uur)</string>
+    <string name="hours_quota_summary">Specifieer je werkuren zodat we je voortgang kunnen tonen</string>
+    <string name="hours_quota_week_summary">Aantal dagen per week dat je werkt</string>
+    <string-array name="pref_day_entries">
+        <item>1 uur</item>
+        <item>2 uur</item>
+        <item>3 uur</item>
+        <item>4 uur</item>
+        <item>5 uur</item>
+        <item>6 uur</item>
+        <item>7 uur</item>
+        <item>8 uur</item>
+        <item>9 uur</item>
+        <item>10 uur</item>
+        <item>11 uur</item>
+        <item>12 uur</item>
+    </string-array>
+    <string-array name="pref_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="pref_week_entries">
+        <item>1 dag</item>
+        <item>2 dagen</item>
+        <item>3 dagen</item>
+        <item>4 dagen</item>
+        <item>5 dagen</item>
+        <item>6 dagen</item>
+        <item>7 dagen</item>
+    </string-array>
+    <string-array name="pref_week_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
 </resources>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Punchtime</string>
+    <string name="account">Utitlisateur</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="add_a_note">Ajoutez une note</string>
+    <string name="add_company_dialog_title">Remplissez une invitation</string>
+    <string name="add_company_summary">Ajoutez vous-même dans une entreprise</string>
+    <string name="add_company_title">Ajouter dans une entreprise</string>
+    <string name="drawer_close">Fermez la navigation</string>
+    <string name="drawer_open">Ouvrez la navigation</string>
+    <string name="last_checkin">Location courant</string>
+    <string name="time_today_content">0m</string>
+    <string name="time_here_title">Ici</string>
+    <string name="time_today_title">Aujourd\'hui</string>
+    <string name="time_here_content">0m</string>
+    <string name="show_on_map">Montrez sur la carte</string>
+    <string name="settings">Préferences</string>
+    <string name="recenter_map_on_current_location">Centrez sur la location</string>
+    <string name="placeholder_user">Non connecté</string>
+    <string name="placeholder_street">Vous n\'êtes pas enrégistré</string>
+    <string name="placeholder_email">Appuyez ici pour aller aux préférences</string>
+    <string name="placeholder_city">Appuyez sur l\'épingle verte pour enrégistrer</string>
+    <string name="ok">Oui</string>
+    <string name="not_logged_in_summary">Pas connecté, appuyez pour se connecter</string>
+    <string name="no_location_error_message">Aucune location trouvée, essayez encore une fois</string>
+    <string name="menu_week">Semaine</string>
+    <string name="menu_history">Historique</string>
+    <string name="menu_day">Jour</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="menu_3_day">3 Jours</string>
+    <string name="logout_dialog_title">Se déconnecter</string>
+    <string name="logout_dialog_message">Vous voulez sûrement vous déconnecter? Vous devez être connecté pour utiliser l\'appli.</string>
+    <string name="login_rationale">Pour donner un location, vouz devez vous connecter</string>
+    <string name="logged_in_twitter">Connecté avec Twitter</string>
+    <string name="logged_in_summary">Connecté, appuyez pour vous déconnecter</string>
+    <string name="logged_in_facebook">Connecté avec Facebook</string>
+    <string name="location_rationale">Cette appli a besoin d\'utiliser la location pour fonctionner</string>
+    <string name="location_mode_title">Mode automatique</string>
+    <string name="location_mode_summary">Ce mode fera les connections pour vous, basé sur la localisation de votre portable</string>
+    <string name="loading">Charger …</string>
+    <string name="checkin_message">Enrégistré ici</string>
+    <string name="checkout_message">Quitté l\'emplacement actuel</string>
+    <string name="map_detail_title">Carte détail</string>
+    <string name="edit_note">Modifier la note</string>
+    <string name="menu_stats">Statistiques</string>
+    <string name="no_note_added">Aucune note a été ajoutée</string>
+    <string name="close">Fermez</string>
+    <string name="info_pulse_title">Information pour cette pulse</string>
+    <string name="submit">Soumettre</string>
+    <string name="cancel">Annuler</string>
+    <string name="current_company_summary">Vous régistrez pour cette employeur</string>
+    <string name="current_company_title">Employeur actuel</string>
+    <string name="invitation_prompt">Code d\'invitation</string>
+    <string name="contact_title">Contact</string>
+    <string name="contact_summary">Contactez votre employeur en direct</string>
+    <string name="email_title">Envoyez un courriel</string>
+    <string name="invitation_claimed_text">Cette code est déjà prise</string>
+    <string name="invitation_claimed_title">Erreur d\'invitation</string>
+    <string name="recenter_button_text">Centrer</string>
+    <string name="write_current_note_message">Ecris une note pour cette checkin</string>
+    <string name="invitation_success_title">Succes</string>
+    <string name="invitation_success_text">"Rejoint avec succès dans "</string>
+    <string name="invitation_error_title">Erreur d\'invitation</string>
+    <string name="invitation_error_text">Controlez si vous avez mis la code exacte</string>
+    <string name="stats_today_description">Heures travaillé aujourd\'hui</string>
+    <string name="stats_week_description">Heures travaillé cette semaine</string>
+    <string name="pref_day_default">8</string>
+    <string name="pref_week_default">5</string>
+    <string name="hours_quota_week_summary"></string>
+    <string-array name="pref_day_entries">
+        <item>1 heure</item>
+        <item>2 heures</item>
+        <item>3 heures</item>
+        <item>4 heures</item>
+        <item>5 heures</item>
+        <item>6 heures</item>
+        <item>7 heures</item>
+        <item>8 heures</item>
+        <item>9 heures</item>
+        <item>10 heures</item>
+        <item>11 heures</item>
+        <item>12 heures</item>
+    </string-array>
+    <string-array name="pref_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="pref_week_entries">
+        <item>1 jour</item>
+        <item>2 jours</item>
+        <item>3 jours</item>
+        <item>4 jours</item>
+        <item>5 jours</item>
+        <item>6 jours</item>
+        <item>7 jours</item>
+    </string-array>
+    <string-array name="pref_week_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+</resources>

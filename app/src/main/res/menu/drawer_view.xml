@@ -26,6 +26,13 @@
             </group>
         </menu>
     </item>
+    <group android:id="@+id/group_stats" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_stats"
+            android:icon="@drawable/ic_assessment_black_24dp"
+            android:title="@string/menu_stats"
+        />
+    </group>
     <group android:id="@+id/group_settings" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"

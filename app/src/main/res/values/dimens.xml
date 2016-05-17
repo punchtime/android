@@ -6,5 +6,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="map_height">200dp</dimen>
+    <dimen name="map_height">300dp</dimen>
 </resources>
