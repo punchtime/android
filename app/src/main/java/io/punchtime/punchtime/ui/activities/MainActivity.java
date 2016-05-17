@@ -37,6 +37,7 @@ import java.util.Map;
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.logic.tasks.DownloadImageTask;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
+import io.punchtime.punchtime.ui.fragments.DayFragment;
 import io.punchtime.punchtime.ui.fragments.HistoryFragment;
 import io.punchtime.punchtime.ui.fragments.SettingsFragment;
 import io.punchtime.punchtime.ui.fragments.StatsFragment;
@@ -81,11 +82,17 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         // connect to firebase
         mRef = new Firebase( getString(R.string.firebase_url));
+        // Firebase login providers config
+        setEnabledAuthProvider(AuthProviderType.FACEBOOK);
+        setEnabledAuthProvider(AuthProviderType.TWITTER);
+        setEnabledAuthProvider(AuthProviderType.GOOGLE);
+        setEnabledAuthProvider(AuthProviderType.PASSWORD);
 
         // Handle punchime intents
         Intent intent = getIntent();
         String action = intent.getAction();
         if (action != null) {
+            isLaunchedFromIntent = true;
             switch (action) {
                 case "android.intent.action.VIEW":
                     Uri data = intent.getData();
@@ -98,7 +105,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
                         // launch fragment
                         setFragment(fragment);
-                        isLaunchedFromIntent = true;
                     }
                     break;
                 case "android.intent.action.MAIN":
@@ -131,17 +137,6 @@ public class MainActivity extends FirebaseLoginBaseActivity {
             Intent permissionIntent = new Intent(this, PermissionErrorActivity.class);
             startActivity(permissionIntent);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // All providers are optional! Remove any you don't want.
-        setEnabledAuthProvider(AuthProviderType.FACEBOOK);
-        setEnabledAuthProvider(AuthProviderType.TWITTER);
-        setEnabledAuthProvider(AuthProviderType.GOOGLE);
-        setEnabledAuthProvider(AuthProviderType.PASSWORD);
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {

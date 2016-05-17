@@ -134,7 +134,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         })
         .setNeutralButton(getString(R.string.show_on_map), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent((Activity) getActivity(), MapDetailActivity.class);
+                Intent intent = new Intent(getActivity(), MapDetailActivity.class);
                 final Location l = new Location("pulse");
                 l.setLatitude(pulse.getLatitude());
                 l.setLongitude(pulse.getLongitude());
