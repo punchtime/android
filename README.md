@@ -1,12 +1,14 @@
 # punchtime app
 
+[![Join the chat at https://gitter.im/punchtime/public](https://badges.gitter.im/punchtime/public.svg)](https://gitter.im/punchtime/public?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![Codacy Badge](https://api.codacy.com/project/badge/Grade/744ef2191f9b460f9434b00af7a4218c)](https://www.codacy.com/app/fingebimus/android?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=punchtime/android&amp;utm_campaign=Badge_Grade)
+
 > Note: this is a work in progress, and not yet a deployed app.
 
 ## screenshots
 
 > Note: these screenshots aren't definitive
 
-<img src="assets/Screenshot_20160427-181433-large.png" alt="screenshot of the main interface" width="200px" align="right">
+<img src="assets/screenshot_dashboard-large.png" alt="screenshot of the main interface" width="200px" align="right">
 
 ## info
 

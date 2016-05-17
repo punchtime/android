@@ -3,6 +3,7 @@ package io.punchtime.punchtime.ui.behaviors;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Build;
+import android.os.PowerManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
@@ -21,18 +22,20 @@ public class AvoidSnackbarBehavior extends CoordinatorLayout.Behavior<View> {
         // because we can use view translation properties which greatly simplifies the code.
         private static final boolean SNACKBAR_BEHAVIOR_ENABLED = Build.VERSION.SDK_INT >= 11;
 
-        private ValueAnimator mchildTranslationYAnimator;
+        private ValueAnimator mChildTranslationYAnimator;
         private float mCardTranslationY;
+        private Context context;
 
         public AvoidSnackbarBehavior(Context context, AttributeSet attrs) {
             super(context,attrs);
+            this.context = context;
         }
 
         @Override
         public boolean layoutDependsOn(CoordinatorLayout parent,
                                        View child, View dependency) {
             // We're dependent on all SnackbarLayouts (if enabled)
-            return SNACKBAR_BEHAVIOR_ENABLED && dependency instanceof Snackbar.SnackbarLayout;
+            return dependency instanceof Snackbar.SnackbarLayout;
         }
 
         @Override
@@ -55,18 +58,18 @@ public class AvoidSnackbarBehavior extends CoordinatorLayout.Behavior<View> {
             final float currentTransY = ViewCompat.getTranslationY(child);
 
             // Make sure that any current animation is cancelled
-            if (mchildTranslationYAnimator != null && mchildTranslationYAnimator.isRunning()) {
-                mchildTranslationYAnimator.cancel();
+            if (mChildTranslationYAnimator != null && mChildTranslationYAnimator.isRunning()) {
+                mChildTranslationYAnimator.cancel();
             }
 
             if (child.isShown()
                     && Math.abs(currentTransY - targetTransY) > (child.getHeight() * 0.667f)) {
                 // If the child will be travelling by more than 2/3 of it's height, let's animate
                 // it instead
-                if (mchildTranslationYAnimator == null) {
-                    mchildTranslationYAnimator = new ValueAnimator();
-                    mchildTranslationYAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    mchildTranslationYAnimator.addUpdateListener(
+                if (mChildTranslationYAnimator == null) {
+                    mChildTranslationYAnimator = new ValueAnimator();
+                    mChildTranslationYAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    mChildTranslationYAnimator.addUpdateListener(
                             new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
                                 public void onAnimationUpdate(ValueAnimator animator) {
@@ -75,11 +78,17 @@ public class AvoidSnackbarBehavior extends CoordinatorLayout.Behavior<View> {
                                 }
                             });
                 }
-                mchildTranslationYAnimator.setFloatValues(currentTransY, targetTransY);
-                mchildTranslationYAnimator.start();
+                mChildTranslationYAnimator.setFloatValues(currentTransY, targetTransY);
+                mChildTranslationYAnimator.start();
             } else {
                 // Now update the translation Y
                 ViewCompat.setTranslationY(child, targetTransY);
+            }
+
+            PowerManager powerManager = (PowerManager) this.context.getSystemService(Context.POWER_SERVICE);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                    && powerManager.isPowerSaveMode()) {
+                ViewCompat.setTranslationY(child, 0);
             }
 
             mCardTranslationY = targetTransY;

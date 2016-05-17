@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -37,6 +38,7 @@ import io.punchtime.punchtime.logic.tasks.DownloadImageTask;
 import io.punchtime.punchtime.ui.fragments.DashboardFragment;
 import io.punchtime.punchtime.ui.fragments.HistoryFragment;
 import io.punchtime.punchtime.ui.fragments.SettingsFragment;
+import io.punchtime.punchtime.ui.fragments.StatsFragment;
 
 public class MainActivity extends FirebaseLoginBaseActivity {
 
@@ -48,12 +50,15 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     private View headerView;
     private SharedPreferences preferences;
     private NavigationView navigationView;
+    private boolean isLaunchedFromIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        isLaunchedFromIntent = false;
 
         // find our drawer layout view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,22 +76,41 @@ public class MainActivity extends FirebaseLoginBaseActivity {
         headerView = (navigationView == null) ? null : navigationView.getHeaderView(0);
         setupDrawerContent(navigationView);
 
-        Firebase.setAndroidContext(this);
-
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // connect to firebase
         mRef = new Firebase( getString(R.string.firebase_url));
 
-        // set default view as dashboard
-        if (savedInstanceState == null) {
-            Fragment fragment = null;
-            try {
-                fragment = DashboardFragment.class.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
+        // Handle punchtime intents
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (action != null) {
+            isLaunchedFromIntent = true;
+            switch (action) {
+                case "android.intent.action.VIEW":
+                    Uri data = intent.getData();
+                    if (data.getHost().equals("invite")) {
+                        // prepare fragment with invite data
+                        Fragment fragment = new SettingsFragment();
+                        Bundle args = new Bundle();
+                        args.putString("invite", data.getLastPathSegment());
+                        fragment.setArguments(args);
+
+                        // launch fragment
+                        setFragment(fragment);
+                    }
+                    break;
+                case "android.intent.action.MAIN":
+                    // set default view as dashboard
+                    Fragment fragment = null;
+                    try {
+                        fragment = DashboardFragment.class.newInstance();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    setFragment(fragment);
+                    break;
             }
-            setFragment(fragment);
         }
 
         View navHeader = headerView.findViewById(R.id.nav_header);
@@ -103,8 +127,8 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            Intent intent = new Intent(this, PermissionErrorActivity.class);
-            startActivity(intent);
+            Intent permissionIntent = new Intent(this, PermissionErrorActivity.class);
+            startActivity(permissionIntent);
         }
     }
 
@@ -112,12 +136,14 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     protected void onStart() {
         super.onStart();
 
-        // All providers are optional! Remove any you don't want.
+        // Firebase login providers config
         setEnabledAuthProvider(AuthProviderType.FACEBOOK);
         setEnabledAuthProvider(AuthProviderType.TWITTER);
         setEnabledAuthProvider(AuthProviderType.GOOGLE);
         setEnabledAuthProvider(AuthProviderType.PASSWORD);
+
     }
+
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -193,11 +219,15 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 args.putInt("fragment",R.id.nav_week);
                 fragment.setArguments(args);
                 break;
+            case R.id.nav_stats:
+                fragment = new StatsFragment();
+                break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
                 break;
             default:
                 fragment = new DashboardFragment();
+                break;
         }
 
         setFragment(fragment);
@@ -231,9 +261,10 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedIn(final AuthData authData) {
-        setFragment(new DashboardFragment());
-        navigationView.setCheckedItem(R.id.nav_dashboard);
-
+        if(!isLaunchedFromIntent) {
+            setFragment(new DashboardFragment());
+            navigationView.setCheckedItem(R.id.nav_dashboard);
+        }
         // Store user data in firebase
         Map<String, Object> map = new HashMap<>();
         map.put("provider", authData.getProvider());
@@ -267,7 +298,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
                 mail.setText("");
                 break;
             default:
-                map.put("image","https://www.drupal.org/files/profile_default.png"); // TODO: 28/04/16 give a real url
+                map.put("image","https://www.drupal.org/files/profile_default.png");
                 break;
         }
 
@@ -275,8 +306,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         preferences.edit().putBoolean("logged_in", true).apply();
 
-        new DownloadImageTask(pic)
-                .execute(map.get("image").toString());
+        new DownloadImageTask(pic).execute(map.get("image").toString());
     }
 
     @Override
@@ -304,5 +334,9 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     public NavigationView getNavigationView() {
         return navigationView;
+    }
+
+    public void setLaunchedFromIntent(boolean launchedFromIntent) {
+        isLaunchedFromIntent = launchedFromIntent;
     }
 }

@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import io.punchtime.punchtime.R;
 
@@ -37,8 +36,7 @@ public class PermissionErrorActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            goToMainActivity();
         }
 
         // Should we show an explanation?
@@ -71,21 +69,19 @@ public class PermissionErrorActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            goToMainActivity();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        // TODO: does this need to be a switch?
         switch (requestCode) {
-            case 1: {
+            case 1:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-
+                    goToMainActivity();
                 } else {
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.location_rationale,
                             Snackbar.LENGTH_INDEFINITE)
@@ -102,7 +98,9 @@ public class PermissionErrorActivity extends AppCompatActivity {
                     textView.setMaxLines(4);
                     snackbar.show();
                 }
-            }
+                break;
+            default:
+                break;
         }
     }
 
@@ -114,5 +112,11 @@ public class PermissionErrorActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction("android.intent.action.MAIN");
+        startActivity(intent);
     }
 }

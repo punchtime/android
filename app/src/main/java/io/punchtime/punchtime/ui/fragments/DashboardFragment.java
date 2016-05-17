@@ -22,6 +22,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,8 @@ import java.util.Map;
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
 import io.punchtime.punchtime.logic.loaders.LocationLoader;
+import io.punchtime.punchtime.logic.loaders.TimerLoader;
+import io.punchtime.punchtime.logic.operations.PulseOperations;
 import io.punchtime.punchtime.ui.SnackbarFactory;
 import io.punchtime.punchtime.ui.activities.MainActivity;
 import io.punchtime.punchtime.ui.activities.MapDetailActivity;
@@ -74,6 +77,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private Geocoder geocoder;
     private TextView street;
     private TextView city;
+    private TextView timeCheckin;
+    private Pulse mLastPulse;
+    private PulseOperations operations;
 
     public DashboardFragment() {
         Bundle args = new Bundle();
@@ -92,15 +98,18 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         activity = (MainActivity) getActivity();
 
         getLoaderManager().initLoader(0, null, locationLoaderCallbacks);
+        getLoaderManager().initLoader(1, null, timerLoaderCallbacks);
 
         // Setup toolbar
         activity.setTitle(R.string.menu_dashboard);
         Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         mSwitch = (MaterialAnimatedSwitch) LayoutInflater.from(activity).inflate(R.layout.toolbar_switch, toolbar, false);
+
         activity.addViewToToolbar(mSwitch);
 
         street = (TextView) v.findViewById(R.id.streetText);
         city = (TextView) v.findViewById(R.id.cityText);
+        timeCheckin = (TextView) v.findViewById(R.id.timeHere);
 
         // Load the map async
         SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -154,19 +163,31 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder inputAlert = new AlertDialog.Builder(context);
-                inputAlert.setTitle("Add a note");
-                inputAlert.setMessage("write a note for your current checkin");
+
+                inputAlert.setMessage(getString(R.string.write_current_note_message));
                 final EditText userInput = new EditText(context);
                 inputAlert.setView(userInput);
-                inputAlert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+
+                String title;
+                if (mLastPulse.getNote() == null || mLastPulse.getNote().isEmpty()) {
+                    title = getString(R.string.add_a_note);
+                } else {
+                    title = getString(R.string.edit_note);
+                    userInput.setText(mLastPulse.getNote());
+                }
+                inputAlert.setTitle(title);
+
+                inputAlert.setPositiveButton(getString(R.string.submit), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Map<String, Object> map = new HashMap<>();
                         map.put("note", userInput.getText().toString());
+                        mLastPulse.setNote(userInput.getText().toString());
                         new UpdateLastPulseTask().execute(map);
+                        noteButton.setText(getText(R.string.edit_note));
                     }
                 });
-                inputAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                inputAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -174,7 +195,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                 });
                 AlertDialog alertDialog = inputAlert.create();
                 alertDialog.show();
-
             }
         });
 
@@ -189,6 +209,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        setTrackingLocationMode(preferences.getBoolean("tracking_location_mode", false));
+
         return v;
     }
 
@@ -197,6 +219,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         super.onStart();
 
         mRef = activity.getFirebaseRef();
+
+        // create PulseOperations instance
+        operations = new PulseOperations(mRef);
 
         if(!preferences.getBoolean("logged_in",false)) {
             // If the user is not logged in, show login rationale and prompt to login
@@ -216,8 +241,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         } else {
             new GetLastPulseTask().execute();
         }
-
-        setTrackingLocationMode(preferences.getBoolean("tracking_location_mode", false));
     }
 
     @Override
@@ -234,11 +257,14 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void checkIn() {
-        setCheckedIn(true);
-        SnackbarFactory.createSnackbar(activity, v, "Checked in at current location").show();
+        SnackbarFactory.createSnackbar(activity, v, getString(R.string.checkin_message)).show();
 
         // Create pulse without geocoding
-        Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), "-KBdSPf90dvJCeH3J8m7", true);
+        Pulse pulse = new Pulse(mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", System.currentTimeMillis(), activity.getAuth().getUid(), preferences.getString("pref_current_company",""), true);
+
+        mLastPulse = pulse;
+
+        setCheckedIn(true);
 
         // Add geocoding to pulse, will also update UI and push to Firebase
         new ReverseGeocodePulseTask().execute(pulse);
@@ -246,7 +272,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
 
     private void checkOut() {
         setCheckedIn(false);
-        SnackbarFactory.createSnackbar(activity, v, "Checked out at current location").show();
+        SnackbarFactory.createSnackbar(activity, v, getString(R.string.checkout_message)).show();
 
         // Update UI
         updateCheckinUI(null);
@@ -263,13 +289,16 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             street.setText(pulse.getAddressStreet());
             city.setText(pulse.getAddressCityCountry());
             mapButton.setVisibility(View.VISIBLE);
+            if(pulse.getNote() != null && !pulse.getNote().isEmpty()) noteButton.setText(getString(R.string.edit_note));
             noteButton.setVisibility(View.VISIBLE);
+            timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – now");
         } else {
             // Not checked in
             street.setText(R.string.placeholder_street);
             city.setText(R.string.placeholder_city);
             mapButton.setVisibility(View.INVISIBLE);
             noteButton.setVisibility(View.INVISIBLE);
+            timeCheckin.setText("");
         }
     }
 
@@ -291,11 +320,21 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         setTrackingLocation(false);
 
         if (!trackingLocationMode) {
+            mSwitch.setOnInitFinishedListener(null);
             if(isCheckedIn) {
                 fab.setImageResource(R.drawable.ic_location_off_black_24dp);
             } else {
                 fab.setImageResource(R.drawable.ic_pin_drop_24dp);
             }
+        } else {
+            mSwitch.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mSwitch.isChecked()) {
+                        mSwitch.toggle();
+                    }
+                }
+            });
         }
     }
 
@@ -364,7 +403,28 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
                     }
                 }
                 @Override
-                public void onLoaderReset(Loader<Location> loader) {}
+                public void onLoaderReset(Loader<Location> loader) {
+                    // do nothing
+                }
+            };
+
+    // Callbacks for TimerLoader
+    private LoaderManager.LoaderCallbacks<Void> timerLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<Void>() {
+                @Override
+                public Loader<Void> onCreateLoader(
+                        int id, Bundle args) {
+                    return new TimerLoader(context);
+                }
+                @Override
+                public void onLoadFinished(Loader<Void> loader, Void mNull) {
+                    // Fires every minute
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Void> loader) {
+                    // do nothing
+                }
             };
 
 
@@ -385,6 +445,9 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         @Override
         protected void onPostExecute(Pulse pulse) {
             super.onPostExecute(pulse);
+
+            mLastPulse = pulse;
+
             // Update UI
             updateCheckinUI(pulse);
 
@@ -398,14 +461,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         protected Void doInBackground(Pulse... params) {
             Pulse p = params[0];
             // Push the new pulse to firebase
-            Firebase fb = mRef.child("pulses").push();
+            Firebase fb = mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").push();
             fb.setValue(p);
-
-            // Add pulse key to users in firebase
-            Map<String, Object> map = new HashMap<>();
-            map.put(fb.getKey(),true);
-            mRef.child("users").child(activity.getAuth().getUid()).child("pulses").updateChildren(map);
-
             return null;
         }
     }
@@ -413,25 +470,12 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
     private class GetLastPulseTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
+            mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     try {
-                        Pulse p;
-                        Pulse latestPulse = new Pulse();
-                        long latestTimestamp, currentTimestamp;
-                        latestTimestamp = 0;
-
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            p = child.getValue(Pulse.class);
-                            currentTimestamp = p.getCheckin();
-                            if(currentTimestamp > latestTimestamp) {
-                                latestTimestamp = currentTimestamp;
-                                latestPulse = p;
-                            }
-                        }
-
+                        Pulse latestPulse = dataSnapshot.getChildren().iterator().next().getValue(Pulse.class);
+                        mLastPulse = latestPulse;
                         updateCheckinUI(latestPulse);
                         if(latestPulse.getCheckout() == 0) setCheckedIn(true);
                         else setCheckedIn(false);
@@ -443,41 +487,31 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
+                    // don't cancel you memelord
                 }
             });
             return null;
         }
     }
 
-    private class UpdateLastPulseTask extends AsyncTask<Map<String,Object>, Pulse, Pulse> {
-        Map<String, Object> map;
+    private class UpdateLastPulseTask extends AsyncTask<Map<String,Object>, Void, Void> {
+        private Map<String, Object> map;
 
         @Override
         @SafeVarargs
-        protected final Pulse doInBackground(Map<String,Object>... params) {
+        protected final Void doInBackground(Map<String,Object>... params) {
             map = params[0];
-            Query query = mRef.child("pulses").orderByChild("employee").equalTo(mRef.getAuth().getUid());
+            Query query = mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").limitToLast(1);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Pulse p;
-                    long latestTimestamp, currentTimestamp;
-                    latestTimestamp = 0;
-                    String lastPulseKey ="";
-
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        p = child.getValue(Pulse.class);
-
-                        currentTimestamp = p.getCheckin();
-                        if(currentTimestamp > latestTimestamp) {
-                            latestTimestamp = currentTimestamp;
-                            lastPulseKey = child.getKey();
-                        }
-                    }
-                    mRef.child("pulses").child(lastPulseKey).updateChildren(map);
+                    mRef.child("users").child(mRef.getAuth().getUid()).child("pulses").child(dataSnapshot.getChildren().iterator().next().getKey()).updateChildren(map);
                 }
                 @Override
-                public void onCancelled(FirebaseError firebaseError) {}
+                public void onCancelled(FirebaseError firebaseError) {
+                    // We allow cancelling and then weep
+                    // TODO: maybe try calling it again?
+                }
             });
             return null;
         }
