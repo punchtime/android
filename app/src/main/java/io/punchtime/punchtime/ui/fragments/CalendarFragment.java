@@ -22,8 +22,11 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.firebase.client.Firebase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.punchtime.punchtime.R;
@@ -101,6 +104,24 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
 
         //get pulse and assign note variable
         final Pulse pulse = pulseArray.get(event.getId());
+
+        // setup the format
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+
+        // convert millisecs to date
+        Date pulseCheckinDate = new Date(pulse.getCheckin());
+
+        // set strings
+        String pulseCheckin = formatter.format(pulseCheckinDate);
+        String pulseCheckout = "now";
+
+        // check if pulse is still going, change string if needed
+        if (pulse.getCheckout() != 0) {
+            Date pulseCheckoutDate = new Date(pulse.getCheckout());
+            pulseCheckout = formatter.format(pulseCheckoutDate);
+        }
+
+
         String pulseNote = pulse.getNote();
         String notePlaceholder = pulseNote;
         String noteInputMessage;
@@ -120,7 +141,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         }
 
         // set title
-        alertDialogBuilder.setTitle(getString(R.string.info_pulse_title));
+        alertDialogBuilder.setTitle(pulseCheckin + " - " + pulseCheckout);
 
         // set message
         alertDialogBuilder.setMessage(notePlaceholder + "\n"

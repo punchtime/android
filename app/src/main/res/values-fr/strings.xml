@@ -30,7 +30,7 @@
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_3_day">3 Jours</string>
     <string name="logout_dialog_title">Se déconnecter</string>
-    <string name="logout_dialog_message">Vous voulez sûrement vous déconnecter? Vous devez être connecter pour utiliser l\'appli.</string>
+    <string name="logout_dialog_message">Vous voulez sûrement vous déconnecter? Vous devez être connecté pour utiliser l\'appli.</string>
     <string name="login_rationale">Pour donner un location, vouz devez vous connecter</string>
     <string name="logged_in_twitter">Connecté avec Twitter</string>
     <string name="logged_in_summary">Connecté, appuyez pour vous déconnecter</string>
@@ -63,4 +63,55 @@
     <string name="invitation_success_text">"Rejoint avec succès dans "</string>
     <string name="invitation_error_title">Erreur d\'invitation</string>
     <string name="invitation_error_text">Controlez si vous avez mis la code exacte</string>
+    <string name="stats_today_description">Heures travaillé aujourd\'hui</string>
+    <string name="stats_week_description">Heures travaillé cette semaine</string>
+    <string name="pref_day_default">8</string>
+    <string name="pref_week_default">5</string>
+    <string name="hours_quota_week_summary"></string>
+    <string-array name="pref_day_entries">
+        <item>1 heure</item>
+        <item>2 heures</item>
+        <item>3 heures</item>
+        <item>4 heures</item>
+        <item>5 heures</item>
+        <item>6 heures</item>
+        <item>7 heures</item>
+        <item>8 heures</item>
+        <item>9 heures</item>
+        <item>10 heures</item>
+        <item>11 heures</item>
+        <item>12 heures</item>
+    </string-array>
+    <string-array name="pref_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="pref_week_entries">
+        <item>1 jour</item>
+        <item>2 jours</item>
+        <item>3 jours</item>
+        <item>4 jours</item>
+        <item>5 jours</item>
+        <item>6 jours</item>
+        <item>7 jours</item>
+    </string-array>
+    <string-array name="pref_week_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
 </resources>
