@@ -52,4 +52,15 @@
     <string name="current_company_summary">Vous régistrez pour cette employeur</string>
     <string name="current_company_title">Employeur actuel</string>
     <string name="invitation_prompt">Code d\'invitation</string>
+    <string name="contact_title">Contact</string>
+    <string name="contact_summary">Contactez votre employeur en direct</string>
+    <string name="email_title">Envoyez un courriel</string>
+    <string name="invitation_claimed_text">Cette code est déjà prise</string>
+    <string name="invitation_claimed_title">Erreur d\'invitation</string>
+    <string name="recenter_button_text">Centrer</string>
+    <string name="write_current_note_message">Ecris une note pour cette checkin</string>
+    <string name="invitation_success_title">Succes</string>
+    <string name="invitation_success_text">"Rejoint avec succès dans "</string>
+    <string name="invitation_error_title">Erreur d\'invitation</string>
+    <string name="invitation_error_text">Controlez si vous avez mis la code exacte</string>
 </resources>

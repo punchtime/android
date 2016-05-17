@@ -53,4 +53,13 @@
     <string name="current_company_summary">This is the company you\'re currently working for</string>
     <string name="current_company_title">Current company</string>
     <string name="invitation_prompt">Enter invitation code</string>
+    <string name="contact_title">Contact</string>
+    <string name="contact_summary">Contact your employer directly</string>
+    <string name="email_title">Send an email</string>
+    <string name="invitation_claimed_title">Invitation code error</string>
+    <string name="invitation_claimed_text">This invite code has already been claimed</string>
+    <string name="invitation_success_title">Success</string>
+    <string name="invitation_success_text">"You have successfully joined "</string>
+    <string name="invitation_error_title">Invitation code error</string>
+    <string name="invitation_error_text">Please verify that you entered the right code and try again.</string>
 </resources>

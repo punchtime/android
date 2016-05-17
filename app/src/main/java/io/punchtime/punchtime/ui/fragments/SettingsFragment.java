@@ -1,7 +1,9 @@
 package io.punchtime.punchtime.ui.fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
@@ -116,6 +118,48 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
         // TODO: 16/05/16 show contact of company
+        final Preference contact = findPreference("pref_contact");
+        contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(R.string.contact_title);
+                // TODO: 17/05/16 get contact info from firebase and current employer
+                final CharSequence[] contactArray = new CharSequence[3];
+                contactArray[0] = "0032497466234";
+                contactArray[1] = "hello@haroen.me";
+                contactArray[2] = "Don't call me unless you're in great danger!";
+                builder.setItems(contactArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        switch (which) {
+                            // the phone number
+                            case 0:
+                                startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactArray[which].toString(), null)));
+                                break;
+                            // the email address
+                            case 1:
+                                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                                emailIntent.setData(Uri.parse("mailto:"+contactArray[which].toString()));
+                                startActivity(Intent.createChooser(emailIntent, activity.getString(R.string.email_title)));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return false;
+            }
+        });
     }
 
     protected void setCompaniesData(final ListPreference lp) {
@@ -155,8 +199,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     if(dataSnapshot.child("claimed").getValue(boolean.class)) {
                         // Alert already joined
                         new AlertDialog.Builder(activity)
-                                .setTitle("Invitation code error")
-                                .setMessage("This invite code has already been claimed")
+                                .setTitle(R.string.invitation_claimed_title)
+                                .setMessage(R.string.invitation_claimed_text)
                                 .create().show();
                         return;
                     }
@@ -168,15 +212,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                     // Alert success
                     new AlertDialog.Builder(activity)
-                            .setTitle("Success")
-                            .setMessage("You have successfully joined " + dataSnapshot.child("company/name").getValue().toString())
+                            .setTitle(R.string.invitation_success_title)
+                            .setMessage(R.string.invitation_success_text + dataSnapshot.child("company/name").getValue().toString())
                             .create().show();
 
                 } else {
                     // Alert failure
                     new AlertDialog.Builder(activity)
-                            .setTitle("Invitation code error")
-                            .setMessage("Please verify that you entered the right code and try again.")
+                            .setTitle(R.string.invitation_error_title)
+                            .setMessage(R.string.invitation_error_text)
                             .create().show();
                 }
             }
