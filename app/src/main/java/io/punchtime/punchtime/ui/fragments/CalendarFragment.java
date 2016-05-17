@@ -140,8 +140,19 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             addNoteTitle = noteInputMessage;
         }
 
+        // set icon
+        alertDialogBuilder.setIcon(R.drawable.ic_access_time_black_24dp);
+
         // set title
+        /*int duration = (int) (pulse.getCheckout() - pulse.getCheckin() / 1000*60*60) % 24;
+        if (duration > 12) {
+            String durationString = Integer.toString(duration);
+            alertDialogBuilder.setTitle(pulseCheckin + " - " + pulseCheckout + " (" + durationString + " hours)");
+        }
+        else {*/
+            
         alertDialogBuilder.setTitle(pulseCheckin + " - " + pulseCheckout);
+
 
         // set message
         alertDialogBuilder.setMessage(notePlaceholder + "\n"
