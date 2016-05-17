@@ -212,7 +212,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                         @Override
                         public void onCancelled(FirebaseError firebaseError) {
-
+                            // no. Firebase doesn't do errors
                         }
                     });
                 }
