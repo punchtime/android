@@ -47,4 +47,5 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.github.eliasmeire:material-animated-switch:0.0.8'
+    compile 'com.github.bmarrdev:android-DecoView-charting:v1.1'
 }
