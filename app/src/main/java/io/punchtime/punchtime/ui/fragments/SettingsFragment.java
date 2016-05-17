@@ -37,6 +37,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private SharedPreferences preferences;
 
     private MainActivity activity;
+
+    final ContactItem[] items = new ContactItem[3];
+
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         activity = (MainActivity) getActivity();
@@ -61,9 +64,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prefLogin.setSummary(R.string.not_logged_in_summary);
         }
 
-        prefLogin.setOnPreferenceClickListener(new android.support.v7.preference.Preference.OnPreferenceClickListener() {
+        prefLogin.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(final android.support.v7.preference.Preference pref) {
+            public boolean onPreferenceClick(final Preference pref) {
             if(preferences.getBoolean("logged_in", false)) {
                 new AlertDialog.Builder(activity)
                         .setTitle(getString(R.string.logout_dialog_title))
@@ -111,7 +114,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         final ListPreference currentCompany = (ListPreference) findPreference("pref_current_company");
-        // TODO: 16/05/16 Make this wait on firebase
         if(activity.getAuth() != null) setCompaniesData(currentCompany);
         currentCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -121,11 +123,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        final ContactItem[] items = {
-                new ContactItem("0032497466234", R.drawable.ic_call_black_24dp),
-                new ContactItem("hello@haroen.me", R.drawable.ic_email_black_24dp),
-                new ContactItem("Note from employer: blah blah xd", 0)
-        };
+        // TODO: 18/05/16 figure out when to call setContact() so it's updated when the company changes 
+        /*currentCompany.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                setContact();
+                return false;
+            }
+        });*/
 
         final ListAdapter adapter = new ArrayAdapter<ContactItem>(
                 activity,
@@ -148,19 +153,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return v;
             }
         };
-        // TODO: 16/05/16 show contact of company
+
+        if(activity.getAuth() != null) setContact();
         final Preference contact = findPreference("pref_contact");
         contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(R.string.contact_title);
-                // TODO: 17/05/16 get contact info from firebase and current employer
 
                 builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
-                        // of the selected item
                         switch (which) {
                             // the phone number
                             case 0:
@@ -186,6 +190,22 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
                 return false;
+            }
+        });
+    }
+
+    protected void setContact() {
+        activity.getFirebaseRef().child("companies").child(preferences.getString("pref_current_company","")).child("contact").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                items[0] = new ContactItem(dataSnapshot.child("phone").getValue(String.class), R.drawable.ic_call_black_24dp);
+                items[1] = new ContactItem(dataSnapshot.child("email").getValue(String.class), R.drawable.ic_email_black_24dp);
+                items[2] = new ContactItem(dataSnapshot.child("note").getValue(String.class), 0);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                // we only need to get the data once.
             }
         });
     }
