@@ -1,13 +1,13 @@
 package io.punchtime.punchtime.logic.operations;
 
-import android.os.AsyncTask;
+//import android.os.AsyncTask;
 import android.support.v4.util.LongSparseArray;
 
 import com.alamkanak.weekview.WeekView;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
+//import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class PulseOperations {
     }
 
     /*
-        Could be replaced with a more general method that updates any child of a pulse
+     * Could be replaced with a more general method that updates any child of a pulse
      */
     public void updatePulseNote(Long longKey, String noteString) {
         //get key for pulse

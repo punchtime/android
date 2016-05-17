@@ -94,7 +94,7 @@ public class StatsFragment extends Fragment {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-
+                  // this won't be relevant. Firebase never has errors.
                 }
             });
         }
@@ -170,7 +170,10 @@ public class StatsFragment extends Fragment {
         @Override
         protected double[] doInBackground(ArrayList<Pulse>... params) {
             ArrayList<Pulse> pulses = params[0];
-            double hoursWorkedToday = 0, hoursWorkedWeek = 0, hoursWorkedPulse;
+            double hoursWorkedToday = 0,
+                   hoursWorkedWeek = 0,
+                   hoursWorkedPulse;
+
             for (Pulse pulse: pulses) {
                 if(pulse.getCheckin() < (System.currentTimeMillis() - 6.048e+8)) continue;
 
