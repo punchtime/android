@@ -124,7 +124,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         final ContactItem[] items = {
                 new ContactItem("0032497466234", R.drawable.ic_call_black_24dp),
                 new ContactItem("hello@haroen.me", R.drawable.ic_email_black_24dp),
-                new ContactItem("Employer note: blah blah xd", 0)
+                new ContactItem("Note from employer: blah blah xd", 0)
         };
 
         final ListAdapter adapter = new ArrayAdapter<ContactItem>(
@@ -159,7 +159,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                 builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position of the selected item
+                        // The 'which' argument contains the index position
+                        // of the selected item
                         switch (which) {
                             // the phone number
                             case 0:

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ public class StatsFragment extends Fragment {
 
     private int seriesDayIndex;
     private int seriesWeekIndex;
+    private int hoursQuota;
+    private int weekQuota;
 
     public StatsFragment() {
         Bundle args = new Bundle();
@@ -57,6 +60,10 @@ public class StatsFragment extends Fragment {
         dayArcView = (DecoView) v.findViewById(R.id.dayArcView);
         dayHoursWorked = (TextView) v.findViewById(R.id.dayHoursWorked);
         weekHoursWorked = (TextView) v.findViewById(R.id.weekHoursWorked);
+
+        // Store preferences
+        hoursQuota = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString("pref_key_hours_day","8"));
+        weekQuota = hoursQuota * Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString("pref_key_hours_week", "5"));
 
         // Setup charts
         setupWeekArc();
@@ -148,14 +155,11 @@ public class StatsFragment extends Fragment {
     }
 
     private void updateChartUI(double hoursDay, double hoursWeek) {
-        // TODO: 17/05/16 Don't hardcode values
-        int quotaDay = 8;
-        int quotaWeek = 38;
-        dayArcView.addEvent(new DecoEvent.Builder((int)((hoursDay / quotaDay) * 100)).setIndex(seriesWeekIndex).setDuration(2000).build());
-        weekArcView.addEvent(new DecoEvent.Builder((int)((hoursWeek / quotaWeek) * 100)).setIndex(seriesDayIndex).setDuration(2000).build());
+        dayArcView.addEvent(new DecoEvent.Builder((int)((hoursDay / hoursQuota) * 100)).setIndex(seriesWeekIndex).setDuration(2000).build());
+        weekArcView.addEvent(new DecoEvent.Builder((int)((hoursWeek / weekQuota) * 100)).setIndex(seriesDayIndex).setDuration(2000).build());
 
-        dayHoursWorked.setText((Math.round(hoursDay * 10.0) / 10.0) + " / " + quotaDay);
-        weekHoursWorked.setText((Math.round(hoursWeek * 10.0) / 10.0) + " / " + quotaWeek);
+        dayHoursWorked.setText((Math.round(hoursDay * 10.0) / 10.0) + " / " + hoursQuota);
+        weekHoursWorked.setText((Math.round(hoursWeek * 10.0) / 10.0) + " / " + weekQuota);
     }
 
     private class CalculateHoursWorked extends AsyncTask<ArrayList<Pulse>, double[], double[]> {

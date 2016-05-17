@@ -27,7 +27,7 @@
     <string name="account">Account</string>
     <string name="logged_in_summary">Logged in, tap to logout</string>
     <string name="not_logged_in_summary">Not logged in, tap to login</string>
-    <string name="location_mode_summary">This option will automatically check you in and out based on location data</string>
+    <string name="location_mode_summary">Check in and out automatically based on location</string>
     <string name="location_mode_title">Automatic tracking</string>
     <string name="logged_in_facebook">Logged in with Facebook</string>
     <string name="logged_in_twitter">Logged in with Twitter</string>
@@ -64,4 +64,62 @@
     <string name="invitation_error_text">Please verify that you entered the right code and try again.</string>
     <string name="stats_week_description">Hours worked this week</string>
     <string name="stats_today_description">Hours worked today</string>
+    <string name="hours_quota_summary">Specify your working hours so the app can track them</string>
+    <string name="hours_quota_day">Working hours</string>
+    <string name="hours_quota_day_summary">The amount of time you work per day (in hours)</string>
+    <string name="hours_quota_week">Amount of working days</string>
+    <string name="hours_quota_week_summary">The amount of days you work per week</string>
+    <string-array name="pref_day_entries">
+        <item>1 Hour</item>
+        <item>2 Hours</item>
+        <item>3 Hours</item>
+        <item>4 Hours</item>
+        <item>5 Hours</item>
+        <item>6 Hours</item>
+        <item>7 Hours</item>
+        <item>8 Hours</item>
+        <item>9 Hours</item>
+        <item>10 Hours</item>
+        <item>11 Hours</item>
+        <item>12 Hours</item>
+    </string-array>
+
+    <string-array name="pref_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string name="pref_day_default">8</string>
+
+    <string-array name="pref_week_entries">
+        <item>1 Day</item>
+        <item>2 Days</item>
+        <item>3 Days</item>
+        <item>4 Days</item>
+        <item>5 Days</item>
+        <item>6 Days</item>
+        <item>7 Days</item>
+    </string-array>
+
+    <string-array name="pref_week_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string name="pref_week_default">5</string>
 </resources>
