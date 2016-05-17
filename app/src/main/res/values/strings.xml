@@ -28,7 +28,7 @@
     <string name="logged_in_summary">Logged in, tap to logout</string>
     <string name="not_logged_in_summary">Not logged in, tap to login</string>
     <string name="location_mode_summary">This option will automatically check you in and out based on location data</string>
-    <string name="location_mode_title">Automatic location tracking</string>
+    <string name="location_mode_title">Automatic tracking</string>
     <string name="logged_in_facebook">Logged in with Facebook</string>
     <string name="logged_in_twitter">Logged in with Twitter</string>
     <string name="location_rationale">Location permission is required for this app to function. Please enable it in the settings</string>
