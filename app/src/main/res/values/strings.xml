@@ -62,4 +62,6 @@
     <string name="invitation_success_text">"You have successfully joined "</string>
     <string name="invitation_error_title">Invitation code error</string>
     <string name="invitation_error_text">Please verify that you entered the right code and try again.</string>
+    <string name="stats_week_description">Hours worked this week</string>
+    <string name="stats_today_description">Hours worked today</string>
 </resources>

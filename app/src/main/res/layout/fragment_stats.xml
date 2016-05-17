@@ -5,19 +5,67 @@
               android:layout_height="match_parent"
               android:padding="8dp">
 
-    <com.hookedonplay.decoviewlib.DecoView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:padding="8dp"
-        android:id="@+id/dayArcView"
-        />
+        android:layout_weight="0.5">
 
-    <com.hookedonplay.decoviewlib.DecoView
+        <TextView
+            android:id="@+id/dayHoursWorked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:id="@+id/dayDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dayHoursWorked"
+            android:layout_centerHorizontal="true"
+            android:maxWidth="200dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/stats_today_description"/>
+
+        <com.hookedonplay.decoviewlib.DecoView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:id="@+id/dayArcView"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="8dp"
-        android:layout_weight="0.5"
-        android:id="@+id/weekArcView"
-        />
+        android:layout_weight="0.5">
+
+        <TextView
+            android:id="@+id/weekHoursWorked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:id="@+id/weekDescription"
+            android:text="@string/stats_week_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/weekHoursWorked"
+            android:layout_centerHorizontal="true"
+            android:maxWidth="200dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <com.hookedonplay.decoviewlib.DecoView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:id="@+id/weekArcView"
+            />
+    </RelativeLayout>
 </LinearLayout>
