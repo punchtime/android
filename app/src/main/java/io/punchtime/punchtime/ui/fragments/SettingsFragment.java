@@ -191,18 +191,31 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     protected void setCompaniesData(final ListPreference lp) {
-        activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("employer").addListenerForSingleValueEvent(new ValueEventListener() {
+        activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("employee").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<CharSequence> entries = new ArrayList<>();
-                List<CharSequence> entryValues = new ArrayList<>();
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                for (DataSnapshot i : children) {
-                    entries.add(i.toString());
-                    entryValues.add(i.getKey());
+                final List<CharSequence> entries = new ArrayList<>();
+                final List<CharSequence> entryValues = new ArrayList<>();
+                List<CharSequence> employerKeys = new ArrayList<>();
+
+                for (DataSnapshot employer : dataSnapshot.getChildren()) {
+                    employerKeys.add(employer.getKey());
+                    entryValues.add(employer.getKey());
+                    activity.getFirebaseRef().child("companies").child(employer.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            entries.add(dataSnapshot.child("name").getValue(String.class));
+                            lp.setEntries(entries.toArray(new CharSequence[entries.size()]));
+                            lp.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+                            if(lp.getValue() == null) lp.setValue((String)entryValues.get(0));
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
                 }
-                lp.setEntries(entries.toArray(new CharSequence[entries.size()]));
-                lp.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
             }
 
             @Override
