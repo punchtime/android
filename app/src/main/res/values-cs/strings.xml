@@ -72,4 +72,50 @@
     <string name="hours_quota_summary">Stikt er je uurtjes in want we hebben rechtstreeks banden met NSA</string>
     <string name="hours_quota_week">Hoeverderhijd van werkdagen</string>
     <string name="hours_quota_week_summary">Dagerkes per wiek da je ge werkt</string>
+    <string-array name="pref_day_entries">
+        <item>1 juur</item>
+        <item>2 puur</item>
+        <item>3 zuur</item>
+        <item>4 duur</item>
+        <item>5 muur</item>
+        <item>6 kuur</item>
+        <item>7 luur</item>
+        <item>8 vuur</item>
+        <item>9 huur</item>
+        <item>10 guur</item>
+        <item>11 nuur</item>
+        <item>12 wuur</item>
+    </string-array>
+    <string-array name="pref_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="pref_week_entries">
+        <item>1 jag</item>
+        <item>2 doj</item>
+        <item>3 daggie</item>
+        <item>4 dieis</item>
+        <item>5 dagerinos</item>
+        <item>6 dey</item>
+        <item>7 dags</item>
+    </string-array>
+    <string-array name="pref_week_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
 </resources>
