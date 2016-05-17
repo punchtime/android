@@ -117,6 +117,35 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
         // TODO: 16/05/16 show contact of company
+        final Preference contact = findPreference("pref_contact");
+        contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                // TODO: 17/05/16 extract string
+                builder.setTitle("Contact");
+                // TODO: 17/05/16 get contact info from firebase and current employer
+                CharSequence[] contactArray = new CharSequence[3];
+                contactArray[0] = "0032497466234";
+                contactArray[1] = "hello@haroen.me";
+                contactArray[2] = "Don't call me unless you're in great danger!";
+                builder.setItems(contactArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return false;
+            }
+        });
     }
 
     protected void setCompaniesData(final ListPreference lp) {
