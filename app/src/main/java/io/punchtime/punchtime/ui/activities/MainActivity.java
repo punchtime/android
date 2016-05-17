@@ -82,13 +82,8 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
         // connect to firebase
         mRef = new Firebase( getString(R.string.firebase_url));
-        // Firebase login providers config
-        setEnabledAuthProvider(AuthProviderType.FACEBOOK);
-        setEnabledAuthProvider(AuthProviderType.TWITTER);
-        setEnabledAuthProvider(AuthProviderType.GOOGLE);
-        setEnabledAuthProvider(AuthProviderType.PASSWORD);
 
-        // Handle punchime intents
+        // Handle punchtime intents
         Intent intent = getIntent();
         String action = intent.getAction();
         if (action != null) {
@@ -138,6 +133,19 @@ public class MainActivity extends FirebaseLoginBaseActivity {
             startActivity(permissionIntent);
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Firebase login providers config
+        setEnabledAuthProvider(AuthProviderType.FACEBOOK);
+        setEnabledAuthProvider(AuthProviderType.TWITTER);
+        setEnabledAuthProvider(AuthProviderType.GOOGLE);
+        setEnabledAuthProvider(AuthProviderType.PASSWORD);
+
+    }
+
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -255,9 +263,10 @@ public class MainActivity extends FirebaseLoginBaseActivity {
 
     @Override
     public void onFirebaseLoggedIn(final AuthData authData) {
-        if(!isLaunchedFromIntent) setFragment(new DashboardFragment());
-        navigationView.setCheckedItem(R.id.nav_dashboard);
-
+        if(!isLaunchedFromIntent) {
+            setFragment(new DashboardFragment());
+            navigationView.setCheckedItem(R.id.nav_dashboard);
+        }
         // Store user data in firebase
         Map<String, Object> map = new HashMap<>();
         map.put("provider", authData.getProvider());

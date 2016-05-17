@@ -36,8 +36,7 @@ public class PermissionErrorActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            goToMainActivity();
         }
 
         // Should we show an explanation?
@@ -70,8 +69,7 @@ public class PermissionErrorActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            goToMainActivity();
         }
     }
 
@@ -83,9 +81,7 @@ public class PermissionErrorActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-
+                    goToMainActivity();
                 } else {
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.location_rationale,
                             Snackbar.LENGTH_INDEFINITE)
@@ -116,5 +112,11 @@ public class PermissionErrorActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction("android.intent.action.MAIN");
+        startActivity(intent);
     }
 }
