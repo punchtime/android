@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -137,14 +138,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         switch (which) {
                             // the phone number
                             case 0:
-                                // TODO: 17/05/16 open phone intent
-                                Log.d("phone number",contactArray[which].toString());
                                 startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactArray[which].toString(), null)));
                                 break;
                             // the email address
                             case 1:
-                                // TODO: 17/05/16 open email intent 
-                                Log.d("email",contactArray[which].toString());
+                                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                                emailIntent.setData(Uri.parse("mailto:"+contactArray[which].toString()));
+                                startActivity(Intent.createChooser(emailIntent, activity.getString(R.string.email_title)));
                                 break;
                             // the info
                             default:
