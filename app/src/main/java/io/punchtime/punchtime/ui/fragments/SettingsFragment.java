@@ -1,7 +1,9 @@
 package io.punchtime.punchtime.ui.fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
@@ -137,6 +139,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             case 0:
                                 // TODO: 17/05/16 open phone intent
                                 Log.d("phone number",contactArray[which].toString());
+                                startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactArray[which].toString(), null)));
                                 break;
                             // the email address
                             case 1:
