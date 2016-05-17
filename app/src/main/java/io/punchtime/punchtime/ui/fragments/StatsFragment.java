@@ -77,13 +77,17 @@ public class StatsFragment extends Fragment {
 
     private void getStatistics() {
         if (activity.getAuth() != null) {
-            Query query = activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("pulses").limitToLast(200);
+            Query query = activity.getFirebaseRef().child("users").child(activity.getAuth().getUid()).child("pulses").limitToLast(1000);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    String currentCompany;
                     ArrayList<Pulse> pulses = new ArrayList<>();
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        pulses.add(child.getValue(Pulse.class));
+                        currentCompany = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString("pref_current_company","");
+                        if(currentCompany.equals(child.child("employer").getValue(String.class))) {
+                            pulses.add(child.getValue(Pulse.class));
+                        }
                     }
                     new CalculateHoursWorked().execute(pulses);
                 }
