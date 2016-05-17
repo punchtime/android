@@ -38,7 +38,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private MainActivity activity;
 
-    final ContactItem[] items = new ContactItem[3];
+    private final ContactItem[] items = new ContactItem[3];
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
