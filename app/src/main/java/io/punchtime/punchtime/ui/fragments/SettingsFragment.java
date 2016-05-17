@@ -196,6 +196,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         activity.getFirebaseRef().child("invites").child(inviteCode).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // TODO: 17/05/16 extract strings 
                 if (dataSnapshot.getValue() != null) {
                     if(dataSnapshot.child("claimed").getValue(boolean.class)) {
                         // Alert already joined
