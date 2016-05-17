@@ -63,4 +63,7 @@
     <string name="invitation_success_title">Succes</string>
     <string name="recenter_button_text">Centreren</string>
     <string name="write_current_note_message">Schrijf een notitie voor je checkin</string>
+    <string name="stats_today_description">uur vandaag gewerkt</string>
+    <string name="twitter_app_key"></string>
+    <string name="stats_week_description">uur deze week gewerkt</string>
 </resources>

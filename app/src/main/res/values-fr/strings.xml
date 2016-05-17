@@ -63,4 +63,6 @@
     <string name="invitation_success_text">"Rejoint avec succès dans "</string>
     <string name="invitation_error_title">Erreur d\'invitation</string>
     <string name="invitation_error_text">Controlez si vous avez mis la code exacte</string>
+    <string name="stats_today_description">Heures travaillé aujourd\'hui</string>
+    <string name="stats_week_description">Heures travaillé cette semaine</string>
 </resources>

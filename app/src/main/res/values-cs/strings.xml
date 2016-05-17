@@ -63,4 +63,6 @@
     <string name="invitation_success_title">congrats ermee</string>
     <string name="recenter_button_text">intmiddden</string>
     <string name="write_current_note_message">skrief een noot voe je sjekin</string>
+    <string name="stats_today_description">Uurkes vandage</string>
+    <string name="stats_week_description">Juren van deze weke</string>
 </resources>
