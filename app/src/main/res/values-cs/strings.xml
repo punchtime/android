@@ -55,4 +55,12 @@
     <string name="contact_summary">valt er hem me lastig</string>
     <string name="contact_title">Kontackt</string>
     <string name="email_title">Stuur een meiltje</string>
+    <string name="invitation_claimed_text">Die kode is al gepakt slimpie, niet stelen he!</string>
+    <string name="invitation_claimed_title">UITNodignsfoutje</string>
+    <string name="invitation_error_text">zie je gie wel zekers da die kode just is? probeer maar e keer ernieuw</string>
+    <string name="invitation_error_title">utnodgingsfoute</string>
+    <string name="invitation_success_text">"succesvol gemarrangeerd in "</string>
+    <string name="invitation_success_title">congrats ermee</string>
+    <string name="recenter_button_text">intmiddden</string>
+    <string name="write_current_note_message">skrief een noot voe je sjekin</string>
 </resources>

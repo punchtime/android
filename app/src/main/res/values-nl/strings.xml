@@ -55,4 +55,12 @@
     <string name="contact_title">Contact</string>
     <string name="contact_summary">Contacteer je werkgever direct</string>
     <string name="email_title">Stuur een e-mail</string>
+    <string name="invitation_claimed_text">Deze code is al ingewisseld</string>
+    <string name="invitation_error_text">Controleer of je de juiste code ingevuldl hebt en probeer opnieuw</string>
+    <string name="invitation_claimed_title">Uitnodigingsfout</string>
+    <string name="invitation_error_title">Uitnodigingsfout</string>
+    <string name="invitation_success_text">"Je maakt nu deel uit van "</string>
+    <string name="invitation_success_title">Succes</string>
+    <string name="recenter_button_text">Centreren</string>
+    <string name="write_current_note_message">Schrijf een notitie voor je checkin</string>
 </resources>

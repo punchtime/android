@@ -144,7 +144,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                                 emailIntent.setData(Uri.parse("mailto:"+contactArray[which].toString()));
                                 startActivity(Intent.createChooser(emailIntent, activity.getString(R.string.email_title)));
                                 break;
-                            // the info
                             default:
                                 break;
                         }
@@ -196,13 +195,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         activity.getFirebaseRef().child("invites").child(inviteCode).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // TODO: 17/05/16 extract strings 
                 if (dataSnapshot.getValue() != null) {
                     if(dataSnapshot.child("claimed").getValue(boolean.class)) {
                         // Alert already joined
                         new AlertDialog.Builder(activity)
-                                .setTitle("Invitation code error")
-                                .setMessage("This invite code has already been claimed")
+                                .setTitle(R.string.invitation_claimed_title)
+                                .setMessage(R.string.invitation_claimed_text)
                                 .create().show();
                         return;
                     }
@@ -214,15 +212,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                     // Alert success
                     new AlertDialog.Builder(activity)
-                            .setTitle("Success")
-                            .setMessage("You have successfully joined " + dataSnapshot.child("company/name").getValue().toString())
+                            .setTitle(R.string.invitation_success_title)
+                            .setMessage(R.string.invitation_success_text + dataSnapshot.child("company/name").getValue().toString())
                             .create().show();
 
                 } else {
                     // Alert failure
                     new AlertDialog.Builder(activity)
-                            .setTitle("Invitation code error")
-                            .setMessage("Please verify that you entered the right code and try again.")
+                            .setTitle(R.string.invitation_error_title)
+                            .setMessage(R.string.invitation_error_text)
                             .create().show();
                 }
             }
