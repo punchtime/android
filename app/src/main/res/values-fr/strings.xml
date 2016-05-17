@@ -65,4 +65,7 @@
     <string name="invitation_error_text">Controlez si vous avez mis la code exacte</string>
     <string name="stats_today_description">Heures travaillé aujourd\'hui</string>
     <string name="stats_week_description">Heures travaillé cette semaine</string>
+    <string name="pref_day_default">8</string>
+    <string name="pref_week_default">5</string>
+    <string name="hours_quota_week_summary"></string>
 </resources>
