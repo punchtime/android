@@ -11,7 +11,11 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
@@ -112,11 +116,38 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         currentCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 setCompaniesData(currentCompany);
                 return false;
             }
         });
+
+        final ContactItem[] items = {
+                new ContactItem("0032497466234", R.drawable.ic_call_black_24dp),
+                new ContactItem("hello@haroen.me", R.drawable.ic_email_black_24dp),
+                new ContactItem("Employer note: blah blah xd", 0)
+        };
+
+        final ListAdapter adapter = new ArrayAdapter<ContactItem>(
+                activity,
+                android.R.layout.select_dialog_item,
+                android.R.id.text1,
+                items){
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // Use super class to create the View
+                View v = super.getView(position, convertView, parent);
+                TextView tv = (TextView)v.findViewById(android.R.id.text1);
+
+                // Put the image on the TextView
+                tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0);
+
+                // Add margin between image and text (support various screen densities)
+                int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 5f);
+                tv.setCompoundDrawablePadding(dp5);
+                tv.setTextSize(16);
+
+                return v;
+            }
+        };
         // TODO: 16/05/16 show contact of company
         final Preference contact = findPreference("pref_contact");
         contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -125,23 +156,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(R.string.contact_title);
                 // TODO: 17/05/16 get contact info from firebase and current employer
-                final CharSequence[] contactArray = new CharSequence[3];
-                contactArray[0] = "0032497466234";
-                contactArray[1] = "hello@haroen.me";
-                contactArray[2] = "Don't call me unless you're in great danger!";
-                builder.setItems(contactArray, new DialogInterface.OnClickListener() {
+
+                builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
+                        // The 'which' argument contains the index position of the selected item
                         switch (which) {
                             // the phone number
                             case 0:
-                                startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactArray[which].toString(), null)));
+                                startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", items[which].text, null)));
                                 break;
                             // the email address
                             case 1:
                                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                                emailIntent.setData(Uri.parse("mailto:"+contactArray[which].toString()));
+                                emailIntent.setData(Uri.parse("mailto:"+ items[which].text));
                                 startActivity(Intent.createChooser(emailIntent, activity.getString(R.string.email_title)));
                                 break;
                             default:
@@ -230,5 +257,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 // don't disconnect from Firebase please
             }
         });
+    }
+
+    public static class ContactItem {
+        public final String text;
+        public final int icon;
+        public ContactItem(String text, Integer icon) {
+            this.text = text;
+            this.icon = icon;
+        }
+        @Override
+        public String toString() {
+            return text;
+        }
     }
 }

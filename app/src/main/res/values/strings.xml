@@ -41,7 +41,7 @@
     <string name="show_on_map">Show on map</string>
     <string name="recenter_map_on_current_location">Recenter map on current location</string>
     <string name="add_company_summary">Add yourself to a company from an invitation</string>
-    <string name="add_company_title">Add yourself to a company</string>
+    <string name="add_company_title">Join company</string>
     <string name="add_company_dialog_title">Enter an invitation</string>
     <string name="checkin_message">Checked in at current location</string>
     <string name="checkout_message">Checked out at current location</string>
