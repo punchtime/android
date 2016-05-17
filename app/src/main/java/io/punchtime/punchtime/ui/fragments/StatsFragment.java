@@ -35,6 +35,8 @@ public class StatsFragment extends Fragment {
         // Setup toolbar
         activity.setTitle(R.string.menu_stats);
 
+        // TODO: 17/05/16 fill in arcview with data from firebase (month and day) 
+        // TODO: 17/05/16 where in firebase is this stored and how is it changed 
         DecoView dayArcView = (DecoView) v.findViewById(R.id.dayArcView);
         // Create background track
         dayArcView.addSeries(new SeriesItem.Builder(Color.argb(56,0,0,0))
