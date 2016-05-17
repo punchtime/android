@@ -125,7 +125,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 // TODO: 17/05/16 extract string
                 builder.setTitle("Contact");
                 // TODO: 17/05/16 get contact info from firebase and current employer
-                CharSequence[] contactArray = new CharSequence[3];
+                final CharSequence[] contactArray = new CharSequence[3];
                 contactArray[0] = "0032497466234";
                 contactArray[1] = "hello@haroen.me";
                 contactArray[2] = "Don't call me unless you're in great danger!";
@@ -133,6 +133,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
+                        switch (which) {
+                            // the phone number
+                            case 0:
+                                // TODO: 17/05/16 open phone intent
+                                Log.d("phone number",contactArray[which].toString());
+                                break;
+                            // the email address
+                            case 1:
+                                // TODO: 17/05/16 open email intent 
+                                Log.d("email",contactArray[which].toString());
+                                break;
+                            // the info
+                            default:
+                                break;
+                        }
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
