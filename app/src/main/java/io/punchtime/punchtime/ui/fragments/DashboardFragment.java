@@ -291,7 +291,8 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
             mapButton.setVisibility(View.VISIBLE);
             if(pulse.getNote() != null && !pulse.getNote().isEmpty()) noteButton.setText(getString(R.string.edit_note));
             noteButton.setVisibility(View.VISIBLE);
-            timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – now");
+            // todo: extract into string resource
+            timeCheckin.setText(DateUtils.getRelativeTimeSpanString(context, mLastPulse.getCheckin()) + " – " + "now");
         } else {
             // Not checked in
             street.setText(R.string.placeholder_street);
