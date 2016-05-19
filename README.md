@@ -19,7 +19,7 @@ By [Haroen Viaene](https://haroen.me), [Elias Meire](http://eliasmei.re) and [Ar
 > Note: these screenshots aren't definitive
 
 <img src="assets/screenshot_dashboard.png" alt="screenshot of the dashboard" width="24%">
-<img src="assets/screenshot_stats.png" alt="screenshot of the user statistics" width="24%">
+<img src="assets/screenshot_statistics.png" alt="screenshot of the user statistics" width="24%">
 <img src="assets/screenshot_history.png" alt="screenshot of the checkin history" width="24%">
 <img src="assets/screenshot_settings.png" alt="screenshot of the settings" width="24%">
 
