@@ -313,7 +313,7 @@ public class MainActivity extends FirebaseLoginBaseActivity {
     public void onFirebaseLoggedOut() {
         ((TextView) headerView.findViewById(R.id.userName)).setText(R.string.placeholder_user);
         ((TextView) headerView.findViewById(R.id.userMail)).setText(R.string.placeholder_email);
-        ((ImageView) headerView.findViewById(R.id.imageView)).setImageDrawable(ContextCompat.getDrawable(this, android.R.drawable.sym_def_app_icon));
+        ((ImageView) headerView.findViewById(R.id.imageView)).setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icon));
 
         preferences.edit().putBoolean("logged_in", false).apply();
     }
