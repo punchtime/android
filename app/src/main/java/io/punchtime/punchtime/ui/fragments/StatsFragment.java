@@ -74,7 +74,7 @@ public class StatsFragment extends Fragment {
 
         // Setup calendar that points to start of today
         startToday = Calendar.getInstance();
-        startToday.clear(Calendar.HOUR_OF_DAY);
+        startToday.set(Calendar.HOUR_OF_DAY, 0);
         startToday.clear(Calendar.MINUTE);
         startToday.clear(Calendar.SECOND);
         startToday.clear(Calendar.MILLISECOND);
