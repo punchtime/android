@@ -36,10 +36,9 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
     private SharedPreferences preferences;
-
     private MainActivity activity;
-
-    final ContactItem[] items = new ContactItem[3];
+    private final ContactItem[] items = new ContactItem[3];
+    private ListPreference currentCompany;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -115,7 +114,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        final ListPreference currentCompany = (ListPreference) findPreference("pref_current_company");
+
+        currentCompany = (ListPreference) findPreference("pref_current_company");
         if(activity.getAuth() != null) setCompaniesData(currentCompany);
         currentCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -282,6 +282,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             .setTitle(R.string.invitation_success_title)
                             .setMessage(getString(R.string.invitation_success_text) + dataSnapshot.child("company/name").getValue().toString())
                             .create().show();
+
+                    setCompaniesData(currentCompany);
+                    setContact();
+                    preferences.edit().putString("pref_current_company", dataSnapshot.child("company/id").getValue().toString()).apply();
+                    findPreference("company_cat").setEnabled(true);
+                    findPreference("pref_current_company").setEnabled(true);
+                    findPreference("pref_contact").setEnabled(true);
 
                 } else {
                     // Alert failure
