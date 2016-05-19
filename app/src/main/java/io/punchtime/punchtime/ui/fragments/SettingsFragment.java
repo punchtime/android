@@ -274,7 +274,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     // Alert success
                     new AlertDialog.Builder(activity)
                             .setTitle(R.string.invitation_success_title)
-                            .setMessage(R.string.invitation_success_text + dataSnapshot.child("company/name").getValue().toString())
+                            .setMessage(getString(R.string.invitation_success_text) + dataSnapshot.child("company/name").getValue().toString())
                             .create().show();
 
                 } else {
