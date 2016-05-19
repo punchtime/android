@@ -200,7 +200,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         context = getContext();
         activity = (MainActivity) getActivity();
         Firebase mRef = activity.getFirebaseRef();
-        operations = new PulseOperations(mRef);
+        operations = new PulseOperations(mRef, activity);
         pulseArray = new LongSparseArray<>();
     }
     public void setupWeekView(WeekView weekView) {
