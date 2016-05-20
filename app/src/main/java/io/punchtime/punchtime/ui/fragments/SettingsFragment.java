@@ -56,7 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings);
-        android.support.v7.preference.Preference prefLogin = findPreference("pref_key_account");
+        Preference prefLogin = findPreference("pref_key_account");
         if(!preferences.getBoolean("logged_in", false)) findPreference("company_cat").setEnabled(false);
 
         if(preferences.getBoolean("logged_in", false)) {
@@ -87,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        android.support.v7.preference.Preference prefAddCompany = findPreference("pref_key_add_company");
+        Preference prefAddCompany = findPreference("pref_key_add_company");
 
         prefAddCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

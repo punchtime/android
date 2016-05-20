@@ -67,7 +67,7 @@
     <string name="stats_week_description">Heures travaillé cette semaine</string>
     <string name="pref_day_default">8</string>
     <string name="pref_week_default">5</string>
-    <string name="hours_quota_week_summary"></string>
+    <string name="hours_quota_week_summary">Les jours par semaine que vous travaillez</string>
     <string-array name="pref_day_entries">
         <item>1 heure</item>
         <item>2 heures</item>
@@ -114,4 +114,8 @@
         <item>6</item>
         <item>7</item>
     </string-array>
+    <string name="hours_quota_day">Heures de travail</string>
+    <string name="hours_quota_day_summary">Heures de travail par jour</string>
+    <string name="hours_quota_summary">Spécifiez </string>
+    <string name="hours_quota_week">Jours de travail par semaine</string>
 </resources>

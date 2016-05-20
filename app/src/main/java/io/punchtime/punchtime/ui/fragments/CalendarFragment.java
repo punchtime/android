@@ -113,6 +113,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
 
         // set strings
         String pulseCheckin = formatter.format(pulseCheckinDate);
+        //todo: use same string as DashboardFragment:294
         String pulseCheckout = "now";
 
         // check if pulse is still going, change string if needed
@@ -150,7 +151,7 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             alertDialogBuilder.setTitle(pulseCheckin + " - " + pulseCheckout + " (" + durationString + " hours)");
         }
         else {*/
-            
+
         alertDialogBuilder.setTitle(pulseCheckin + " - " + pulseCheckout);
 
 
