@@ -19,6 +19,7 @@ import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import io.punchtime.punchtime.R;
 import io.punchtime.punchtime.data.Pulse;
@@ -38,6 +39,8 @@ public class StatsFragment extends Fragment {
     private int seriesWeekIndex;
     private int hoursQuota;
     private int weekQuota;
+    private Calendar startToday;
+    private Calendar startWeek;
 
     public StatsFragment() {
         Bundle args = new Bundle();
@@ -68,6 +71,17 @@ public class StatsFragment extends Fragment {
         // Setup charts
         setupWeekArc();
         setupDayArc();
+
+        // Setup calendar that points to start of today
+        startToday = Calendar.getInstance();
+        startToday.set(Calendar.HOUR_OF_DAY, 0);
+        startToday.clear(Calendar.MINUTE);
+        startToday.clear(Calendar.SECOND);
+        startToday.clear(Calendar.MILLISECOND);
+
+        // Setup calendar that points to start of week
+        startWeek = (Calendar) startToday.clone();
+        startWeek.set(Calendar.DAY_OF_WEEK, startWeek.getFirstDayOfWeek());
 
         // get Firebase data
         getStatistics();
@@ -166,6 +180,20 @@ public class StatsFragment extends Fragment {
         weekHoursWorked.setText((Math.round(hoursWeek * 10.0) / 10.0) + " / " + weekQuota);
     }
 
+    private boolean isThisWeek(long timestamp) {
+        // Return true if timestamp is after start of this week and before end of this week
+        return startWeek.getTimeInMillis() < timestamp && (startWeek.getTimeInMillis() + 6.048e+8) > timestamp;
+    }
+
+    private boolean isToday(long timestamp) {
+        // Return true if timestamp is after start of today and before end of today
+        return startToday.getTimeInMillis() < timestamp && (startToday.getTimeInMillis() + 8.64e+7) > timestamp;
+    }
+
+    private double millisToHours(long millis) {
+        return millis / 3.6e+6;
+    }
+
     private class CalculateHoursWorked extends AsyncTask<ArrayList<Pulse>, double[], double[]> {
         @Override
         protected double[] doInBackground(ArrayList<Pulse>... params) {
@@ -175,14 +203,10 @@ public class StatsFragment extends Fragment {
                    hoursWorkedPulse;
 
             for (Pulse pulse: pulses) {
-                if(pulse.getCheckin() < (System.currentTimeMillis() - 6.048e+8)) continue;
-
-                hoursWorkedPulse = pulse.getCheckout() != 0 ? (pulse.getCheckout() - pulse.getCheckin()) / 3.6e+6 : (System.currentTimeMillis() - pulse.getCheckin()) / 3.6e+6;
-
-                if(pulse.getCheckin() > (System.currentTimeMillis() - 6.048e+8)) {
-                    hoursWorkedWeek += hoursWorkedPulse;
-                    if(pulse.getCheckin() > (System.currentTimeMillis() - 8.64e+7)) hoursWorkedToday += hoursWorkedPulse;
-                }
+                if(!isThisWeek(pulse.getCheckin())) continue;
+                hoursWorkedPulse = millisToHours(pulse.getCheckout() != 0 ? pulse.getCheckout() - pulse.getCheckin() : System.currentTimeMillis() - pulse.getCheckin());
+                hoursWorkedWeek += hoursWorkedPulse;
+                if(isToday(pulse.getCheckin())) hoursWorkedToday += hoursWorkedPulse;
             }
 
             return new double[] {hoursWorkedToday, hoursWorkedWeek};

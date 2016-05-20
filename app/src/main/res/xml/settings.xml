@@ -45,7 +45,8 @@
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
-        android:title="Company">
+        android:title="Company"
+        android:key="company_cat">
         <android.support.v7.preference.Preference
             android:key="pref_key_add_company"
             android:icon="@drawable/ic_group_add_black_24dp"

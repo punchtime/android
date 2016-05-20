@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "io.punchtime.punchtime"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -48,5 +48,4 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.github.eliasmeire:material-animated-switch:0.0.8'
     compile 'com.github.bmarrdev:android-DecoView-charting:v1.1'
-    compile 'com.vanniktech:vntnumberpickerpreference:1.0.0'
 }

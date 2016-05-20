@@ -23,6 +23,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,10 +36,9 @@ import io.punchtime.punchtime.ui.activities.MainActivity;
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
     private SharedPreferences preferences;
-
     private MainActivity activity;
-
     private final ContactItem[] items = new ContactItem[3];
+    private ListPreference currentCompany;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -57,6 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings);
         Preference prefLogin = findPreference("pref_key_account");
+        if(!preferences.getBoolean("logged_in", false)) findPreference("company_cat").setEnabled(false);
 
         if(preferences.getBoolean("logged_in", false)) {
             prefLogin.setSummary(R.string.logged_in_summary);
@@ -113,7 +114,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        final ListPreference currentCompany = (ListPreference) findPreference("pref_current_company");
+
+        currentCompany = (ListPreference) findPreference("pref_current_company");
         if(activity.getAuth() != null) setCompaniesData(currentCompany);
         currentCompany.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -123,14 +125,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        // TODO: 18/05/16 figure out when to call setContact() so it's updated when the company changes
-        /*currentCompany.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        preferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                setContact();
-                return false;
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if(key.equals("logged_in")) {
+                    findPreference("company_cat").setEnabled(sharedPreferences.getBoolean(key, false));
+                }
+                else if(key.equals("pref_current_company")) {
+                    setContact();
+                }
             }
-        });*/
+        });
 
         final ListAdapter adapter = new ArrayAdapter<ContactItem>(
                 activity,
@@ -216,10 +221,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final List<CharSequence> entries = new ArrayList<>();
                 final List<CharSequence> entryValues = new ArrayList<>();
-                List<CharSequence> employerKeys = new ArrayList<>();
-
-                for (DataSnapshot employer : dataSnapshot.getChildren()) {
-                    employerKeys.add(employer.getKey());
+                Iterable<DataSnapshot> employers = dataSnapshot.getChildren();
+                if(!employers.iterator().hasNext()) {
+                    lp.setEnabled(false);
+                }
+                for (DataSnapshot employer : employers) {
                     entryValues.add(employer.getKey());
                     activity.getFirebaseRef().child("companies").child(employer.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -274,8 +280,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     // Alert success
                     new AlertDialog.Builder(activity)
                             .setTitle(R.string.invitation_success_title)
-                            .setMessage(R.string.invitation_success_text + dataSnapshot.child("company/name").getValue().toString())
+                            .setMessage(getString(R.string.invitation_success_text) + dataSnapshot.child("company/name").getValue().toString())
                             .create().show();
+
+                    setCompaniesData(currentCompany);
+                    setContact();
+                    preferences.edit().putString("pref_current_company", dataSnapshot.child("company/id").getValue().toString()).apply();
+                    findPreference("company_cat").setEnabled(true);
+                    findPreference("pref_current_company").setEnabled(true);
+                    findPreference("pref_contact").setEnabled(true);
 
                 } else {
                     // Alert failure

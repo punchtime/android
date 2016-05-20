@@ -221,7 +221,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback {
         mRef = activity.getFirebaseRef();
 
         // create PulseOperations instance
-        operations = new PulseOperations(mRef);
+        operations = new PulseOperations(mRef, activity);
 
         if(!preferences.getBoolean("logged_in",false)) {
             // If the user is not logged in, show login rationale and prompt to login
