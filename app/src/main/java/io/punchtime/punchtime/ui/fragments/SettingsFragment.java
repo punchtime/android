@@ -128,10 +128,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         preferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if(key.equals("logged_in")) {
+                if("logged_in".equals(key)) {
                     findPreference("company_cat").setEnabled(sharedPreferences.getBoolean(key, false));
                 }
-                else if(key.equals("pref_current_company")) {
+                else if("pref_current_company".equals(key)) {
                     setContact();
                 }
             }
