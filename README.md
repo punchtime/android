@@ -25,10 +25,22 @@ By [Haroen Viaene](https://haroen.me), [Elias Meire](http://eliasmei.re) and [Ar
 
 ## Building it yourself
 
-* Fill in valid API keys in [app/src/main/values/api_keys.xml](app/src/main/values/api_keys.xml) like [app/src/main/values/api_keys.example.xml](app/src/main/values/api_keys.example.xml) for:
+* Fill in valid API keys in [app/src/main/values/donottranslate.xml](app/src/main/values/donottranslate.xml) for:
     * Google Maps
     * Facebook OAuth
     * Twitter OAuth
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="maps_api_key"></string>
+    <string name="facebook_app_id"></string>
+    <string name="twitter_app_key"></string>
+    <string name="twitter_app_secret"></string>
+    <string name="firebase_url"></string>
+</resources>
+```
+
 * Copy the google-services.json from the Google Developer Console into the (projectroot)/app directory to enable Google OAuth
 
 ## Related
