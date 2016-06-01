@@ -207,6 +207,7 @@ public class StatsFragment extends Fragment {
                 hoursWorkedPulse = millisToHours(pulse.getCheckout() != 0 ? pulse.getCheckout() - pulse.getCheckin() : System.currentTimeMillis() - pulse.getCheckin());
                 hoursWorkedWeek += hoursWorkedPulse;
                 if(isToday(pulse.getCheckin())) hoursWorkedToday += hoursWorkedPulse;
+                else if(isToday(pulse.getCheckout())) hoursWorkedToday += millisToHours(pulse.getCheckout() - startToday.getTimeInMillis());
             }
 
             return new double[] {hoursWorkedToday, hoursWorkedWeek};
