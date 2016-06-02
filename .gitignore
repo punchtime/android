@@ -36,5 +36,7 @@ build/
 obj/
 
 #API keys
-app/src/main/res/values/api_keys.xml
+app/src/main/res/values/donottranslate.xml
 
+#google OAuth key
+app/google-services.json

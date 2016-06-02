@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
     android:minHeight="?attr/actionBarSize"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    android:background="?attr/colorPrimary">
-    <com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch
-        android:id="@+id/pin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="6dp"
-        app:base_release_color="@color/colorPrimaryDark"
-        app:base_press_color="@color/colorPrimaryDark"
-        app:ball_release_color="@color/colorAccent"
-        app:ball_press_color="@color/colorPrimary"
-        app:icon_release="@drawable/ic_tracking"
-        app:icon_press="@drawable/ic_tracking"
-        />
-</android.support.v7.widget.Toolbar>
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:background="?attr/colorPrimary"/>

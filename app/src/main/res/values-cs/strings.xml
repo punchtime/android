@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Punchtime</string>
+    <string name="account">Accountje xd</string>
+    <string name="action_settings">Inshctellinge</string>
+    <string name="add_a_note">Notichie</string>
+    <string name="drawer_close">owpe het allemaals </string>
+    <string name="drawer_open">doe het dicht xddd</string>
+    <string name="last_checkin">ja daar he loser</string>
+    <string name="loading">jep jep jep duurt lang he :DDDD</string>
+    <string name="location_mode_summary">tis allemaal vanzelf </string>
+    <string name="location_mode_title">vanzelf</string>
+    <string name="location_rationale">euh ja kweenie wa dacht je nu zelf eigenlijk dat deze app ging lukken zonder locatie hahahahaha ik lach me een breuk xd</string>
+    <string name="logged_in_facebook">tis me smoelenboek</string>
+    <string name="logged_in_summary">ga ter eki ut</string>
+    <string name="logged_in_twitter">tis ier ingelogt me den vogelei</string>
+    <string name="login_rationale">ja kik ja ge moe wel derin gelogt zijn eh</string>
+    <string name="logout_dialog_message">zie je het wel zekers? tis wel nin zo simple vo in terug te loggen eee</string>
+    <string name="logout_dialog_title">utloggen </string>
+    <string name="menu_3_day">nen alve weeke</string>
+    <string name="menu_dashboard">kieloemietriek</string>
+    <string name="menu_day">dagh</string>
+    <string name="menu_history">skienisse</string>
+    <string name="menu_week">wieke</string>
+    <string name="not_logged_in_summary">nie ingehlogdt</string>
+    <string name="ok">jap</string>
+    <string name="placeholder_city">klik op da groen spillement vo in te loggn</string>
+    <string name="placeholder_email">klik op alier voe na d\'instelling te goan</string>
+    <string name="placeholder_street">ge zi nog altie nie ingelohd</string>
+    <string name="placeholder_user">Nie ingelohdt</string>
+    <string name="settings">inspiekeringen</string>
+    <string name="time_here_content">nietent</string>
+    <string name="time_here_title">iere</string>
+    <string name="time_today_content">niksniemendal</string>
+    <string name="time_today_title">just vandoage</string>
+    <string name="add_company_summary">stik je ne ki in ne bedrief</string>
+    <string name="add_company_title">Jupla erin!</string>
+    <string name="no_location_error_message">kiek jongen ik vind ik ier da nie ze, miskien ku je et ernieuw proberen</string>
+    <string name="add_company_dialog_title">Stikt er nen utnodiging in</string>
+    <string name="show_on_map">Show et ne ki in da koartjen</string>
+    <string name="recenter_map_on_current_location">stik et int middel</string>
+    <string name="checkin_message">je ziet er geraakt; tscjekt in lik dame zeggen</string>
+    <string name="checkout_message">jow groetjes nog e allemoale; cheketut</string>
+    <string name="map_detail_title">Kaartjesvergrotering</string>
+    <string name="edit_note">verander notitietje xdd</string>
+    <string name="menu_stats">statistiekjessss</string>
+    <string name="no_note_added">geen notitietje gevonden loool</string>
+    <string name="close">Toe doen eeh</string>
+    <string name="info_pulse_title">Informatietjes voor deze pulse</string>
+    <string name="submit">Awel voeg et moar toe ze</string>
+    <string name="cancel">Ow stop maar</string>
+    <string name="current_company_summary">EM IS DE BOAS va joen</string>
+    <string name="current_company_title">Het bedrief</string>
+    <string name="invitation_prompt">Vul je kodetje maar in</string>
+    <string name="contact_summary">valt er hem me lastig</string>
+    <string name="contact_title">Kontackt</string>
+    <string name="email_title">Stuur een meiltje</string>
+    <string name="invitation_claimed_text">Die kode is al gepakt slimpie, niet stelen he!</string>
+    <string name="invitation_claimed_title">UITNodignsfoutje</string>
+    <string name="invitation_error_text">zie je gie wel zekers da die kode just is? probeer maar e keer ernieuw</string>
+    <string name="invitation_error_title">utnodgingsfoute</string>
+    <string name="invitation_success_text">"succesvol gemarrangeerd in "</string>
+    <string name="invitation_success_title">congrats ermee</string>
+    <string name="recenter_button_text">intmiddden</string>
+    <string name="write_current_note_message">skrief een noot voe je sjekin</string>
+    <string name="stats_today_description">Uurkes vandage</string>
+    <string name="stats_week_description">Juren van deze weke</string>
+    <string name="pref_day_default">8</string>
+    <string name="pref_week_default">5</string>
+    <string name="hours_quota_day">travailleeruurtjes</string>
+    <string name="hours_quota_day_summary">Uurkes per dag da je travailleert in de werktuin</string>
+    <string name="hours_quota_summary">Stikt er je uurtjes in want we hebben rechtstreeks banden met NSA</string>
+    <string name="hours_quota_week">Hoeverderhijd van werkdagen</string>
+    <string name="hours_quota_week_summary">Dagerkes per wiek da je ge werkt</string>
+    <string-array name="pref_day_entries">
+        <item>1 juur</item>
+        <item>2 puur</item>
+        <item>3 zuur</item>
+        <item>4 duur</item>
+        <item>5 muur</item>
+        <item>6 kuur</item>
+        <item>7 luur</item>
+        <item>8 vuur</item>
+        <item>9 huur</item>
+        <item>10 guur</item>
+        <item>11 nuur</item>
+        <item>12 wuur</item>
+    </string-array>
+    <string-array name="pref_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="pref_week_entries">
+        <item>1 jag</item>
+        <item>2 doj</item>
+        <item>3 daggie</item>
+        <item>4 dieis</item>
+        <item>5 dagerinos</item>
+        <item>6 dey</item>
+        <item>7 dags</item>
+    </string-array>
+    <string-array name="pref_week_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+</resources>

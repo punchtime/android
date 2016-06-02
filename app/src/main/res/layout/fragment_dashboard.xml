@@ -1,57 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.punchtime.punchtime.MainActivity"
+    tools:context=".ui.activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <fragment
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/map_height"
+        android:layout_weight="0.7"
+        android:layout_gravity="top"
+        map:cameraZoom="13"
+        map:mapType="normal"
+        map:liteMode="true" />
 
-    <ScrollView
-        android:orientation="vertical"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent" >
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimary"
+        android:layout_margin="8dp"
+        android:layout_weight="0.3"
+        android:layout_gravity="bottom"
+        app:layout_behavior="io.punchtime.punchtime.ui.behaviors.AvoidSnackbarBehavior">
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:orientation="vertical"
-            android:layout_height="fill_parent"
-            android:layout_width="fill_parent">
-
-            <fragment
-                class="com.google.android.gms.maps.SupportMapFragment"
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/map_height"
-                map:cameraZoom="13"
-                map:mapType="normal"
-                map:liteMode="true"
-                />
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/pulsesList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </android.support.v7.widget.RecyclerView>
-            <TextView
-                android:id="@+id/text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </ScrollView>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:src="@drawable/ic_my_location_24dp"/>
-    </FrameLayout>
-</RelativeLayout>
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:background="@color/colorPrimaryDark">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/last_checkin"
+                    android:textColor="#FFFFFF"
+                    android:alpha="0.7"
+                    />
+
+                <TextView
+                    android:id="@+id/timeHere"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:alpha="0.9"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/fab_margin">
+
+                <TextView
+                    android:id="@+id/streetText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"/>
+
+                <TextView
+                    android:id="@+id/cityText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.7"
+                    android:textColor="@color/cardview_light_background"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+
+                <Button
+                    android:id="@+id/noteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_a_note"
+                    android:visibility="invisible"
+                    style="?attr/borderlessButtonStyle"
+                    android:textColor="@color/colorAccent" />
+
+                <Button
+                    android:id="@+id/showMapButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/show_on_map"
+                    style="?attr/borderlessButtonStyle"
+                    android:visibility="invisible"
+                    android:textColor="@color/colorAccent" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/map"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="invisible"
+        android:clickable="true" />
+
+
+</android.support.design.widget.CoordinatorLayout>

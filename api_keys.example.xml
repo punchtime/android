@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- https://console.developers.google.com/project -->
+    <string name="maps_api_key"></string>
+    <!-- https://developers.facebook.com/apps -->
+    <string name="facebook_app_id"></string>
+    <!-- https://apps.twitter.com -->
+    <string name="twitter_app_key"></string>
+    <string name="twitter_app_secret"></string>
+    
+    <string name="firebase_url"></string>
+</resources>

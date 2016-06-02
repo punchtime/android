@@ -4,37 +4,40 @@
         <item
             android:id="@+id/nav_dashboard"
             android:icon="@drawable/ic_home"
-            android:title="Dashboard"
+            android:title="@string/menu_dashboard"
             android:checked="true">
         </item>
     </group>
-    <item android:title="History">
+    <item android:title="@string/menu_history">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_day"
                     android:icon="@drawable/ic_view_day"
-                    android:title="Day" />
+                    android:title="@string/menu_day" />
                 <item
                     android:id="@+id/nav_3days"
                     android:icon="@drawable/ic_view_week"
-                    android:title="3 Day" />
+                    android:title="@string/menu_3_day" />
                 <item
                     android:id="@+id/nav_week"
                     android:icon="@drawable/ic_view_week"
-                    android:title="Week" />
-                <item
-                    android:id="@+id/nav_month"
-                    android:icon="@drawable/ic_view_month"
-                    android:title="Month" />
+                    android:title="@string/menu_week" />
             </group>
         </menu>
     </item>
+    <group android:id="@+id/group_stats" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_stats"
+            android:icon="@drawable/ic_assessment_black_24dp"
+            android:title="@string/menu_stats"
+        />
+    </group>
     <group android:id="@+id/group_settings" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
-            android:title="Settings">
+            android:title="@string/settings">
         </item>
     </group>
 </menu>
